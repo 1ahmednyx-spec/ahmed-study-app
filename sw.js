@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ahmed-study-platform-v12';
+const CACHE_NAME = 'ahmed-study-platform-v13';
 const APP_FILES = [
   './',
   './index.html',
@@ -12,6 +12,7 @@ const APP_FILES = [
   './assets/js/features/mistakes.js',
   './assets/js/features/tools.js',
   './assets/js/features/english-course.js',
+  './assets/js/features/english-coach.js',
   './assets/js/app.js',
   './manifest.webmanifest',
   './icon-192.png',

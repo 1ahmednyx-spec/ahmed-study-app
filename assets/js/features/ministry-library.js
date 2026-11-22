@@ -24,6 +24,13 @@
       term: 'الفصل الدراسي الأول',
       url: 'https://elearnningcontent.blob.core.windows.net/elearnningcontent/2026_2027/Secondry/Secondry3/Term1/StudentBook/English_language_Sec3_tr1.pdf',
       note: 'رابط ملف PDF الذي أرسله المستخدم؛ لم نتمكن من فحص استجابة خادم الملفات آليًا.'
+    },
+    'الأحياء': {
+      title: 'كتاب الأحياء باللغة العربية — الفصل الدراسي الأول',
+      year: '2026/2027',
+      term: 'الفصل الدراسي الأول',
+      url: 'https://elearnningcontent.blob.core.windows.net/elearnningcontent/2026_2027/Secondry/Secondry3/Term1/StudentBook/Biology_ARABIC_Sec3.pdf',
+      note: 'رابط ملف PDF الذي أرسله المستخدم؛ لم نتمكن من فحص استجابة خادم الملفات آليًا.'
     }
   };
   const commonSubjects = [

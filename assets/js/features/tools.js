@@ -1,5 +1,5 @@
 (function(global){
-  function init({state,save,uid,today,addDays,escapeHtml:esc,showAlert,getAI,errMsg,getPlanText,renderSched,renderNotes,renderWords,renderPrac,renderMist,fillSubjects}) {
+  function init({state,save,uid,today,addDays,escapeHtml:esc,showAlert,getAI,errMsg,getPlanText,renderSched,renderNotes,renderWords,renderPrac,renderMist,fillSubjects,refreshPreferences}) {
     const $=s=>document.querySelector(s);
     const S=state;
     const ai=()=>getAI();
@@ -50,7 +50,7 @@
     $('#bkGo').onclick=async()=>{
       try{downloadFile('study-backup.json',JSON.stringify(S,null,2),'application/json;charset=utf-8');$('#bkSt').textContent='تم تنزيل النسخة الاحتياطية'}catch(e){$('#bkSt').textContent='مقدرتش أحفظ الملف'}};
     $('#bkIn').onchange=async e=>{const f=e.target.files[0];if(!f)return;
-      try{const d=JSON.parse(await f.text());if(!d||typeof d!=='object'||Array.isArray(d))throw 0;const arrayKeys=['ev','notes','words','prac','mist'];if(arrayKeys.some(k=>k in d&&!Array.isArray(d[k])))throw 0;if('track' in d&&!['sci','math','lit'].includes(d.track))throw 0;const allowed=['ev','notes','words','track','prac','goal','mist','focus','courseDone','courseWords','courseWriting','courseExamChecks','theme','app','me','color'];if(Object.keys(d).some(k=>!allowed.includes(k)))throw 0;Object.assign(S,d);save();renderSched();renderNotes();renderWords();renderPrac();renderMist();pmShow();fillSubjects();$('#bkSt').textContent='اترجعت بياناتك'}
+      try{const d=JSON.parse(await f.text());if(!d||typeof d!=='object'||Array.isArray(d))throw 0;const arrayKeys=['ev','notes','words','prac','mist'];if(arrayKeys.some(k=>k in d&&!Array.isArray(d[k])))throw 0;if('track' in d&&!['sci','math','lit'].includes(d.track))throw 0;const allowed=['ev','notes','words','track','prac','goal','mist','focus','courseDone','courseWords','courseWriting','courseExamChecks','theme','app','me','color'];if(Object.keys(d).some(k=>!allowed.includes(k)))throw 0;Object.assign(S,d);save();renderSched();renderNotes();renderWords();renderPrac();renderMist();pmShow();fillSubjects();if(refreshPreferences)refreshPreferences();$('#bkSt').textContent='اترجعت بياناتك'}
       catch(x){$('#bkSt').textContent='الملف ده مش نسخة صالحة'}};
     
     

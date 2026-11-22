@@ -19,6 +19,7 @@ try {
   const mistakesResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/mistakes.js');
   const toolsResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/tools.js');
   const englishCourseResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/english-course.js');
+  const englishCoachResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/english-coach.js');
   assert.equal(cssResponse.status(), 200, 'External stylesheet must be served');
   assert.equal(jsResponse.status(), 200, 'External application script must be served');
   assert.equal(storageResponse.status(), 200, 'Storage module must be served');
@@ -30,6 +31,7 @@ try {
   assert.equal(mistakesResponse.status(), 200, 'Mistakes module must be served');
   assert.equal(toolsResponse.status(), 200, 'Tools module must be served');
   assert.equal(englishCourseResponse.status(), 200, 'English course module must be served');
+  assert.equal(englishCoachResponse.status(), 200, 'English coach module must be served');
   const scriptOrder = await page.locator('script[src]').evaluateAll(nodes => nodes.map(node => node.getAttribute('src')));
   assert.ok(scriptOrder.indexOf('./assets/js/core/storage.js') < scriptOrder.indexOf('./assets/js/core/navigation.js'), 'Storage must load before navigation');
   assert.ok(scriptOrder.indexOf('./assets/js/core/navigation.js') < scriptOrder.indexOf('./assets/js/features/schedule.js'), 'Navigation must load before feature modules');
@@ -39,13 +41,15 @@ try {
   assert.ok(scriptOrder.indexOf('./assets/js/features/practice.js') < scriptOrder.indexOf('./assets/js/features/mistakes.js'), 'Practice must load before mistakes feature');
   assert.ok(scriptOrder.indexOf('./assets/js/features/mistakes.js') < scriptOrder.indexOf('./assets/js/features/tools.js'), 'Mistakes must load before tools feature');
   assert.ok(scriptOrder.indexOf('./assets/js/features/tools.js') < scriptOrder.indexOf('./assets/js/features/english-course.js'), 'Tools must load before English course feature');
-  assert.ok(scriptOrder.indexOf('./assets/js/features/english-course.js') < scriptOrder.indexOf('./assets/js/app.js'), 'English course must load before app bootstrap');
+  assert.ok(scriptOrder.indexOf('./assets/js/features/english-course.js') < scriptOrder.indexOf('./assets/js/features/english-coach.js'), 'English course must load before English coach feature');
+  assert.ok(scriptOrder.indexOf('./assets/js/features/english-coach.js') < scriptOrder.indexOf('./assets/js/app.js'), 'English coach must load before app bootstrap');
   assert.equal(await page.evaluate(() => typeof window.StudyNotes?.init), 'function', 'Notes module must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.StudyWords?.init), 'function', 'Words module must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.StudyPractice?.init), 'function', 'Practice module must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.StudyMistakes?.init), 'function', 'Mistakes module must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.StudyTools?.init), 'function', 'Tools module must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.StudyEnglishCourse?.init), 'function', 'English course module must expose its initializer');
+  assert.equal(await page.evaluate(() => typeof window.StudyEnglishCoach?.init), 'function', 'English coach module must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.StudySchedule?.init), 'function', 'Schedule module must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.activateTab), 'function', 'Navigation module must expose tab activation');
   assert.match(await page.title(), /Ahmed Study Platform/);
@@ -119,6 +123,12 @@ try {
   await page.locator('#ecFlash').getByText('مقدم رعاية').waitFor({ state: 'visible' });
   await page.locator('#ecQuizStart').click();
   assert.equal(await page.locator('#ecQuizBox .course-question').count(), 5, 'English course quiz should generate five questions');
+
+  // English conversation helper should show a clear static-host AI fallback.
+  await page.locator('[data-tab="chat"]').click();
+  await page.locator('#cIn').fill('Hello, how are you?');
+  await page.locator('#cSend').click();
+  await page.locator('#cSt').getByText('مش متاحة هنا').waitFor({ state: 'visible' });
 
   // Practice tracking should validate answers, persist a valid session, and update the weekly goal.
   await page.locator('[data-tab="prac"]').click();

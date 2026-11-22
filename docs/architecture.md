@@ -10,6 +10,7 @@
 - `assets/js/features/words.js`: vocabulary entry, AI-assisted translation, flashcard review, spaced-repetition levels, and importing vocabulary from the English helper.
 - `assets/js/features/practice.js`: practice records, subject accuracy statistics, weekly question goals, AI question generation, and AI weekly-plan suggestions.
 - `assets/js/features/mistakes.js`: mistake notebook, retry/correct actions, review scheduling, and completion tracking.
+- `assets/js/features/tools.js`: exam generation and grading, lesson explanation, focus timer, revision-sheet export, local backup/restore, and appearance personalization.
 - `assets/js/app.js`: browser application bootstrap and remaining feature logic.
 - `manifest.webmanifest`: PWA metadata.
 - `sw.js`: service-worker cache strategy.
@@ -39,6 +40,7 @@ There is no account system, cloud database, or server-side AI integration yet. N
 - `features/words.js`: vocabulary management and flashcard review (extracted).
 - `features/practice.js`: practice tracking, progress statistics, and study-plan suggestions (extracted).
 - `features/mistakes.js`: mistake notebook and spaced review (extracted).
+- `features/tools.js`: study tools and personalization (extracted).
 - `features/tools.js`: remaining tool behavior.
 - `app.js`: bootstrap and orchestration.
 

@@ -9,7 +9,11 @@
       year: '2026/2027',
       term: 'الفصل الدراسي الأول',
       url: 'https://elearnningcontent.blob.core.windows.net/elearnningcontent/2026_2027/Secondry/Secondry3/Term1/StudentBook/Arabic_language_Sec3.pdf',
-      note: 'رابط ملف PDF الذي أرسله المستخدم؛ لم نتمكن من فحص استجابة خادم الملفات آليًا.'
+      note: 'رابط ملف PDF الذي أرسله المستخدم؛ لم نتمكن من فحص استجابة خادم الملفات آليًا.',
+      supplementaryBooks: [{
+        title: 'كتاب اللغة العربية — القصة — الفصل الدراسي الأول',
+        url: 'https://elearnningcontent.blob.core.windows.net/elearnningcontent/2026_2027/Secondry/Secondry3/Term1/StudentBook/Arabic_language_Story_Sec3.pdf'
+      }]
     },
     'الكيمياء': {
       title: 'كتاب الكيمياء باللغة العربية — الفصل الدراسي الأول',
@@ -140,6 +144,15 @@
         '<div class="ministry-book-actions">' +
         '<a class="p ministry-open-link" href="' + book.url + '" target="_blank" rel="noopener">عرض الكتاب PDF <span aria-hidden="true">↗</span></a>' +
         '<a class="s ministry-open-link" href="' + book.url + '" target="_blank" rel="noopener" download>تحميل PDF <span aria-hidden="true">↓</span></a></div>' +
+        (book.supplementaryBooks || []).map(extra =>
+          '<div class="ministry-book-row"><div class="ministry-book-cover" aria-hidden="true">📖</div>' +
+          '<div class="ministry-book-info"><b>' + extra.title + '</b>' +
+          '<small>الصف الثالث الثانوي • 2026/2027 • الفصل الدراسي الأول</small>' +
+          '<span class="ministry-source-status">ملف PDF مباشر — رابط مقدم للمكتبة</span></div></div>' +
+          '<div class="ministry-book-actions">' +
+          '<a class="p ministry-open-link" href="' + extra.url + '" target="_blank" rel="noopener">عرض القصة PDF <span aria-hidden="true">↗</span></a>' +
+          '<a class="s ministry-open-link" href="' + extra.url + '" target="_blank" rel="noopener" download>تحميل القصة PDF <span aria-hidden="true">↓</span></a></div>'
+        ).join('') +
         '<p class="hint">' + book.note + '</p>'
       : '<div class="ministry-book-row"><div class="ministry-book-cover" aria-hidden="true">📘</div>' +
         '<div class="ministry-book-info"><b>كتاب الوزارة الرسمي</b>' +

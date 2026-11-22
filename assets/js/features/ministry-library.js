@@ -2,6 +2,16 @@
 (function () {
   const $ = selector => document.querySelector(selector);
   const MINISTRY_LIBRARY = 'https://studentbooks.moe.gov.eg/Books';
+  // Direct textbook links are added only when supplied or verified for the exact grade/year.
+  const directBooks = {
+    'اللغة العربية': {
+      title: 'كتاب اللغة العربية — الفصل الدراسي الأول',
+      year: '2026/2027',
+      term: 'الفصل الدراسي الأول',
+      url: 'https://elearnningcontent.blob.core.windows.net/elearnningcontent/2026_2027/Secondry/Secondry3/Term1/StudentBook/Arabic_language_Sec3.pdf',
+      note: 'رابط ملف PDF الذي أرسله المستخدم؛ لم نتمكن من فحص استجابة خادم الملفات آليًا.'
+    }
+  };
   const commonSubjects = [
     { name: 'اللغة الأجنبية الثانية', icon: '🌐' },
     { name: 'التربية الدينية', icon: '🕌' },
@@ -72,19 +82,29 @@
     }
 
     const isCommon = commonSubjects.some(item => item.name === selected);
+    const book = directBooks[current.name];
+    const bookContent = book
+      ? '<div class="ministry-book-row"><div class="ministry-book-cover" aria-hidden="true">📕</div>' +
+        '<div class="ministry-book-info"><b>' + book.title + '</b>' +
+        '<small>الصف الثالث الثانوي • ' + book.year + ' • ' + book.term + '</small>' +
+        '<span class="ministry-source-status">ملف PDF مباشر — رابط مقدم للمكتبة</span></div></div>' +
+        '<div class="ministry-book-actions">' +
+        '<a class="p ministry-open-link" href="' + book.url + '" target="_blank" rel="noopener">عرض الكتاب PDF <span aria-hidden="true">↗</span></a>' +
+        '<a class="s ministry-open-link" href="' + book.url + '" target="_blank" rel="noopener" download>تحميل PDF <span aria-hidden="true">↓</span></a></div>' +
+        '<p class="hint">' + book.note + '</p>'
+      : '<div class="ministry-book-row"><div class="ministry-book-cover" aria-hidden="true">📘</div>' +
+        '<div class="ministry-book-info"><b>كتاب الوزارة الرسمي</b>' +
+        '<small>العام الدراسي 2026/2027 — لم يضف رابط PDF مباشر لهذه المادة بعد</small>' +
+        '<span class="ministry-source-status">المصدر المرجعي: بوابة وزارة التربية والتعليم</span></div></div>' +
+        '<div class="ministry-book-actions"><a class="p ministry-open-link" href="' + MINISTRY_LIBRARY +
+        '" target="_blank" rel="noopener">افتح مكتبة الكتب الرسمية <span aria-hidden="true">↗</span></a></div>' +
+        '<p class="hint">لم نضف رابط PDF تخمينيًا. أضف رابط الكتاب الرسمي لهذه المادة ليظهر هنا مثل كتاب اللغة العربية.</p>';
+
     detail.innerHTML =
       '<div class="ministry-detail-heading"><div><span class="eyebrow">OFFICIAL MINISTRY BOOK</span><h2>' + current.name +
       '</h2><p>الصف الثالث الثانوي • ' + trackLabels[track] + (isCommon ? ' • مادة عامة' : ' • مادة تخصصية') + '</p></div>' +
       '<span class="ministry-detail-icon" aria-hidden="true">' + current.icon + '</span></div>' +
-      '<div class="ministry-book-row"><div class="ministry-book-cover" aria-hidden="true">📘</div>' +
-      '<div class="ministry-book-info"><b>كتاب الوزارة الرسمي</b>' +
-      '<small>العام الدراسي 2026/2027 — عند توفر النسخة على مكتبة الوزارة</small>' +
-      '<span class="ministry-source-status">المصدر: وزارة التربية والتعليم</span></div></div>' +
-      '<div class="ministry-book-actions"><a class="p ministry-open-link" href="' + MINISTRY_LIBRARY +
-      '" target="_blank" rel="noopener">افتح مكتبة الكتب الرسمية واختر الكتاب <span aria-hidden="true">↗</span></a></div>' +
-      '<ol class="ministry-book-steps"><li>اختر المرحلة الثانوية.</li><li>اختر الصف الثالث الثانوي والعام الدراسي 2026/2027.</li>' +
-      '<li>اختر مادة ' + current.name + ' ثم افتح الكتاب أو حمّله إذا أتاح الموقع ذلك.</li></ol>' +
-      '<p class="hint">هذا رابط بوابة الكتب الرسمية وليس رابط PDF مباشرًا. لم نعرض قارئًا داخليًا أو زر تنزيل مستقلًا لأن رابط ملف الكتاب لم يُتحقق منه بعد.</p>';
+      bookContent;
   }
 
   function init() {

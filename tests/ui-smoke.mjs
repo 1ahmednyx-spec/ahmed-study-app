@@ -60,7 +60,12 @@ try {
   const mobile = await page.evaluate(() => ({
     viewport: document.documentElement.clientWidth,
     document: document.documentElement.scrollWidth,
-    nav: getComputedStyle(document.querySelector('.tabs')).overflowX
+    nav: getComputedStyle(document.querySelector('.tabs')).overflowX,
+    offenders: [...document.querySelectorAll('body *')].filter(el => {
+      if (el.closest('[hidden]')) return false;
+      const r = el.getBoundingClientRect();
+      return r.width > 0 && (r.right > document.documentElement.clientWidth + 2 || r.left < -2);
+    }).slice(0, 12).map(el => ({tag:el.tagName,id:el.id,className:typeof el.className==='string'?el.className:'',left:Math.round(el.getBoundingClientRect().left),right:Math.round(el.getBoundingClientRect().right),width:Math.round(el.getBoundingClientRect().width)}))
   }));
   assert.ok(mobile.document <= mobile.viewport + 1, `Mobile page overflow: ${JSON.stringify(mobile)}`);
   assert.ok(['auto', 'scroll'].includes(mobile.nav), `Mobile navigation should scroll horizontally: ${mobile.nav}`);

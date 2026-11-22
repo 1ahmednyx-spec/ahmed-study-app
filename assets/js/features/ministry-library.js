@@ -2,6 +2,84 @@
 (function () {
   const $ = selector => document.querySelector(selector);
   const MINISTRY_LIBRARY = 'https://studentbooks.moe.gov.eg/Books';
+  // Direct textbook links are added only when supplied or verified for the exact grade/year.
+  const directBooks = {
+    'اللغة العربية': {
+      title: 'كتاب اللغة العربية — الفصل الدراسي الأول',
+      year: '2026/2027',
+      term: 'الفصل الدراسي الأول',
+      url: 'https://elearnningcontent.blob.core.windows.net/elearnningcontent/2026_2027/Secondry/Secondry3/Term1/StudentBook/Arabic_language_Sec3.pdf',
+      note: 'رابط ملف PDF الذي أرسله المستخدم؛ لم نتمكن من فحص استجابة خادم الملفات آليًا.',
+      supplementaryBooks: [
+        {
+          title: 'كتاب اللغة العربية — القصة — الفصل الدراسي الأول',
+          actionLabel: 'القصة',
+          url: 'https://elearnningcontent.blob.core.windows.net/elearnningcontent/2026_2027/Secondry/Secondry3/Term1/StudentBook/Arabic_language_Story_Sec3.pdf'
+        },
+        {
+          title: 'كتاب اللغة العربية — القواعد الأساسية للنحو والصرف — الفصل الدراسي الأول',
+          actionLabel: 'القواعد',
+          url: 'https://elearnningcontent.blob.core.windows.net/elearnningcontent/2026_2027/Secondry/Secondry3/Term1/StudentBook/Arabic_language_NAHO_Sec3.pdf'
+        }
+      ]
+    },
+    'الكيمياء': {
+      title: 'كتاب الكيمياء باللغة العربية — الفصل الدراسي الأول',
+      year: '2026/2027',
+      term: 'الفصل الدراسي الأول',
+      url: 'https://elearnningcontent.blob.core.windows.net/elearnningcontent/2026_2027/Secondry/Secondry3/Term1/StudentBook/Chemistry_Arabic_Sec3.pdf',
+      note: 'رابط ملف PDF الذي أرسله المستخدم؛ لم نتمكن من فحص استجابة خادم الملفات آليًا.'
+    },
+    'اللغة الأجنبية الأولى': {
+      title: 'كتاب اللغة الإنجليزية — الفصل الدراسي الأول',
+      year: '2026/2027',
+      term: 'الفصل الدراسي الأول',
+      url: 'https://elearnningcontent.blob.core.windows.net/elearnningcontent/2026_2027/Secondry/Secondry3/Term1/StudentBook/English_language_Sec3_tr1.pdf',
+      note: 'رابط ملف PDF الذي أرسله المستخدم؛ لم نتمكن من فحص استجابة خادم الملفات آليًا.'
+    },
+    'اللغة الأجنبية الثانية': {
+      title: 'كتاب اللغة الفرنسية — الفصل الدراسي الأول',
+      year: '2026/2027',
+      term: 'الفصل الدراسي الأول',
+      url: 'https://elearnningcontent.blob.core.windows.net/elearnningcontent/2026_2027/Secondry/Secondry3/Term1/StudentBook/Premiere_langue_francaise_SB_Sec3.pdf',
+      note: 'رابط ملف PDF الذي أرسله المستخدم؛ لم نتمكن من فحص استجابة خادم الملفات آليًا.'
+    },
+    'الأحياء': {
+      title: 'كتاب الأحياء باللغة العربية — الفصل الدراسي الأول',
+      year: '2026/2027',
+      term: 'الفصل الدراسي الأول',
+      url: 'https://elearnningcontent.blob.core.windows.net/elearnningcontent/2026_2027/Secondry/Secondry3/Term1/StudentBook/Biology_ARABIC_Sec3.pdf',
+      note: 'رابط ملف PDF الذي أرسله المستخدم؛ لم نتمكن من فحص استجابة خادم الملفات آليًا.'
+    },
+    'الفيزياء': {
+      title: 'كتاب الفيزياء باللغة العربية — الفصل الدراسي الأول',
+      year: '2026/2027',
+      term: 'الفصل الدراسي الأول',
+      url: 'https://elearnningcontent.blob.core.windows.net/elearnningcontent/2026_2027/Secondry/Secondry3/Term1/StudentBook/Physics_Arabic_Sec3.pdf',
+      note: 'رابط ملف PDF الذي أرسله المستخدم؛ لم نتمكن من فحص استجابة خادم الملفات آليًا.'
+    },
+    'الرياضيات البحتة': {
+      title: 'كتاب الرياضيات البحتة باللغة العربية — الفصل الدراسي الأول',
+      year: '2026/2027',
+      term: 'الفصل الدراسي الأول',
+      url: 'https://elearnningcontent.blob.core.windows.net/elearnningcontent/2026_2027/Secondry/Secondry3/Term1/StudentBook/pure_Mathematics_ARABIC_Sec3.pdf',
+      note: 'رابط ملف PDF الذي أرسله المستخدم؛ لم نتمكن من فحص استجابة خادم الملفات آليًا.'
+    },
+    'الرياضيات التطبيقية': {
+      title: 'كتاب الرياضيات التطبيقية باللغة العربية — الفصل الدراسي الأول',
+      year: '2026/2027',
+      term: 'الفصل الدراسي الأول',
+      url: 'https://elearnningcontent.blob.core.windows.net/elearnningcontent/2026_2027/Secondry/Secondry3/Term1/StudentBook/applied_Mathematics_ARABIC_Sec3.pdf',
+      note: 'رابط ملف PDF الذي أرسله المستخدم؛ لم نتمكن من فحص استجابة خادم الملفات آليًا.'
+    },
+    'الإحصاء': {
+      title: 'كتاب الإحصاء باللغة العربية — الفصل الدراسي الأول',
+      year: '2026/2027',
+      term: 'الفصل الدراسي الأول',
+      url: 'https://elearnningcontent.blob.core.windows.net/elearnningcontent/2026_2027/Secondry/Secondry3/Term1/StudentBook/Statistics_Arabic_Sec3.pdf',
+      note: 'رابط ملف PDF الذي أرسله المستخدم؛ لم نتمكن من فحص استجابة خادم الملفات آليًا.'
+    }
+  };
   const commonSubjects = [
     { name: 'اللغة الأجنبية الثانية', icon: '🌐' },
     { name: 'التربية الدينية', icon: '🕌' },
@@ -72,19 +150,38 @@
     }
 
     const isCommon = commonSubjects.some(item => item.name === selected);
+    const book = directBooks[current.name];
+    const bookContent = book
+      ? '<div class="ministry-book-row"><div class="ministry-book-cover" aria-hidden="true">📕</div>' +
+        '<div class="ministry-book-info"><b>' + book.title + '</b>' +
+        '<small>الصف الثالث الثانوي • ' + book.year + ' • ' + book.term + '</small>' +
+        '<span class="ministry-source-status">ملف PDF مباشر — رابط مقدم للمكتبة</span></div></div>' +
+        '<div class="ministry-book-actions">' +
+        '<a class="p ministry-open-link" href="' + book.url + '" target="_blank" rel="noopener">عرض الكتاب PDF <span aria-hidden="true">↗</span></a>' +
+        '<a class="s ministry-open-link" href="' + book.url + '" target="_blank" rel="noopener" download>تحميل PDF <span aria-hidden="true">↓</span></a></div>' +
+        (book.supplementaryBooks || []).map(extra =>
+          '<div class="ministry-book-row"><div class="ministry-book-cover" aria-hidden="true">📖</div>' +
+          '<div class="ministry-book-info"><b>' + extra.title + '</b>' +
+          '<small>الصف الثالث الثانوي • 2026/2027 • الفصل الدراسي الأول</small>' +
+          '<span class="ministry-source-status">ملف PDF مباشر — رابط مقدم للمكتبة</span></div></div>' +
+          '<div class="ministry-book-actions">' +
+          '<a class="p ministry-open-link" href="' + extra.url + '" target="_blank" rel="noopener">عرض ' + extra.actionLabel + ' PDF <span aria-hidden="true">↗</span></a>' +
+          '<a class="s ministry-open-link" href="' + extra.url + '" target="_blank" rel="noopener" download>تحميل ' + extra.actionLabel + ' PDF <span aria-hidden="true">↓</span></a></div>'
+        ).join('') +
+        '<p class="hint">' + book.note + '</p>'
+      : '<div class="ministry-book-row"><div class="ministry-book-cover" aria-hidden="true">📘</div>' +
+        '<div class="ministry-book-info"><b>كتاب الوزارة الرسمي</b>' +
+        '<small>العام الدراسي 2026/2027 — لم يضف رابط PDF مباشر لهذه المادة بعد</small>' +
+        '<span class="ministry-source-status">المصدر المرجعي: بوابة وزارة التربية والتعليم</span></div></div>' +
+        '<div class="ministry-book-actions"><a class="p ministry-open-link" href="' + MINISTRY_LIBRARY +
+        '" target="_blank" rel="noopener">افتح مكتبة الكتب الرسمية <span aria-hidden="true">↗</span></a></div>' +
+        '<p class="hint">لم نضف رابط PDF تخمينيًا. أضف رابط الكتاب الرسمي لهذه المادة ليظهر هنا مثل كتاب اللغة العربية.</p>';
+
     detail.innerHTML =
       '<div class="ministry-detail-heading"><div><span class="eyebrow">OFFICIAL MINISTRY BOOK</span><h2>' + current.name +
       '</h2><p>الصف الثالث الثانوي • ' + trackLabels[track] + (isCommon ? ' • مادة عامة' : ' • مادة تخصصية') + '</p></div>' +
       '<span class="ministry-detail-icon" aria-hidden="true">' + current.icon + '</span></div>' +
-      '<div class="ministry-book-row"><div class="ministry-book-cover" aria-hidden="true">📘</div>' +
-      '<div class="ministry-book-info"><b>كتاب الوزارة الرسمي</b>' +
-      '<small>العام الدراسي 2026/2027 — عند توفر النسخة على مكتبة الوزارة</small>' +
-      '<span class="ministry-source-status">المصدر: وزارة التربية والتعليم</span></div></div>' +
-      '<div class="ministry-book-actions"><a class="p ministry-open-link" href="' + MINISTRY_LIBRARY +
-      '" target="_blank" rel="noopener">افتح مكتبة الكتب الرسمية واختر الكتاب <span aria-hidden="true">↗</span></a></div>' +
-      '<ol class="ministry-book-steps"><li>اختر المرحلة الثانوية.</li><li>اختر الصف الثالث الثانوي والعام الدراسي 2026/2027.</li>' +
-      '<li>اختر مادة ' + current.name + ' ثم افتح الكتاب أو حمّله إذا أتاح الموقع ذلك.</li></ol>' +
-      '<p class="hint">هذا رابط بوابة الكتب الرسمية وليس رابط PDF مباشرًا. لم نعرض قارئًا داخليًا أو زر تنزيل مستقلًا لأن رابط ملف الكتاب لم يُتحقق منه بعد.</p>';
+      bookContent;
   }
 
   function init() {

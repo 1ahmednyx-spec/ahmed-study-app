@@ -96,7 +96,13 @@ try {
   assert.equal(await page.locator('#ministrySubjectGrid [data-ministry-subject="الجيولوجيا"]').count(), 0);
   await page.locator('#ministrySubjectGrid [data-ministry-subject="الفيزياء"]').click();
   await page.locator('#ministrySubjectDetail h2').getByText('الفيزياء').waitFor({ state: 'visible' });
-  assert.equal(await page.locator('#ministrySubjectDetail a').getAttribute('href'), 'https://studentbooks.moe.gov.eg/Books');
+  assert.equal(await page.getByRole('link', { name: 'عرض الكتاب PDF' }).getAttribute('href'), 'https://elearnningcontent.blob.core.windows.net/elearnningcontent/2026_2027/Secondry/Secondry3/Term1/StudentBook/Physics_Arabic_Sec3.pdf');
+  assert.equal(await page.getByRole('link', { name: 'تحميل PDF' }).getAttribute('href'), 'https://elearnningcontent.blob.core.windows.net/elearnningcontent/2026_2027/Secondry/Secondry3/Term1/StudentBook/Physics_Arabic_Sec3.pdf');
+  await page.locator('#ministrySubjectGrid [data-ministry-subject="اللغة العربية"]').click();
+  assert.equal(await page.getByRole('link', { name: 'عرض القصة PDF' }).getAttribute('href'), 'https://elearnningcontent.blob.core.windows.net/elearnningcontent/2026_2027/Secondry/Secondry3/Term1/StudentBook/Arabic_language_Story_Sec3.pdf');
+  assert.equal(await page.getByRole('link', { name: 'عرض القواعد PDF' }).getAttribute('href'), 'https://elearnningcontent.blob.core.windows.net/elearnningcontent/2026_2027/Secondry/Secondry3/Term1/StudentBook/Arabic_language_NAHO_Sec3.pdf');
+  await page.locator('#ministrySubjectGrid [data-ministry-subject="اللغة الأجنبية الثانية"]').click();
+  assert.equal(await page.getByRole('link', { name: 'عرض الكتاب PDF' }).getAttribute('href'), 'https://elearnningcontent.blob.core.windows.net/elearnningcontent/2026_2027/Secondry/Secondry3/Term1/StudentBook/Premiere_langue_francaise_SB_Sec3.pdf');
   await page.locator('#trk').selectOption('math');
   await page.locator('#ministrySubjectGrid [data-ministry-subject="الرياضيات"]').waitFor({ state: 'visible' });
   assert.equal(await page.locator('#ministrySubjectGrid [data-ministry-subject="الأحياء"]').count(), 0);

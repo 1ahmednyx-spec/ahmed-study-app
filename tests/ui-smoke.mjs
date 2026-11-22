@@ -25,7 +25,7 @@ try {
   const serviceWorkerResponse = await page.request.get('http://127.0.0.1:4173/sw.js');
   assert.equal(serviceWorkerResponse.status(), 200, 'Service worker must be served');
   const serviceWorkerSource = await serviceWorkerResponse.text();
-  assert.match(serviceWorkerSource, /ahmed-study-platform-v16/, 'Service worker cache must be versioned');
+  assert.match(serviceWorkerSource, /ahmed-study-platform-v17/, 'Service worker cache must be versioned');
   for (const modulePath of ['./assets/js/features/preferences.js', './assets/js/features/english-course.js', './assets/js/features/ministry-library.js', './assets/js/features/english-coach.js']) {
     assert.ok(serviceWorkerSource.includes(modulePath), `Service worker must precache ${modulePath}`);
   }

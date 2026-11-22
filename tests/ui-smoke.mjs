@@ -21,6 +21,14 @@ try {
   const englishCourseResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/english-course.js');
   const englishCoachResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/english-coach.js');
   const preferencesResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/preferences.js');
+  const serviceWorkerResponse = await page.request.get('http://127.0.0.1:4173/sw.js');
+  assert.equal(serviceWorkerResponse.status(), 200, 'Service worker must be served');
+  const serviceWorkerSource = await serviceWorkerResponse.text();
+  assert.match(serviceWorkerSource, /ahmed-study-platform-v15/, 'Service worker cache must be versioned');
+  for (const modulePath of ['./assets/js/features/preferences.js', './assets/js/features/english-course.js', './assets/js/features/english-coach.js']) {
+    assert.ok(serviceWorkerSource.includes(modulePath), `Service worker must precache ${modulePath}`);
+  }
+
   assert.equal(cssResponse.status(), 200, 'External stylesheet must be served');
   assert.equal(jsResponse.status(), 200, 'External application script must be served');
   assert.equal(storageResponse.status(), 200, 'Storage module must be served');
@@ -84,6 +92,17 @@ try {
   await page.locator('#evForm button[type="submit"]').click();
   await page.locator('#upList').getByText('اختبار واجهة المنصة').waitFor({ state: 'visible' });
 
+  // Schedule completion, undo, deletion, and persistence should all work.
+  await page.locator('#upList [data-done]').check();
+  await page.locator('#doneList').getByText('اختبار واجهة المنصة').waitFor({ state: 'visible' });
+  await page.reload({ waitUntil: 'domcontentloaded' });
+  await page.locator('[data-tab="sched"]').click();
+  await page.locator('#doneList').getByText('اختبار واجهة المنصة').waitFor({ state: 'visible' });
+  await page.locator('#doneList [data-done]').uncheck();
+  await page.locator('#upList').getByText('اختبار واجهة المنصة').waitFor({ state: 'visible' });
+  await page.locator('#upList [data-del]').click();
+  await page.locator('#upList').getByText('ضيف أول موعد مذاكرة من الأعلى').waitFor({ state: 'visible' });
+
   // Notes should be saved locally without requiring an AI provider.
   await page.locator('[data-tab="notes"]').click();
   await page.locator('#nT').fill('ملاحظة اختبارية');
@@ -96,6 +115,11 @@ try {
   await page.locator('#nT').fill('ملاحظة اختبارية ثانية');
   await page.locator('#nB').fill('هذه فقرة ثانية لاختبار أن حفظ الملاحظات يعمل بعد حذف الملاحظة الأولى.');
   await page.locator('#noteForm button[type="submit"]').click();
+  await page.locator('#noteList').getByText('ملاحظة اختبارية ثانية').waitFor({ state: 'visible' });
+
+  // A saved note should survive a full page reload.
+  await page.reload({ waitUntil: 'domcontentloaded' });
+  await page.locator('[data-tab="notes"]').click();
   await page.locator('#noteList').getByText('ملاحظة اختبارية ثانية').waitFor({ state: 'visible' });
 
   // Vocabulary words should support manual entry, flashcard reveal, spaced review, deletion, and AI-chat import.
@@ -186,6 +210,48 @@ try {
   });
   await page.locator('#bkSt').getByText('مش نسخة صالحة').waitFor({ state: 'visible' });
   assert.equal(await page.locator('#mList').getByText('خطأ ثانٍ لاختبار استعادة النسخة الاحتياطية').count(), 1);
+
+  // Backup export must produce a readable JSON snapshot of current study data.
+  const [backupDownload] = await Promise.all([
+    page.waitForEvent('download'),
+    page.locator('#bkGo').click()
+  ]);
+  assert.equal(backupDownload.suggestedFilename(), 'study-backup.json');
+  const backupStream = await backupDownload.createReadStream();
+  const backupChunks = [];
+  for await (const chunk of backupStream) backupChunks.push(chunk);
+  const exportedBackup = JSON.parse(Buffer.concat(backupChunks).toString('utf8'));
+  assert.ok(Array.isArray(exportedBackup.ev));
+  assert.ok(exportedBackup.mist.some(item => item.q === 'خطأ ثانٍ لاختبار استعادة النسخة الاحتياطية'));
+
+  // A valid backup must restore schedule, notes, study track, and appearance immediately.
+  const validBackup = {
+    ev: [{ id: 'restored-event', title: 'موعد مستعاد من النسخة', d: '2027-01-16', t: '10:00', lead: 10, fired: false, done: false }],
+    notes: [{ id: 'restored-note', title: 'ملاحظة مستعادة', sub: 'فيزياء', sum: 'ملخص تم استعادته بنجاح.' }],
+    words: [], track: 'math', prac: [], goal: 40, mist: [], focus: {},
+    courseDone: {}, courseWords: [], courseWriting: [], courseExamChecks: {},
+    theme: 'dark', app: 'Backup Restored', me: 'Restored Student', color: '#4F46E5'
+  };
+  await page.locator('#bkIn').setInputFiles({
+    name: 'valid-backup.json',
+    mimeType: 'application/json',
+    buffer: Buffer.from(JSON.stringify(validBackup))
+  });
+  await page.locator('#bkSt').getByText('اترجعت بياناتك').waitFor({ state: 'visible' });
+  await page.locator('#upList').getByText('موعد مستعاد من النسخة').waitFor({ state: 'visible' });
+  await page.locator('#noteList').getByText('ملاحظة مستعادة').waitFor({ state: 'visible' });
+  assert.equal(await page.locator('#trk').inputValue(), 'math');
+  assert.equal(await page.locator('#brandName').textContent(), 'Backup Restored');
+  assert.equal(await page.locator('#hi').textContent(), 'أهلًا يا Restored Student');
+  assert.equal(await page.locator('html').getAttribute('data-theme'), 'dark');
+  assert.equal(await page.evaluate(() => document.documentElement.style.getPropertyValue('--brand')), '#4F46E5');
+  await page.reload({ waitUntil: 'domcontentloaded' });
+  await page.locator('[data-tab="tools"]').click();
+  assert.equal(await page.locator('#brandName').textContent(), 'Backup Restored');
+  await page.locator('[data-tab="sched"]').click();
+  await page.locator('#upList').getByText('موعد مستعاد من النسخة').waitFor({ state: 'visible' });
+  await page.locator('[data-tab="notes"]').click();
+  await page.locator('#noteList').getByText('ملاحظة مستعادة').waitFor({ state: 'visible' });
 
   // Focus timer can start and cancel without corrupting the timer display.
   await page.locator('[data-tab="tools"]').click();

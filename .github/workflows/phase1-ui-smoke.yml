@@ -1,19 +1,21 @@
-name: Phase 1 UI smoke tests
+name: Study Platform browser smoke tests
 
 on:
   push:
     branches:
       - phase-1-ui-foundation
+      - phase-2-modular-foundation
   pull_request:
     branches:
       - main
+      - phase-1-ui-foundation
   workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: phase1-ui-smoke-${{ github.ref }}
+  group: study-platform-smoke-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:

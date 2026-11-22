@@ -14,18 +14,22 @@ try {
   const navigationResponse = await page.request.get('http://127.0.0.1:4173/assets/js/core/navigation.js');
   const scheduleResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/schedule.js');
   const notesResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/notes.js');
+  const wordsResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/words.js');
   assert.equal(cssResponse.status(), 200, 'External stylesheet must be served');
   assert.equal(jsResponse.status(), 200, 'External application script must be served');
   assert.equal(storageResponse.status(), 200, 'Storage module must be served');
   assert.equal(navigationResponse.status(), 200, 'Navigation module must be served');
   assert.equal(scheduleResponse.status(), 200, 'Schedule module must be served');
   assert.equal(notesResponse.status(), 200, 'Notes module must be served');
+  assert.equal(wordsResponse.status(), 200, 'Words module must be served');
   const scriptOrder = await page.locator('script[src]').evaluateAll(nodes => nodes.map(node => node.getAttribute('src')));
   assert.ok(scriptOrder.indexOf('./assets/js/core/storage.js') < scriptOrder.indexOf('./assets/js/core/navigation.js'), 'Storage must load before navigation');
   assert.ok(scriptOrder.indexOf('./assets/js/core/navigation.js') < scriptOrder.indexOf('./assets/js/features/schedule.js'), 'Navigation must load before feature modules');
   assert.ok(scriptOrder.indexOf('./assets/js/features/schedule.js') < scriptOrder.indexOf('./assets/js/features/notes.js'), 'Schedule must load before notes feature');
-  assert.ok(scriptOrder.indexOf('./assets/js/features/notes.js') < scriptOrder.indexOf('./assets/js/app.js'), 'Notes must load before app bootstrap');
+  assert.ok(scriptOrder.indexOf('./assets/js/features/notes.js') < scriptOrder.indexOf('./assets/js/features/words.js'), 'Notes must load before words feature');
+  assert.ok(scriptOrder.indexOf('./assets/js/features/words.js') < scriptOrder.indexOf('./assets/js/app.js'), 'Words must load before app bootstrap');
   assert.equal(await page.evaluate(() => typeof window.StudyNotes?.init), 'function', 'Notes module must expose its initializer');
+  assert.equal(await page.evaluate(() => typeof window.StudyWords?.init), 'function', 'Words module must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.StudySchedule?.init), 'function', 'Schedule module must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.activateTab), 'function', 'Navigation module must expose tab activation');
   assert.match(await page.title(), /Ahmed Study Platform/);
@@ -65,6 +69,28 @@ try {
   await page.locator('#nB').fill('هذه فقرة ثانية لاختبار أن حفظ الملاحظات يعمل بعد حذف الملاحظة الأولى.');
   await page.locator('#noteForm button[type="submit"]').click();
   await page.locator('#noteList').getByText('ملاحظة اختبارية ثانية').waitFor({ state: 'visible' });
+
+  // Vocabulary words should support manual entry, flashcard reveal, spaced review, deletion, and AI-chat import.
+  await page.locator('[data-tab="english"]').click();
+  await page.locator('#wE').fill('resilient');
+  await page.locator('#wA').fill('مرن وقادر على التعافي');
+  await page.locator('#wForm button[type="submit"]').click();
+  await page.locator('#wList').getByText('resilient').waitFor({ state: 'visible' });
+  await page.locator('#card').click();
+  await page.locator('#card').getByText('مرن وقادر على التعافي').waitFor({ state: 'visible' });
+  await page.locator('#know').click();
+  assert.equal(await page.locator('#rev').isHidden(), true, 'Review buttons should hide after advancing');
+  await page.locator('#wList [data-wdel]').click();
+  await page.locator('#wList').getByText('ضيف كلمات جديدة من فوق').waitFor({ state: 'visible' });
+  await page.evaluate(() => {
+    const button = document.createElement('button');
+    button.dataset.addw = 'break down = يتعطل أو ينهار';
+    document.body.appendChild(button);
+    button.click();
+    button.remove();
+  });
+  await page.locator('#wList').getByText('break down').waitFor({ state: 'visible' });
+  await page.locator('#wList').getByText('يتعطل أو ينهار').waitFor({ state: 'visible' });
 
   // A newly recorded mistake must remain visible even when its spaced-review date is in the future.
   await page.locator('[data-tab="tools"]').click();

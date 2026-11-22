@@ -14,7 +14,7 @@
 - `assets/js/features/english-course.js`: English 2027 unit map, grammar reference, reader notes, vocabulary flashcards, writing practice, and curriculum quiz.
 - `assets/js/features/english-coach.js`: English conversation helper, response correction, translation, speech playback, and optional voice input.
 - `assets/js/features/preferences.js`: theme switching, brand name and greeting customization, and accent-color selection.
-- `assets/js/app.js`: browser application bootstrap and remaining feature logic.
+- `assets/js/app.js`: shared helpers, dependency wiring, initial rendering, and service-worker registration.
 - `manifest.webmanifest`: PWA metadata.
 - `sw.js`: service-worker cache strategy.
 - `tests/ui-smoke.mjs`: Playwright browser smoke tests.
@@ -38,4 +38,4 @@ There is no account system, cloud database, or server-side AI integration yet. N
 
 All feature modules listed in the current structure above have been extracted and are loaded before the bootstrap. `app.js` now contains only shared helpers, dependency wiring, initial rendering, and service-worker registration. Further changes should be driven by concrete maintenance needs rather than splitting the small bootstrap into artificial modules.
 
-These are migration targets, not modules already implemented.
+All modules above are implemented and loaded by `index.html` before the application bootstrap.

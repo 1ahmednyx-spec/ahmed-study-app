@@ -18,18 +18,6 @@ function left(ms){
 function showAlert(t){$('#alertText').textContent=t;$('#alert').style.display='block'}
 $('#closeAlert').onclick=()=>$('#alert').style.display='none';
 
-/* Main navigation */
-function activateTab(id){
-  const ids=['home','sched','notes','chat','prac','tools','eng','english2027'];
-  if(!ids.includes(id))return;
-  document.querySelectorAll('.tabs button').forEach(x=>x.setAttribute('aria-selected',String(x.dataset.tab===id)));
-  ids.forEach(sectionId=>{const section=$('#'+sectionId);if(section)section.hidden=sectionId!==id});
-  if(id==='english2027')ecRender();
-  const main=$('.main-content');if(main&&window.matchMedia('(max-width: 900px)').matches)main.scrollIntoView({behavior:'smooth',block:'start'});
-}
-document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>activateTab(b.dataset.tab));
-document.addEventListener('click',e=>{const target=e.target.closest('[data-go-tab]');if(target){e.preventDefault();activateTab(target.dataset.goTab)}});
-
 /* Schedule */
 function renderSched(){
   const now=Date.now(),sorted=[...S.ev].sort((a,b)=>at(a)-at(b));

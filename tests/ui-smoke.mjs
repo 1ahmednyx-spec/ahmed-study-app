@@ -238,7 +238,9 @@ try {
     buffer: Buffer.from(JSON.stringify(validBackup))
   });
   await page.locator('#bkSt').getByText('اترجعت بياناتك').waitFor({ state: 'visible' });
+  await page.locator('[data-tab="sched"]').click();
   await page.locator('#upList').getByText('موعد مستعاد من النسخة').waitFor({ state: 'visible' });
+  await page.locator('[data-tab="notes"]').click();
   await page.locator('#noteList').getByText('ملاحظة مستعادة').waitFor({ state: 'visible' });
   assert.equal(await page.locator('#trk').inputValue(), 'math');
   assert.equal(await page.locator('#brandName').textContent(), 'Backup Restored');
@@ -259,6 +261,8 @@ try {
   await page.locator('#pmT').waitFor({ state: 'visible' });
   await page.locator('#pmX').click();
   assert.equal(await page.locator('#pmT').textContent(), '25:00');
+  await page.locator('#themeToggle').click();
+  assert.equal(await page.locator('html').getAttribute('data-theme'), 'light');
 
   // Theme selection must persist across reloads.
   await page.locator('#themeToggle').click();

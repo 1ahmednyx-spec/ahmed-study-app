@@ -117,7 +117,7 @@ try {
   await page.locator('[data-tab="englishPath"]').click();
   assert.ok(await page.locator('#englishPath .english-path-lesson').count() >= 15, 'English learning path must render a substantial set of lessons');
   const firstPathLesson = page.locator('#englishPath .english-path-lesson').first();
-  await firstPathLesson.locator('summary').click();
+  await firstPathLesson.locator(':scope > summary').click();
   assert.ok(await firstPathLesson.getByText('أمثلة مع الترجمة').count() === 1, 'English lessons must include explained examples');
   await firstPathLesson.locator('input[type="radio"]').nth(1).check();
   await firstPathLesson.locator('[data-path-check]').click();

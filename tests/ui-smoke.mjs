@@ -31,6 +31,9 @@ try {
   assert.equal(practiceResponse.status(), 200, 'Practice module must be served');
   assert.equal(mistakesResponse.status(), 200, 'Mistakes module must be served');
   assert.equal(toolsResponse.status(), 200, 'Tools module must be served');
+  const toolsSource = await toolsResponse.text();
+  assert.match(toolsSource, /const ai=\(\)=>getAI\(\)/, 'Study tools must resolve the AI client when an action runs');
+  assert.doesNotMatch(toolsSource, /const S=state,\s*AI=getAI\(\)/, 'Study tools must not capture an unavailable AI client during startup');
   assert.equal(englishCourseResponse.status(), 200, 'English course module must be served');
   assert.equal(englishCoachResponse.status(), 200, 'English coach module must be served');
   assert.equal(preferencesResponse.status(), 200, 'Preferences module must be served');
@@ -52,6 +55,7 @@ try {
   assert.equal(await page.evaluate(() => typeof window.StudyMistakes?.init), 'function', 'Mistakes module must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.StudyTools?.init), 'function', 'Tools module must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.StudyEnglishCourse?.init), 'function', 'English course module must expose its initializer');
+  assert.equal(await page.evaluate(() => typeof window.ecRender), 'function', 'English course renderer must be available to tab navigation');
   assert.equal(await page.evaluate(() => typeof window.StudyEnglishCoach?.init), 'function', 'English coach module must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.StudyPreferences?.init), 'function', 'Preferences module must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.StudySchedule?.init), 'function', 'Schedule module must expose its initializer');

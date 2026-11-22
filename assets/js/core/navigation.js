@@ -1,6 +1,6 @@
 /* Main navigation */
 (function () {
-  const ids = ['home', 'sched', 'notes', 'chat', 'prac', 'tools', 'eng', 'english2027'];
+  const ids = ['home', 'sched', 'notes', 'chat', 'prac', 'tools', 'eng', 'english2027', 'arabic2027', 'chemistry2027', 'physics2027', 'math2027', 'biology2027'];
   const $ = selector => document.querySelector(selector);
 
   function activateTab(id) {

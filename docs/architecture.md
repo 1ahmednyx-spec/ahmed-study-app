@@ -8,6 +8,7 @@
 - `assets/js/features/schedule.js`: schedule rendering, event creation/completion/deletion, next-event display, and in-app reminders.
 - `assets/js/features/notes.js`: local lesson-note creation, rendering, deletion, and offline fallback summarization.
 - `assets/js/features/words.js`: vocabulary entry, AI-assisted translation, flashcard review, spaced-repetition levels, and importing vocabulary from the English helper.
+- `assets/js/features/practice.js`: practice records, subject accuracy statistics, weekly question goals, AI question generation, and AI weekly-plan suggestions.
 - `assets/js/app.js`: browser application bootstrap and remaining feature logic.
 - `manifest.webmanifest`: PWA metadata.
 - `sw.js`: service-worker cache strategy.
@@ -35,7 +36,8 @@ There is no account system, cloud database, or server-side AI integration yet. N
 - `features/schedule.js`: schedule and in-app reminder behavior (extracted).
 - `features/notes.js`: local notes and fallback summaries (extracted).
 - `features/words.js`: vocabulary management and flashcard review (extracted).
-- `features/practice.js` and `features/tools.js`: remaining feature behavior.
+- `features/practice.js`: practice tracking, progress statistics, and study-plan suggestions (extracted).
+- `features/tools.js`: remaining tool behavior.
 - `app.js`: bootstrap and orchestration.
 
 These are migration targets, not modules already implemented.

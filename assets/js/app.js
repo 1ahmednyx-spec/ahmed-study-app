@@ -1,8 +1,8 @@
-const $=s=>document.querySelector(s),K='study-v1';
-let S={ev:[],notes:[],words:[],track:'sci',prac:[],goal:100,mist:[],focus:{}};
-try{const r=localStorage.getItem(K);if(r)S=Object.assign(S,JSON.parse(r))}catch(e){}
+const $=s=>document.querySelector(s);
+const {load:loadStudyState,save:saveStudyState}=window.StudyStorage;
+let S=loadStudyState();
 S.courseDone=S.courseDone||{};S.courseWords=S.courseWords||[];S.courseWriting=S.courseWriting||[];S.courseExamChecks=S.courseExamChecks||{};
-const save=()=>{try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}};
+const save=()=>saveStudyState(S);
 const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
 const at=e=>new Date(e.d+'T'+e.t);

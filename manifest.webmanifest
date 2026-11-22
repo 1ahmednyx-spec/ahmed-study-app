@@ -1,18 +1,18 @@
 {
   "id": "./",
-  "name": "مساعد المذاكرة - أحمد عادل",
-  "short_name": "مساعد المذاكرة",
-  "description": "نظّم مواعيد المذاكرة والملخصات والكلمات والمراجعة.",
+  "name": "Ahmed Study Platform — منصة أحمد التعليمية",
+  "short_name": "Ahmed Study",
+  "description": "Learn. Practice. Achieve. منصة أحمد التعليمية للصف الثالث الثانوي.",
   "lang": "ar",
   "dir": "rtl",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "orientation": "portrait",
-  "background_color": "#EAF0F4",
-  "theme_color": "#0F5C6E",
+  "orientation": "any",
+  "background_color": "#F4F7FC",
+  "theme_color": "#080B14",
   "icons": [
-    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
   ]
 }

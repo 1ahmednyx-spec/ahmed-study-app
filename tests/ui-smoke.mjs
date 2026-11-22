@@ -17,6 +17,7 @@ try {
   const wordsResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/words.js');
   const practiceResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/practice.js');
   const mistakesResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/mistakes.js');
+  const toolsResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/tools.js');
   assert.equal(cssResponse.status(), 200, 'External stylesheet must be served');
   assert.equal(jsResponse.status(), 200, 'External application script must be served');
   assert.equal(storageResponse.status(), 200, 'Storage module must be served');
@@ -26,6 +27,7 @@ try {
   assert.equal(wordsResponse.status(), 200, 'Words module must be served');
   assert.equal(practiceResponse.status(), 200, 'Practice module must be served');
   assert.equal(mistakesResponse.status(), 200, 'Mistakes module must be served');
+  assert.equal(toolsResponse.status(), 200, 'Tools module must be served');
   const scriptOrder = await page.locator('script[src]').evaluateAll(nodes => nodes.map(node => node.getAttribute('src')));
   assert.ok(scriptOrder.indexOf('./assets/js/core/storage.js') < scriptOrder.indexOf('./assets/js/core/navigation.js'), 'Storage must load before navigation');
   assert.ok(scriptOrder.indexOf('./assets/js/core/navigation.js') < scriptOrder.indexOf('./assets/js/features/schedule.js'), 'Navigation must load before feature modules');
@@ -33,11 +35,13 @@ try {
   assert.ok(scriptOrder.indexOf('./assets/js/features/notes.js') < scriptOrder.indexOf('./assets/js/features/words.js'), 'Notes must load before words feature');
   assert.ok(scriptOrder.indexOf('./assets/js/features/words.js') < scriptOrder.indexOf('./assets/js/features/practice.js'), 'Words must load before practice feature');
   assert.ok(scriptOrder.indexOf('./assets/js/features/practice.js') < scriptOrder.indexOf('./assets/js/features/mistakes.js'), 'Practice must load before mistakes feature');
-  assert.ok(scriptOrder.indexOf('./assets/js/features/mistakes.js') < scriptOrder.indexOf('./assets/js/app.js'), 'Mistakes must load before app bootstrap');
+  assert.ok(scriptOrder.indexOf('./assets/js/features/mistakes.js') < scriptOrder.indexOf('./assets/js/features/tools.js'), 'Mistakes must load before tools feature');
+  assert.ok(scriptOrder.indexOf('./assets/js/features/tools.js') < scriptOrder.indexOf('./assets/js/app.js'), 'Tools must load before app bootstrap');
   assert.equal(await page.evaluate(() => typeof window.StudyNotes?.init), 'function', 'Notes module must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.StudyWords?.init), 'function', 'Words module must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.StudyPractice?.init), 'function', 'Practice module must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.StudyMistakes?.init), 'function', 'Mistakes module must expose its initializer');
+  assert.equal(await page.evaluate(() => typeof window.StudyTools?.init), 'function', 'Tools module must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.StudySchedule?.init), 'function', 'Schedule module must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.activateTab), 'function', 'Navigation module must expose tab activation');
   assert.match(await page.title(), /Ahmed Study Platform/);
@@ -148,6 +152,13 @@ try {
   });
   await page.locator('#bkSt').getByText('مش نسخة صالحة').waitFor({ state: 'visible' });
   assert.equal(await page.locator('#mList').getByText('خطأ ثانٍ لاختبار استعادة النسخة الاحتياطية').count(), 1);
+
+  // Focus timer can start and cancel without corrupting the timer display.
+  await page.locator('[data-tab="tools"]').click();
+  await page.locator('#pmGo').click();
+  await page.locator('#pmT').waitFor({ state: 'visible' });
+  await page.locator('#pmX').click();
+  assert.equal(await page.locator('#pmT').textContent(), '25:00');
 
   // Theme selection must persist across reloads.
   await page.locator('#themeToggle').click();

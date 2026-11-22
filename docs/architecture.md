@@ -12,6 +12,7 @@
 - `assets/js/features/mistakes.js`: mistake notebook, retry/correct actions, review scheduling, and completion tracking.
 - `assets/js/features/tools.js`: exam generation and grading, lesson explanation, focus timer, revision-sheet export, local backup/restore, and appearance personalization.
 - `assets/js/features/english-course.js`: English 2027 unit map, grammar reference, reader notes, vocabulary flashcards, writing practice, and curriculum quiz.
+- `assets/js/features/english-coach.js`: English conversation helper, response correction, translation, speech playback, and optional voice input.
 - `assets/js/app.js`: browser application bootstrap and remaining feature logic.
 - `manifest.webmanifest`: PWA metadata.
 - `sw.js`: service-worker cache strategy.
@@ -43,6 +44,7 @@ There is no account system, cloud database, or server-side AI integration yet. N
 - `features/mistakes.js`: mistake notebook and spaced review (extracted).
 - `features/tools.js`: study tools and personalization (extracted).
 - `features/english-course.js`: English 2027 course tracking and practice (extracted).
+- `features/english-coach.js`: English chat and voice interaction (extracted).
 - `features/tools.js`: remaining tool behavior.
 - `app.js`: bootstrap and orchestration.
 

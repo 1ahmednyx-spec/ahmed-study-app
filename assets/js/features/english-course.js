@@ -72,6 +72,7 @@
     $('#ecWritingSave').onclick=()=>{const prompt=$('#ecWritingPrompt').value.trim(),answer=$('#ecWritingAnswer').value.trim();if(!prompt||!answer){$('#ecWritingStatus').textContent='اكتب السؤال وإجابتك أولًا';return}S.courseWriting.push({kind:'practice',type:$('#ecWritingType').value,prompt,answer,date:new Date().toISOString()});save();$('#ecWritingStatus').textContent='تم الحفظ على هذا الجهاز';$('#ecWritingAnswer').value='';ecRenderWriting()};
     $('#ecQuizStart').onclick=()=>{ecQuizSet=[...EC_QUIZ].sort(()=>Math.random()-.5).slice(0,5);ecQuizAnswers={};$('#ecQuizBox').innerHTML=ecQuizSet.map((q,i)=>`<div class="course-question"><b>${i+1}. ${esc(q.q)}</b>${q.o.map((o,j)=>`<label><input type="radio" name="ecq${i}" value="${j}"> <span dir="ltr">${esc(o)}</span></label>`).join('')}<div class="course-feedback" id="ecqf${i}" hidden></div></div>`).join('')+'<button class="p" id="ecQuizSubmit" type="button">صحّح الاختبار</button><div id="ecQuizResult"></div>';$('#ecQuizSubmit').onclick=()=>{let score=0;ecQuizSet.forEach((q,i)=>{const v=document.querySelector(`input[name="ecq${i}"]:checked`),ok=v&&+v.value===q.a;if(ok)score++;const f=$('#ecqf'+i);f.hidden=false;f.textContent=(ok?'صحيح. ':'الإجابة الصحيحة: '+q.o[q.a]+'. ')+q.e});$('#ecQuizResult').innerHTML=`<div class="course-feedback"><b>نتيجتك: ${score} من ${ecQuizSet.length}</b></div>`}};
     
+    global.ecRender=ecRender;
     ecRender();
   }
   global.StudyEnglishCourse={init};

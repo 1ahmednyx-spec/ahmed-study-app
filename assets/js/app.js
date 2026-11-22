@@ -193,11 +193,7 @@ $('#plAdd').onclick=async()=>{const st=$('#plSt');if(!AI)return noAI(st);st.text
     arr.slice(0,14).forEach(x=>{if(x.title&&/^\d{4}-\d\d-\d\d$/.test(x.date)&&/^\d\d:\d\d$/.test(x.time))S.ev.push({id:uid(),title:String(x.title),d:x.date,t:x.time,lead:10,fired:false,done:false})});
     save();renderSched();st.textContent='اتضافت للجدول'}catch(e){st.textContent=errMsg(e.code)}};
 
-function renderMist(){const active=S.mist.filter(m=>m.box<2),due=active.filter(m=>m.due<=today()).length,done=S.mist.filter(m=>m.box>=2).length;
-  $('#mSt').textContent=`${S.mist.length} غلطة مسجلة، ${done} اتراجعت بنجاح، و${due} مستحقة للمراجعة الآن`;
-  $('#mList').innerHTML=active.length?active.map(m=>{const dueNow=m.due<=today();return `<div class="item"><div class="m"><div class="n">${esc(m.q)}</div><div class="d">${esc(m.s)} - ${esc(m.r)} · ${dueNow?'مستحقة للمراجعة':`موعد المراجعة: ${esc(m.due)}`}</div></div><button class="s" data-mok="${m.id}">جاوبتها صح</button><button class="s" data-mno="${m.id}">غلطت تاني</button></div>`}).join(''):'<div class="empty">لا توجد أخطاء للمراجعة حاليًا. سجّل أول نقطة تحتاج مراجعتها.</div>'}
-$('#mForm').onsubmit=e=>{e.preventDefault();const s=$('#mS').value;S.mist.push({id:uid(),s,q:$('#mQ').value.trim(),r:$('#mR').value,box:0,due:addDays(2)});save();e.target.reset();$('#mS').value=s;renderMist()};
-document.addEventListener('click',e=>{const ok=e.target.dataset.mok,no=e.target.dataset.mno;if(!ok&&!no)return;const m=S.mist.find(x=>x.id===(ok||no));if(!m)return;if(ok){m.box++;m.due=addDays(7)}else{m.box=0;m.due=addDays(2)}save();renderMist()});
+const {render:renderMist}=window.StudyMistakes.init({state:S,save,uid,today,addDays,escapeHtml:esc});
 
 $('#xGo').onclick=async()=>{const t=$('#xT').value.trim(),st=$('#xSt');
   if(!AI)return noAI(st);if(!t){st.textContent='اكتب الدرس الأول';return}

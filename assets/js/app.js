@@ -51,6 +51,7 @@ $('#trk').onchange=e=>{S.track=e.target.value;save();fillSubj()};
 window.StudyEnglishCoach.init({getAI:()=>AI,errMsg,escapeHtml:esc,showAlert});
 
 window.StudyEnglishCourse.init({state:S,save,escapeHtml:esc,showAlert});
+window.StudyMinistryLibrary.init();
 
 const {render:renderMist}=window.StudyMistakes.init({state:S,save,uid,today,addDays,escapeHtml:esc});
 

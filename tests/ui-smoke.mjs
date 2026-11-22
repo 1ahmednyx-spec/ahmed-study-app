@@ -96,7 +96,7 @@ try {
   assert.equal(await page.locator('#ministrySubjectGrid [data-ministry-subject="الجيولوجيا"]').count(), 0);
   await page.locator('#ministrySubjectGrid [data-ministry-subject="الفيزياء"]').click();
   await page.locator('#ministrySubjectDetail h2').getByText('الفيزياء').waitFor({ state: 'visible' });
-  assert.equal(await page.locator('#ministrySubjectDetail a').getAttribute('href'), 'https://ellibrary.moe.gov.eg/Books-sec/');
+  assert.equal(await page.locator('#ministrySubjectDetail a').getAttribute('href'), 'https://studentbooks.moe.gov.eg/Books');
   await page.locator('#trk').selectOption('math');
   await page.locator('#ministrySubjectGrid [data-ministry-subject="الرياضيات"]').waitFor({ state: 'visible' });
   assert.equal(await page.locator('#ministrySubjectGrid [data-ministry-subject="الأحياء"]').count(), 0);
@@ -170,7 +170,7 @@ try {
   // English 2027 course tools should render, save vocabulary locally, and start a quiz.
   await page.locator('[data-tab="english2027"]').click();
   await page.locator('#ecProgressText').getByText('0 من 12 وحدة').waitFor({ state: 'visible' });
-  const officialEnglishLibrary = page.locator('#english2027 a[href="https://ellibrary.moe.gov.eg/Books-sec/"]');
+  const officialEnglishLibrary = page.locator('#english2027 a[href="https://studentbooks.moe.gov.eg/Books"]');
   assert.ok(await officialEnglishLibrary.count() >= 1, 'English course must link to the official Ministry book library');
   assert.ok(await page.locator('#ecUnitList').getByText('محاور للمذاكرة وليست قائمة رسمية بعناوين الدروس').count() > 0, 'Unit details must identify lesson prompts as unverified official titles');
   assert.ok(await page.locator('#english2027').getByText('فهرس مساعد غير رسمي').count() === 1, 'Supplementary curriculum index must be labeled unofficial');

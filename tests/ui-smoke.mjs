@@ -39,6 +39,27 @@ try {
   await page.locator('#noteForm button[type="submit"]').click();
   await page.locator('#noteList').getByText('ملاحظة اختبارية').waitFor({ state: 'visible' });
 
+  // A newly recorded mistake must remain visible even when its spaced-review date is in the future.
+  await page.locator('[data-tab="tools"]').click();
+  await page.locator('#mQ').fill('سؤال يحتاج مراجعة لاحقًا');
+  await page.locator('#mForm button[type="submit"]').click();
+  await page.locator('#mList').getByText('سؤال يحتاج مراجعة لاحقًا').waitFor({ state: 'visible' });
+
+  // AI-dependent tools must explain the Pages limitation instead of failing silently.
+  await page.locator('#aT').fill('A short lesson about photosynthesis.');
+  await page.locator('#aQ').fill('Explain photosynthesis.');
+  await page.locator('#aGo').click();
+  await page.locator('#aSt').getByText('غير مفعّل').waitFor({ state: 'visible' });
+
+  // Invalid backup files must be rejected without replacing the current study data.
+  await page.locator('#bkIn').setInputFiles({
+    name: 'invalid-backup.json',
+    mimeType: 'application/json',
+    buffer: Buffer.from(JSON.stringify({ notes: 'not-an-array', injectedField: true }))
+  });
+  await page.locator('#bkSt').getByText('مش نسخة صالحة').waitFor({ state: 'visible' });
+  assert.equal(await page.locator('#mList').getByText('سؤال يحتاج مراجعة لاحقًا').count(), 1);
+
   // Theme selection must persist across reloads.
   await page.locator('#themeToggle').click();
   assert.equal(await page.locator('html').getAttribute('data-theme'), 'dark');

@@ -9,14 +9,14 @@
       const toggle=$('#themeToggle');if(toggle){toggle.textContent=theme==='dark'?'☀':'☾';toggle.setAttribute('aria-label',theme==='dark'?'تفعيل الوضع الفاتح':'تفعيل الوضع الداكن');toggle.title=theme==='dark'?'تفعيل الوضع الفاتح':'تفعيل الوضع الداكن'}
       if(S.color){r.setProperty('--brand',S.color);r.setProperty('--on-brand','#fff')}}
     $('#cuCols').innerHTML=COLS.map(c=>`<button type="button" data-col="${c}" aria-label="لون" style="width:38px;height:38px;border-radius:50%;border:2px solid var(--line);margin-inline-end:8px;cursor:pointer;background:${c}"></button>`).join('');
+    function refresh(){applyTheme();$('#cuA').value=S.app||'';$('#cuM').value=S.me||''}
     $('#cuA').value=S.app||'';$('#cuM').value=S.me||'';
     $('#themeToggle').onclick=()=>{S.theme=(S.theme||'light')==='dark'?'light':'dark';save();applyTheme()};
     $('#cuA').oninput=e=>{S.app=e.target.value.trim();save();applyTheme()};
     $('#cuM').oninput=e=>{S.me=e.target.value.trim();save();applyTheme()};
     document.addEventListener('click',e=>{const c=e.target.dataset.col;if(c){S.color=c;save();applyTheme()}});
-    applyTheme();
-    
-    
+    refresh();
+    return {refresh};
   }
   global.StudyPreferences={init};
 })(window);

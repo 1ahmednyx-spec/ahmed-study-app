@@ -54,7 +54,7 @@
       '" data-ministry-subject="' + subject.name + '">' +
       '<span class="ministry-subject-icon" aria-hidden="true">' + subject.icon + '</span>' +
       '<span><b>' + subject.name + '</b><small>' +
-      (commonSubjects.some(item => item.name === subject.name) ? 'مادة عامة • نجاح ورسوب' : 'مادة تخصصية • الصف الثالث الثانوي') +
+      (commonSubjects.some(item => item.name === subject.name) ? 'مادة مشتركة • تحقق من توفر الكتاب' : 'مادة تخصصية • الصف الثالث الثانوي') +
       '</small></span><span class="ministry-subject-arrow" aria-hidden="true">←</span></button>'
     ).join('') || '<p class="empty">لا توجد مادة مطابقة للبحث.</p>';
 

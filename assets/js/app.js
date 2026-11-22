@@ -1,7 +1,7 @@
 const $=s=>document.querySelector(s);
 const {load:loadStudyState,save:saveStudyState}=window.StudyStorage;
 let S=loadStudyState();
-S.courseDone=S.courseDone||{};S.courseWords=S.courseWords||[];S.courseWriting=S.courseWriting||[];S.courseExamChecks=S.courseExamChecks||{};
+S.courseDone=S.courseDone||{};S.courseWords=S.courseWords||[];S.courseWriting=S.courseWriting||[];S.courseExamChecks=S.courseExamChecks||{};S.subjectLessonDone=S.subjectLessonDone||{};
 const save=()=>saveStudyState(S);
 const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
@@ -51,6 +51,7 @@ $('#trk').onchange=e=>{S.track=e.target.value;save();fillSubj()};
 window.StudyEnglishCoach.init({getAI:()=>AI,errMsg,escapeHtml:esc,showAlert});
 
 window.StudyEnglishCourse.init({state:S,save,escapeHtml:esc,showAlert});
+window.StudySubjectCourses.init({state:S,save,escapeHtml:esc,showAlert});
 window.StudyMinistryLibrary.init();
 
 const {render:renderMist}=window.StudyMistakes.init({state:S,save,uid,today,addDays,escapeHtml:esc});

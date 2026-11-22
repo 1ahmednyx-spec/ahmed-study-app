@@ -31,7 +31,7 @@ const {render:renderNotes}=window.StudyNotes.init({
 });
 
 const {render:renderPrac}=window.StudyPractice.init({
-  state:S,save,escapeHtml:esc,
+  state:S,save,uid,escapeHtml:esc,showAlert,
   getAI:()=>AI,
   getTrackLabel:()=>TN[S.track],
   getSubjects:()=>SUBJ[S.track],

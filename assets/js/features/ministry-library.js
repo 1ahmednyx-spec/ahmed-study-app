@@ -13,10 +13,12 @@
       supplementaryBooks: [
         {
           title: 'كتاب اللغة العربية — القصة — الفصل الدراسي الأول',
+          actionLabel: 'القصة',
           url: 'https://elearnningcontent.blob.core.windows.net/elearnningcontent/2026_2027/Secondry/Secondry3/Term1/StudentBook/Arabic_language_Story_Sec3.pdf'
         },
         {
           title: 'كتاب اللغة العربية — القواعد الأساسية للنحو والصرف — الفصل الدراسي الأول',
+          actionLabel: 'القواعد',
           url: 'https://elearnningcontent.blob.core.windows.net/elearnningcontent/2026_2027/Secondry/Secondry3/Term1/StudentBook/Arabic_language_NAHO_Sec3.pdf'
         }
       ]
@@ -163,8 +165,8 @@
           '<small>الصف الثالث الثانوي • 2026/2027 • الفصل الدراسي الأول</small>' +
           '<span class="ministry-source-status">ملف PDF مباشر — رابط مقدم للمكتبة</span></div></div>' +
           '<div class="ministry-book-actions">' +
-          '<a class="p ministry-open-link" href="' + extra.url + '" target="_blank" rel="noopener">عرض القصة PDF <span aria-hidden="true">↗</span></a>' +
-          '<a class="s ministry-open-link" href="' + extra.url + '" target="_blank" rel="noopener" download>تحميل القصة PDF <span aria-hidden="true">↓</span></a></div>'
+          '<a class="p ministry-open-link" href="' + extra.url + '" target="_blank" rel="noopener">عرض ' + extra.actionLabel + ' PDF <span aria-hidden="true">↗</span></a>' +
+          '<a class="s ministry-open-link" href="' + extra.url + '" target="_blank" rel="noopener" download>تحميل ' + extra.actionLabel + ' PDF <span aria-hidden="true">↓</span></a></div>'
         ).join('') +
         '<p class="hint">' + book.note + '</p>'
       : '<div class="ministry-book-row"><div class="ministry-book-cover" aria-hidden="true">📘</div>' +

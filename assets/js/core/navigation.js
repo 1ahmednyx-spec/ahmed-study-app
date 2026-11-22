@@ -1,6 +1,6 @@
 /* Main navigation */
 (function () {
-  const ids = ['home', 'sched', 'notes', 'chat', 'prac', 'tools', 'eng', 'english2027'];
+  const ids = ['home', 'sched', 'notes', 'chat', 'prac', 'tools', 'eng', 'library', 'english2027'];
   const $ = selector => document.querySelector(selector);
 
   function activateTab(id) {
@@ -12,6 +12,7 @@
       const section = $('#' + sectionId);
       if (section) section.hidden = sectionId !== id;
     });
+    if (id === 'library' && typeof window.ministryLibraryRender === 'function') window.ministryLibraryRender();
     if (id === 'english2027' && typeof window.ecRender === 'function') {
       window.ecRender();
     }

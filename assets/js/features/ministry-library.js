@@ -78,6 +78,31 @@
       term: 'الفصل الدراسي الأول',
       url: 'https://elearnningcontent.blob.core.windows.net/elearnningcontent/2026_2027/Secondry/Secondry3/Term1/StudentBook/Statistics_Arabic_Sec3.pdf',
       note: 'رابط ملف PDF الذي أرسله المستخدم؛ لم نتمكن من فحص استجابة خادم الملفات آليًا.'
+    },
+    'التربية الوطنية': {
+      title: 'كتاب التربية الوطنية — الفصل الدراسي الأول',
+      year: '2026/2027',
+      term: 'الفصل الدراسي الأول',
+      url: 'https://elearnningcontent.blob.core.windows.net/elearnningcontent/2026_2027/Secondry/Secondry3/Term1/StudentBook/National_Education_Sec3_tr1.pdf',
+      note: 'رابط ملف PDF الذي أرسله المستخدم؛ لم نتمكن من فحص استجابة خادم الملفات آليًا.'
+    },
+    'التربية الدينية': {
+      title: 'كتب التربية الدينية — الفصل الدراسي الأول',
+      year: '2026/2027',
+      term: 'الفصل الدراسي الأول',
+      note: 'اختر الكتاب المناسب لك. الروابط أرسلها المستخدم ولم نتمكن من فحص استجابة خادم الملفات آليًا.',
+      supplementaryBooks: [
+        {
+          title: 'كتاب التربية الدينية الإسلامية — الفصل الدراسي الأول',
+          actionLabel: 'التربية الدينية الإسلامية',
+          url: 'https://elearnningcontent.blob.core.windows.net/elearnningcontent/2026_2027/Secondry/Secondry3/Term1/StudentBook/Islamic_religion_Sec3.pdf'
+        },
+        {
+          title: 'كتاب التربية الدينية المسيحية — الفصل الدراسي الأول',
+          actionLabel: 'التربية الدينية المسيحية',
+          url: 'https://elearnningcontent.blob.core.windows.net/elearnningcontent/2026_2027/Secondry/Secondry3/Term1/StudentBook/Christian_religion_Sec3.pdf'
+        }
+      ]
     }
   };
   const commonSubjects = [

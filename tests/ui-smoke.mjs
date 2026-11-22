@@ -86,15 +86,21 @@ try {
     assert.equal(await page.locator('.tabs [aria-selected="true"]').getAttribute('data-tab'), target);
   }
 
-  // Ministry library should follow the selected track and link only to the official Ministry library.
+  // Ministry library must show the 2026/2027 track subjects and shared pass/fail subjects.
   await page.locator('[data-tab="library"]').click();
   await page.locator('#ministrySubjectGrid [data-ministry-subject="الأحياء"]').waitFor({ state: 'visible' });
+  await page.locator('#ministrySubjectGrid [data-ministry-subject="اللغة الأجنبية الأولى"]').waitFor({ state: 'visible' });
+  await page.locator('#ministrySubjectGrid [data-ministry-subject="اللغة الأجنبية الثانية"]').waitFor({ state: 'visible' });
+  await page.locator('#ministrySubjectGrid [data-ministry-subject="التربية الدينية"]').waitFor({ state: 'visible' });
+  await page.locator('#ministrySubjectGrid [data-ministry-subject="التربية الوطنية"]').waitFor({ state: 'visible' });
+  assert.equal(await page.locator('#ministrySubjectGrid [data-ministry-subject="الجيولوجيا"]').count(), 0);
   await page.locator('#ministrySubjectGrid [data-ministry-subject="الفيزياء"]').click();
-  await page.locator('#ministrySubjectDetail').getByText('الفيزياء').waitFor({ state: 'visible' });
+  await page.locator('#ministrySubjectDetail h2').getByText('الفيزياء').waitFor({ state: 'visible' });
   assert.equal(await page.locator('#ministrySubjectDetail a').getAttribute('href'), 'https://ellibrary.moe.gov.eg/Books-sec/');
   await page.locator('#trk').selectOption('math');
   await page.locator('#ministrySubjectGrid [data-ministry-subject="الرياضيات"]').waitFor({ state: 'visible' });
   assert.equal(await page.locator('#ministrySubjectGrid [data-ministry-subject="الأحياء"]').count(), 0);
+  assert.equal(await page.locator('#ministrySubjectGrid [data-ministry-subject="الجيولوجيا"]').count(), 0);
   await page.locator('#trk').selectOption('sci');
 
   // Dashboard quick links must return to the home screen.

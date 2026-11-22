@@ -7,6 +7,7 @@
 - `assets/js/core/navigation.js`: tab activation and dashboard quick-link navigation.
 - `assets/js/features/schedule.js`: schedule rendering, event creation/completion/deletion, next-event display, and in-app reminders.
 - `assets/js/features/notes.js`: local lesson-note creation, rendering, deletion, and offline fallback summarization.
+- `assets/js/features/words.js`: vocabulary entry, AI-assisted translation, flashcard review, spaced-repetition levels, and importing vocabulary from the English helper.
 - `assets/js/app.js`: browser application bootstrap and remaining feature logic.
 - `manifest.webmanifest`: PWA metadata.
 - `sw.js`: service-worker cache strategy.
@@ -33,6 +34,7 @@ There is no account system, cloud database, or server-side AI integration yet. N
 - `core/navigation.js`: section and tab switching (extracted).
 - `features/schedule.js`: schedule and in-app reminder behavior (extracted).
 - `features/notes.js`: local notes and fallback summaries (extracted).
+- `features/words.js`: vocabulary management and flashcard review (extracted).
 - `features/practice.js` and `features/tools.js`: remaining feature behavior.
 - `app.js`: bootstrap and orchestration.
 

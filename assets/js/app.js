@@ -5,58 +5,10 @@ S.courseDone=S.courseDone||{};S.courseWords=S.courseWords||[];S.courseWriting=S.
 const save=()=>saveStudyState(S);
 const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
-const at=e=>new Date(e.d+'T'+e.t);
-const fmt=e=>at(e).toLocaleString('ar-EG',{weekday:'long',day:'numeric',month:'long',hour:'numeric',minute:'2-digit'});
-
-function left(ms){
-  const m=Math.max(0,Math.round(ms/60000));
-  if(m<1)return 'دلوقتي';
-  const d=Math.floor(m/1440),h=Math.floor(m%1440/60),n=m%60,p=[];
-  if(d)p.push(d+' يوم');if(h)p.push(h+' ساعة');if(n&&!d)p.push(n+' دقيقة');
-  return 'بعد '+p.join(' و ');
-}
 function showAlert(t){$('#alertText').textContent=t;$('#alert').style.display='block'}
 $('#closeAlert').onclick=()=>$('#alert').style.display='none';
 
-/* Schedule */
-function renderSched(){
-  const now=Date.now(),sorted=[...S.ev].sort((a,b)=>at(a)-at(b));
-  const up=sorted.filter(e=>!e.done&&at(e)>=now-36e5),dn=sorted.filter(e=>!up.includes(e)).reverse();
-  const row=e=>`<div class="item ${e.done?'done':''}"><input type="checkbox" data-done="${e.id}" ${e.done?'checked':''} aria-label="تم"><div class="m"><div class="n">${esc(e.title)}</div><div class="d">${fmt(e)}</div></div><button class="x" data-del="${e.id}" aria-label="احذف">×</button></div>`;
-  $('#upList').innerHTML=up.length?up.map(row).join(''):'<div class="empty">ضيف أول موعد مذاكرة من الأعلى</div>';
-  $('#doneList').innerHTML=dn.length?dn.map(row).join(''):'<div class="empty">لا شيء هنا بعد</div>';
-  tickHero();
-}
-function tickHero(){
-  const n=S.ev.filter(e=>!e.done&&at(e)>=Date.now()).sort((a,b)=>at(a)-at(b))[0];
-  $('#nextT').textContent=n?n.title:'لا توجد مواعيد قادمة';
-  $('#nextC').textContent=n?left(at(n)-Date.now()):'';
-}
-$('#evForm').onsubmit=e=>{e.preventDefault();
-  S.ev.push({id:uid(),title:$('#evT').value.trim(),d:$('#evD').value,t:$('#evH').value,lead:+$('#lead').value,fired:false,done:false});
-  save();e.target.reset();renderSched()};
-document.addEventListener('click',e=>{
-  const del=e.target.dataset.del;
-  if(del){S.ev=S.ev.filter(x=>x.id!==del);save();renderSched()}
-});
-document.addEventListener('change',e=>{
-  const id=e.target.dataset.done;
-  if(id){const x=S.ev.find(v=>v.id===id);if(x){x.done=e.target.checked;save();renderSched()}}
-});
-function checkReminders(){
-  const now=Date.now();let ch=false;
-  S.ev.forEach(e=>{
-    if(e.done||e.fired)return;
-    const t=at(e).getTime();
-    if(now>=t-e.lead*60000&&now<t+36e5){
-      e.fired=true;ch=true;
-      const msg=(e.lead?left(t-now)+': ':'حان الآن: ')+e.title;
-      showAlert(msg);
-    }
-  });
-  if(ch){save();renderSched()}
-}
-setInterval(()=>{tickHero();checkReminders()},15000);
+const {render:renderSched,checkReminders}=window.StudySchedule.init({state:S,save,uid,escapeHtml:esc,showAlert});
 
 /* Notes */
 function summarize(t){

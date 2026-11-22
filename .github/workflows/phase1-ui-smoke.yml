@@ -1,0 +1,30 @@
+name: Phase 1 UI smoke tests
+
+on:
+  push:
+    branches:
+      - phase-1-ui-foundation
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  browser-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install Playwright
+        run: npm install --no-save playwright
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Start local web server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/ahmed-study-http.log 2>&1 &
+          echo $! > /tmp/ahmed-study-http.pid
+      - name: Run browser smoke tests
+        run: node tests/ui-smoke.mjs

@@ -149,6 +149,10 @@ try {
   // English 2027 course tools should render, save vocabulary locally, and start a quiz.
   await page.locator('[data-tab="english2027"]').click();
   await page.locator('#ecProgressText').getByText('0 من 12 وحدة').waitFor({ state: 'visible' });
+  const officialEnglishLibrary = page.locator('#english2027 a[href="https://ellibrary.moe.gov.eg/Books-sec/"]');
+  assert.ok(await officialEnglishLibrary.count() >= 1, 'English course must link to the official Ministry book library');
+  assert.ok(await page.locator('#ecUnitList').getByText('محاور للمذاكرة وليست قائمة رسمية بعناوين الدروس').count() > 0, 'Unit details must identify lesson prompts as unverified official titles');
+  assert.ok(await page.locator('#english2027').getByText('فهرس مساعد غير رسمي').count() === 1, 'Supplementary curriculum index must be labeled unofficial');
   await page.locator('#ecWord').fill('caregiver');
   await page.locator('#ecMeaning').fill('مقدم رعاية');
   await page.locator('#ecWordForm button[type="submit"]').click();

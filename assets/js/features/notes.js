@@ -46,7 +46,7 @@
 لو النص ناقص حاجة مهمة قول إيه هي.
 
 النص:
-${body}`)).text;
+${body}`)).text.trim();
         } catch (error) {
           status.textContent = getErrorMessage(error.code) + '، استخدمت تلخيصًا بسيطًا بدله';
         }

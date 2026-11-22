@@ -13,6 +13,7 @@
       if (section) section.hidden = sectionId !== id;
     });
     if (id === 'library' && typeof window.ministryLibraryRender === 'function') window.ministryLibraryRender();
+    if (['arabic2027','chemistry2027','physics2027','math2027','biology2027'].includes(id) && typeof window.subjectCourseRender === 'function') window.subjectCourseRender(id);
     if (id === 'english2027' && typeof window.ecRender === 'function') {
       window.ecRender();
     }

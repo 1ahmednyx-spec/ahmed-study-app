@@ -8,6 +8,10 @@ page.on('pageerror', error => pageErrors.push(error.message));
 
 try {
   await page.goto('http://127.0.0.1:4173/', { waitUntil: 'domcontentloaded' });
+  const cssResponse = await page.request.get('http://127.0.0.1:4173/assets/css/app.css');
+  const jsResponse = await page.request.get('http://127.0.0.1:4173/assets/js/app.js');
+  assert.equal(cssResponse.status(), 200, 'External stylesheet must be served');
+  assert.equal(jsResponse.status(), 200, 'External application script must be served');
   assert.match(await page.title(), /Ahmed Study Platform/);
   await page.locator('#home').waitFor({ state: 'visible' });
   assert.equal(await page.locator('.tabs [role="tab"]').count(), 8);

@@ -10,27 +10,6 @@ $('#closeAlert').onclick=()=>$('#alert').style.display='none';
 
 const {render:renderSched,checkReminders}=window.StudySchedule.init({state:S,save,uid,escapeHtml:esc,showAlert});
 
-/* Notes */
-function summarize(t){
-  const s=t.split(/(?<=[.!؟?])\s+|\n+/).map(x=>x.trim()).filter(x=>x.length>20);
-  if(s.length<=3)return s.join(' ')||t.slice(0,200);
-  const f={},W=/[\p{L}]{3,}/gu;
-  (t.toLowerCase().match(W)||[]).forEach(w=>f[w]=(f[w]||0)+1);
-  const sc=s.map((x,i)=>({x,i,v:(x.toLowerCase().match(W)||[]).reduce((a,w)=>a+f[w],0)/Math.sqrt(x.length)}));
-  return sc.sort((a,b)=>b.v-a.v).slice(0,3).sort((a,b)=>a.i-b.i).map(o=>o.x).join(' ');
-}
-function renderNotes(){
-  $('#noteList').innerHTML=S.notes.length?S.notes.map(n=>`<div class="panel"><div class="item" style="border:0;padding:0"><div class="m"><div class="n">${esc(n.title)}</div><div class="d">${esc(n.sub||'')}</div></div><button class="x" data-ndel="${n.id}" aria-label="احذف">×</button></div><div class="sum">${esc(n.sum)}</div></div>`).join(''):'<div class="empty">ملخصاتك هتظهر هنا</div>';
-}
-$('#noteForm').onsubmit=async e=>{e.preventDefault();
-  const b=$('#nB').value.trim(),t=$('#nT').value.trim(),sub=$('#nS').value,st=$('#nSt'),btn=$('#nBtn');
-  let sum='';btn.disabled=true;
-  if(AI){st.textContent='جاري التلخيص…';
-    try{sum=(await AI(`أنت مدرس خبير لطلاب الثانوية العامة المصرية (الصف الثالث الثانوي، ${TN[S.track]}). المادة: ${sub}. لخّص الدرس التالي بالعربية المبسطة (والمصطلحات الأجنبية كما هي) بدون إضافة معلومات غير موجودة في النص، وبالترتيب ده:\nالفكرة العامة: سطرين\nأهم النقاط: من 5 إلى 8 نقاط مرقمة\nتعريفات وقوانين ومصطلحات لازم تتحفظ\nأسئلة متوقعة: سؤالين مقاليين و3 اختيار من متعدد مع إجاباتها\nلو النص ناقص حاجة مهمة قول إيه هي.\n\nالنص:\n${b}`)).text}catch(x){st.textContent=errMsg(x.code)+'، استخدمت تلخيصًا بسيطًا بدله'}}
-  if(!sum)sum=summarize(b);
-  S.notes.unshift({id:uid(),title:t,sub,sum});save();e.target.reset();$('#nS').value=sub;renderNotes();btn.disabled=false;if(AI&&sum)st.textContent=''};
-document.addEventListener('click',e=>{const d=e.target.dataset.ndel;if(d){S.notes=S.notes.filter(n=>n.id!==d);save();renderNotes()}});
-
 /* English */
 let cur=null,shown=false;
 function renderWords(){
@@ -64,6 +43,13 @@ let AI=null;
 const errMsg=c=>({not_granted:'لازم توافق على استخدام Claude',rate_limited:'الاستخدام كتير، جرّب بعد شوية',sampling_disabled:'الذكاء الاصطناعي غير متاح لحسابك'}[c]||'حصلت مشكلة، جرّب تاني');
 const TN={sci:'علمي علوم',math:'علمي رياضة',lit:'أدبي'};
 const SUBJ={sci:['اللغة العربية','اللغة الإنجليزية','اللغة الأجنبية الثانية','الأحياء','الكيمياء','الفيزياء','الجيولوجيا'],math:['اللغة العربية','اللغة الإنجليزية','اللغة الأجنبية الثانية','الرياضيات','الفيزياء','الكيمياء'],lit:['اللغة العربية','اللغة الإنجليزية','اللغة الأجنبية الثانية','التاريخ','الجغرافيا','الفلسفة والمنطق','علم النفس والاجتماع']};
+const {render:renderNotes}=window.StudyNotes.init({
+  state:S,save,uid,escapeHtml:esc,
+  getAI:()=>AI,
+  getTrackLabel:()=>TN[S.track],
+  getErrorMessage:code=>errMsg(code)
+});
+
 function fillSubj(){
   const o=SUBJ[S.track].concat('مادة أخرى').map(s=>`<option>${esc(s)}</option>`).join('');
   ['#nS','#pS','#mS','#rS','#xS'].forEach(id=>{const el=$(id),v=el.value;el.innerHTML=o;if(v)el.value=v});

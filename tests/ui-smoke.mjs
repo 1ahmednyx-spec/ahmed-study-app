@@ -25,7 +25,7 @@ try {
   const serviceWorkerResponse = await page.request.get('http://127.0.0.1:4173/sw.js');
   assert.equal(serviceWorkerResponse.status(), 200, 'Service worker must be served');
   const serviceWorkerSource = await serviceWorkerResponse.text();
-  assert.match(serviceWorkerSource, /ahmed-study-platform-v16/, 'Service worker cache must be versioned');
+  assert.match(serviceWorkerSource, /ahmed-study-platform-v17/, 'Service worker cache must be versioned');
   for (const modulePath of ['./assets/js/features/preferences.js', './assets/js/features/english-course.js', './assets/js/features/ministry-library.js', './assets/js/features/english-coach.js']) {
     assert.ok(serviceWorkerSource.includes(modulePath), `Service worker must precache ${modulePath}`);
   }
@@ -93,6 +93,14 @@ try {
   await page.locator('#ministrySubjectGrid [data-ministry-subject="اللغة الأجنبية الثانية"]').waitFor({ state: 'visible' });
   await page.locator('#ministrySubjectGrid [data-ministry-subject="التربية الدينية"]').waitFor({ state: 'visible' });
   await page.locator('#ministrySubjectGrid [data-ministry-subject="التربية الوطنية"]').waitFor({ state: 'visible' });
+  await page.locator('#ministrySubjectGrid [data-ministry-subject="التربية الوطنية"]').click();
+  assert.equal(await page.getByRole('link', { name: 'عرض الكتاب PDF' }).getAttribute('href'), 'https://elearnningcontent.blob.core.windows.net/elearnningcontent/2026_2027/Secondry/Secondry3/Term1/StudentBook/National_Education_Sec3_tr1.pdf');
+  assert.equal(await page.getByRole('link', { name: 'تحميل PDF' }).getAttribute('href'), 'https://elearnningcontent.blob.core.windows.net/elearnningcontent/2026_2027/Secondry/Secondry3/Term1/StudentBook/National_Education_Sec3_tr1.pdf');
+  await page.locator('#ministrySubjectGrid [data-ministry-subject="التربية الدينية"]').click();
+  assert.equal(await page.getByRole('link', { name: 'عرض التربية الدينية الإسلامية PDF' }).getAttribute('href'), 'https://elearnningcontent.blob.core.windows.net/elearnningcontent/2026_2027/Secondry/Secondry3/Term1/StudentBook/Islamic_religion_Sec3.pdf');
+  assert.equal(await page.getByRole('link', { name: 'تحميل التربية الدينية الإسلامية PDF' }).getAttribute('href'), 'https://elearnningcontent.blob.core.windows.net/elearnningcontent/2026_2027/Secondry/Secondry3/Term1/StudentBook/Islamic_religion_Sec3.pdf');
+  assert.equal(await page.getByRole('link', { name: 'عرض التربية الدينية المسيحية PDF' }).getAttribute('href'), 'https://elearnningcontent.blob.core.windows.net/elearnningcontent/2026_2027/Secondry/Secondry3/Term1/StudentBook/Christian_religion_Sec3.pdf');
+  assert.equal(await page.getByRole('link', { name: 'تحميل التربية الدينية المسيحية PDF' }).getAttribute('href'), 'https://elearnningcontent.blob.core.windows.net/elearnningcontent/2026_2027/Secondry/Secondry3/Term1/StudentBook/Christian_religion_Sec3.pdf');
   assert.equal(await page.locator('#ministrySubjectGrid [data-ministry-subject="الجيولوجيا"]').count(), 0);
   await page.locator('#ministrySubjectGrid [data-ministry-subject="الفيزياء"]').click();
   await page.locator('#ministrySubjectDetail h2').getByText('الفيزياء').waitFor({ state: 'visible' });

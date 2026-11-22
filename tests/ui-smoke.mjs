@@ -147,7 +147,7 @@ try {
     buffer: Buffer.from(JSON.stringify({ notes: 'not-an-array', injectedField: true }))
   });
   await page.locator('#bkSt').getByText('مش نسخة صالحة').waitFor({ state: 'visible' });
-  assert.equal(await page.locator('#mList').getByText('سؤال يحتاج مراجعة لاحقًا').count(), 1);
+  assert.equal(await page.locator('#mList').getByText('خطأ ثانٍ لاختبار استعادة النسخة الاحتياطية').count(), 1);
 
   // Theme selection must persist across reloads.
   await page.locator('#themeToggle').click();

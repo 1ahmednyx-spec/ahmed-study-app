@@ -93,6 +93,14 @@ try {
   await page.locator('#ministrySubjectGrid [data-ministry-subject="اللغة الأجنبية الثانية"]').waitFor({ state: 'visible' });
   await page.locator('#ministrySubjectGrid [data-ministry-subject="التربية الدينية"]').waitFor({ state: 'visible' });
   await page.locator('#ministrySubjectGrid [data-ministry-subject="التربية الوطنية"]').waitFor({ state: 'visible' });
+  await page.locator('#ministrySubjectGrid [data-ministry-subject="التربية الوطنية"]').click();
+  assert.equal(await page.getByRole('link', { name: 'عرض الكتاب PDF' }).getAttribute('href'), 'https://elearnningcontent.blob.core.windows.net/elearnningcontent/2026_2027/Secondry/Secondry3/Term1/StudentBook/National_Education_Sec3_tr1.pdf');
+  assert.equal(await page.getByRole('link', { name: 'تحميل PDF' }).getAttribute('href'), 'https://elearnningcontent.blob.core.windows.net/elearnningcontent/2026_2027/Secondry/Secondry3/Term1/StudentBook/National_Education_Sec3_tr1.pdf');
+  await page.locator('#ministrySubjectGrid [data-ministry-subject="التربية الدينية"]').click();
+  assert.equal(await page.getByRole('link', { name: 'عرض التربية الدينية الإسلامية PDF' }).getAttribute('href'), 'https://elearnningcontent.blob.core.windows.net/elearnningcontent/2026_2027/Secondry/Secondry3/Term1/StudentBook/Islamic_religion_Sec3.pdf');
+  assert.equal(await page.getByRole('link', { name: 'تحميل التربية الدينية الإسلامية PDF' }).getAttribute('href'), 'https://elearnningcontent.blob.core.windows.net/elearnningcontent/2026_2027/Secondry/Secondry3/Term1/StudentBook/Islamic_religion_Sec3.pdf');
+  assert.equal(await page.getByRole('link', { name: 'عرض التربية الدينية المسيحية PDF' }).getAttribute('href'), 'https://elearnningcontent.blob.core.windows.net/elearnningcontent/2026_2027/Secondry/Secondry3/Term1/StudentBook/Christian_religion_Sec3.pdf');
+  assert.equal(await page.getByRole('link', { name: 'تحميل التربية الدينية المسيحية PDF' }).getAttribute('href'), 'https://elearnningcontent.blob.core.windows.net/elearnningcontent/2026_2027/Secondry/Secondry3/Term1/StudentBook/Christian_religion_Sec3.pdf');
   assert.equal(await page.locator('#ministrySubjectGrid [data-ministry-subject="الجيولوجيا"]').count(), 0);
   await page.locator('#ministrySubjectGrid [data-ministry-subject="الفيزياء"]').click();
   await page.locator('#ministrySubjectDetail h2').getByText('الفيزياء').waitFor({ state: 'visible' });

@@ -45,6 +45,13 @@
       term: 'الفصل الدراسي الأول',
       url: 'https://elearnningcontent.blob.core.windows.net/elearnningcontent/2026_2027/Secondry/Secondry3/Term1/StudentBook/pure_Mathematics_ARABIC_Sec3.pdf',
       note: 'رابط ملف PDF الذي أرسله المستخدم؛ لم نتمكن من فحص استجابة خادم الملفات آليًا.'
+    },
+    'الرياضيات التطبيقية': {
+      title: 'كتاب الرياضيات التطبيقية باللغة العربية — الفصل الدراسي الأول',
+      year: '2026/2027',
+      term: 'الفصل الدراسي الأول',
+      url: 'https://elearnningcontent.blob.core.windows.net/elearnningcontent/2026_2027/Secondry/Secondry3/Term1/StudentBook/applied_Mathematics_ARABIC_Sec3.pdf',
+      note: 'رابط ملف PDF الذي أرسله المستخدم؛ لم نتمكن من فحص استجابة خادم الملفات آليًا.'
     }
   };
   const commonSubjects = [

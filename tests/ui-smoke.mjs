@@ -11,11 +11,15 @@ try {
   const cssResponse = await page.request.get('http://127.0.0.1:4173/assets/css/app.css');
   const jsResponse = await page.request.get('http://127.0.0.1:4173/assets/js/app.js');
   const storageResponse = await page.request.get('http://127.0.0.1:4173/assets/js/core/storage.js');
+  const navigationResponse = await page.request.get('http://127.0.0.1:4173/assets/js/core/navigation.js');
   assert.equal(cssResponse.status(), 200, 'External stylesheet must be served');
   assert.equal(jsResponse.status(), 200, 'External application script must be served');
   assert.equal(storageResponse.status(), 200, 'Storage module must be served');
+  assert.equal(navigationResponse.status(), 200, 'Navigation module must be served');
   const scriptOrder = await page.locator('script[src]').evaluateAll(nodes => nodes.map(node => node.getAttribute('src')));
-  assert.ok(scriptOrder.indexOf('./assets/js/core/storage.js') < scriptOrder.indexOf('./assets/js/app.js'), 'Storage must load before app bootstrap');
+  assert.ok(scriptOrder.indexOf('./assets/js/core/storage.js') < scriptOrder.indexOf('./assets/js/core/navigation.js'), 'Storage must load before navigation');
+  assert.ok(scriptOrder.indexOf('./assets/js/core/navigation.js') < scriptOrder.indexOf('./assets/js/app.js'), 'Navigation must load before app bootstrap');
+  assert.equal(await page.evaluate(() => typeof window.activateTab), 'function', 'Navigation module must expose tab activation');
   assert.match(await page.title(), /Ahmed Study Platform/);
   await page.locator('#home').waitFor({ state: 'visible' });
   assert.equal(await page.locator('.tabs [role="tab"]').count(), 8);

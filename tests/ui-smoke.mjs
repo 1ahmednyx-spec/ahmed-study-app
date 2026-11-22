@@ -30,6 +30,7 @@ try {
   assert.ok(scriptOrder.indexOf('./assets/js/features/words.js') < scriptOrder.indexOf('./assets/js/app.js'), 'Words must load before app bootstrap');
   assert.equal(await page.evaluate(() => typeof window.StudyNotes?.init), 'function', 'Notes module must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.StudyWords?.init), 'function', 'Words module must expose its initializer');
+  assert.equal(await page.evaluate(() => typeof window.StudyPractice?.init), 'function', 'Practice module must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.StudySchedule?.init), 'function', 'Schedule module must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.activateTab), 'function', 'Navigation module must expose tab activation');
   assert.match(await page.title(), /Ahmed Study Platform/);
@@ -79,7 +80,7 @@ try {
   await page.locator('#card').click();
   await page.locator('#card').getByText('مرن وقادر على التعافي').waitFor({ state: 'visible' });
   await page.locator('#know').click();
-  assert.equal(await page.locator('#rev').isHidden(), true, 'Review buttons should hide after advancing');
+  assert.equal(await page.locator('#rev').evaluate(element => element.hidden), true, 'Review buttons should be marked hidden after advancing');
   await page.locator('#wList [data-wdel]').click();
   await page.locator('#wList').getByText('ضيف كلمات جديدة من فوق').waitFor({ state: 'visible' });
   await page.evaluate(() => {
@@ -91,6 +92,25 @@ try {
   });
   await page.locator('#wList').getByText('break down').waitFor({ state: 'visible' });
   await page.locator('#wList').getByText('يتعطل أو ينهار').waitFor({ state: 'visible' });
+
+  // Practice tracking should validate answers, persist a valid session, and update the weekly goal.
+  await page.locator('[data-tab="prac"]').click();
+  await page.locator('#pN').fill('5');
+  await page.locator('#pC').fill('6');
+  await page.locator('#pForm button[type="submit"]').click();
+  assert.equal(await page.locator('#stats').getByText('5 سؤال').count(), 0, 'Invalid practice results must not be saved');
+  await page.locator('#pN').fill('5');
+  await page.locator('#pC').fill('4');
+  await page.locator('#pForm button[type="submit"]').click();
+  await page.locator('#stats').getByText('5 سؤال، دقة 80%').waitFor({ state: 'visible' });
+  await page.locator('#goal').fill('30');
+  await page.locator('#goal').dispatchEvent('change');
+  await page.locator('#goalSt').getByText('من 30 سؤال').waitFor({ state: 'visible' });
+  await page.locator('#qT').fill('درس تجريبي');
+  await page.locator('#qBtn').click();
+  await page.locator('#qSt').getByText('مش متاحة هنا').waitFor({ state: 'visible' });
+  await page.locator('#plBtn').click();
+  await page.locator('#plSt').getByText('مش متاحة هنا').waitFor({ state: 'visible' });
 
   // A newly recorded mistake must remain visible even when its spaced-review date is in the future.
   await page.locator('[data-tab="tools"]').click();

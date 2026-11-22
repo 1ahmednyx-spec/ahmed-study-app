@@ -4,7 +4,9 @@
 
 - `index.html`: semantic page structure and navigation.
 - `assets/css/app.css`: application styles and responsive layouts.
-- `assets/js/app.js`: current browser application entry point and feature logic.
+- `assets/js/core/navigation.js`: tab activation and dashboard quick-link navigation.
+- `assets/js/features/schedule.js`: schedule rendering, event creation/completion/deletion, next-event display, and in-app reminders.
+- `assets/js/app.js`: browser application bootstrap and remaining feature logic.
 - `manifest.webmanifest`: PWA metadata.
 - `sw.js`: service-worker cache strategy.
 - `tests/ui-smoke.mjs`: Playwright browser smoke tests.
@@ -27,8 +29,9 @@ There is no account system, cloud database, or server-side AI integration yet. N
 ## Next modularization targets
 
 - `core/storage.js`: validated local persistence and backup compatibility.
-- `core/navigation.js`: section and tab switching.
-- `features/schedule.js`, `features/notes.js`, `features/practice.js`, and `features/tools.js`: feature behavior.
+- `core/navigation.js`: section and tab switching (extracted).
+- `features/schedule.js`: schedule and in-app reminder behavior (extracted).
+- `features/notes.js`, `features/practice.js`, and `features/tools.js`: remaining feature behavior.
 - `app.js`: bootstrap and orchestration.
 
 These are migration targets, not modules already implemented.

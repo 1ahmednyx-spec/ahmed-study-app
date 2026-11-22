@@ -1,0 +1,693 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>أحمد عادل</title>
+<meta name="theme-color" content="#0F5C6E">
+<meta name="description" content="مساعد المذاكرة - نظّم مواعيدك وملخصاتك وكلماتك ومراجعتك في مكان واحد.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EAF0F4;--surface:#fff;--ink:#14212B;--muted:#5B6B78;--brand:#0F5C6E;--on-brand:#fff;--accent:#E8A33D;--line:#CBD6DE;--danger:#B3261E;--ok:#2E7D4F;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0E1A22;--surface:#16262F;--ink:#E7EEF2;--muted:#93A4B0;--brand:#5FB8CC;--on-brand:#08222B;--accent:#F0B556;--line:#294150;--danger:#FF8A80;--ok:#6FCF97;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0E1A22;--surface:#16262F;--ink:#E7EEF2;--muted:#93A4B0;--brand:#5FB8CC;--on-brand:#08222B;--accent:#F0B556;--line:#294150;--danger:#FF8A80;--ok:#6FCF97;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:500 16px/1.7 Tajawal,"Segoe UI",Tahoma,sans-serif}
+.wrap{max-width:720px;margin:0 auto;padding:16px}
+h1{font-size:22px;margin:4px 0 12px;font-weight:800}
+h2{font-size:17px;margin:20px 0 8px;font-weight:700}
+.hero{background:var(--brand);color:var(--on-brand);border-radius:18px;padding:20px;margin-bottom:14px}
+.hero small{opacity:.85;display:block}
+.hero .t{font-size:24px;font-weight:800;line-height:1.4;margin:2px 0}
+.hero .c{font-size:30px;font-weight:800;color:var(--accent);filter:brightness(1.15)}
+.tabs{overflow-x:auto;display:flex;gap:6px;background:var(--surface);padding:5px;border-radius:14px;margin-bottom:14px;border:1px solid var(--line)}
+.tabs button{flex:1;white-space:nowrap;border:0;background:none;color:var(--muted);font:700 14px Tajawal,sans-serif;padding:10px 10px;border-radius:10px;cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--brand);color:var(--on-brand)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+label{display:block;font-size:14px;color:var(--muted);margin:8px 0 3px}
+input,textarea,select{width:100%;font:500 16px Tajawal,sans-serif;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:9px 11px}
+textarea{min-height:110px;resize:vertical}
+.row{display:flex;gap:8px}.row>*{flex:1}
+button.p,button.s{font:700 15px Tajawal,sans-serif;border-radius:10px;padding:10px 16px;cursor:pointer;margin-top:10px;border:1px solid var(--brand)}
+button.p{background:var(--brand);color:var(--on-brand)}
+button.s{background:none;color:var(--brand)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.item{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line)}
+.item:first-child{border-top:0}
+.item .m{flex:1;min-width:0}
+.item .n{font-weight:700}.item.done .n{text-decoration:line-through;color:var(--muted)}
+.item .d{font-size:14px;color:var(--muted)}
+.item input[type=checkbox]{width:22px;height:22px;accent-color:var(--brand)}
+.x{background:none;border:0;color:var(--danger);font-size:20px;cursor:pointer;padding:4px 8px}
+.empty{color:var(--muted);text-align:center;padding:14px 0}
+#alert{display:none;position:sticky;top:8px;z-index:5;background:var(--accent);color:#1b1300;border-radius:12px;padding:12px 14px;margin-bottom:12px;font-weight:700}
+#alert button{float:left;border:0;background:none;font-size:20px;cursor:pointer;color:inherit}
+.card{min-height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border:2px dashed var(--line);border-radius:14px;padding:16px;cursor:pointer}
+.card .w{font-size:30px;font-weight:800;direction:ltr}
+.card .a{font-size:20px;color:var(--brand);margin-top:6px}
+.sum{white-space:pre-wrap;background:var(--bg);border-radius:10px;padding:10px;margin-top:8px;font-size:15px}
+.hint{font-size:14px;color:var(--muted)}.bar{height:8px;background:var(--line);border-radius:6px;overflow:hidden;margin-top:4px}.bar i{display:block;height:100%;background:var(--brand);width:0}.log{height:300px;overflow:auto;background:var(--bg);border-radius:10px;padding:8px;margin:8px 0}.b{max-width:90%;padding:8px 12px;border-radius:12px;margin:6px 0}.b.u{background:var(--brand);color:var(--on-brand);margin-inline-start:auto}.b.a{background:var(--surface);border:1px solid var(--line)}.fx{font-size:14px;color:var(--muted);margin-top:6px;border-top:1px dashed var(--line);padding-top:6px}details{margin-top:8px}summary{cursor:pointer;font-weight:700;color:var(--brand)}
+@media (prefers-reduced-motion:no-preference){.hero .c{transition:opacity .3s}}
+
+.course-hero{background:linear-gradient(135deg,var(--brand),#173d63);color:#fff;border-radius:16px;padding:16px;margin:10px 0 14px}
+.course-hero h2{font-size:21px;margin:0 0 5px;color:#fff}.course-hero p{margin:4px 0;color:#eef7ff}
+.course-links{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.course-links a{display:inline-block;padding:8px 12px;border:1px solid rgba(255,255,255,.65);border-radius:9px;color:#fff;text-decoration:none;font-weight:700}
+.course-nav{display:flex;gap:7px;overflow:auto;padding:4px 0 10px;position:sticky;top:0;background:var(--bg);z-index:3}
+.course-nav button{white-space:nowrap;border:1px solid var(--line);border-radius:20px;background:var(--surface);color:var(--ink);padding:7px 12px;font:700 13px Tajawal;cursor:pointer}
+.course-nav button.active{background:var(--brand);color:var(--on-brand)}
+.course-section{scroll-margin-top:55px}.course-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}
+.course-box{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px;margin:8px 0}
+.course-box h3{font-size:16px;margin:0 0 5px}.course-box p{margin:5px 0}.course-muted{font-size:13px;color:var(--muted)}
+.course-unit{border:1px solid var(--line);border-radius:12px;background:var(--surface);margin:9px 0;overflow:hidden}
+.course-unit summary{padding:12px 14px;list-style:none;display:flex;align-items:center;gap:8px}.course-unit summary::-webkit-details-marker{display:none}.course-unit summary:after{content:'＋';margin-inline-start:auto;color:var(--brand)}.course-unit[open] summary:after{content:'−'}
+.course-unit-body{padding:0 14px 14px}.course-tag{display:inline-block;background:var(--bg);color:var(--brand);border-radius:20px;padding:3px 8px;font-size:12px;margin:3px}
+.course-done{accent-color:var(--brand);width:20px;height:20px}.course-word-row{display:flex;justify-content:space-between;gap:10px;border-top:1px solid var(--line);padding:8px 0}.course-word-row:first-child{border-top:0}.course-en{direction:ltr;text-align:left;font-weight:800}.course-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.course-feedback{padding:9px;border-radius:9px;background:var(--bg);margin-top:8px}.course-question{padding:12px;border:1px solid var(--line);border-radius:12px;margin:10px 0;background:var(--surface)}
+.course-question label{display:flex;gap:8px;align-items:flex-start;color:var(--ink);font-size:15px}.course-question input{width:auto;margin-top:5px}
+.course-meter{height:9px;background:var(--line);border-radius:20px;overflow:hidden}.course-meter span{display:block;height:100%;background:var(--brand);width:0}
+@media(max-width:480px){.course-grid{grid-template-columns:1fr}.course-hero{padding:13px}}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+<div id="alert" role="alert"><button aria-label="إغلاق" id="closeAlert">×</button><span id="alertText"></span></div>
+<div style="border-radius:18px;overflow:hidden;margin-bottom:12px;line-height:0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 360" width="100%" role="img" aria-label="شاطئ بحر وطيور واسم أحمد عادل">
+<defs>
+<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5FB6E0"/><stop offset="1" stop-color="#FCE7C6"/></linearGradient>
+<linearGradient id="sea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2AA3C4"/><stop offset="1" stop-color="#0A5C85"/></linearGradient>
+<linearGradient id="sand" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F4DDAE"/><stop offset="1" stop-color="#DDB67A"/></linearGradient>
+<radialGradient id="sun"><stop offset="0" stop-color="#FFF6D6"/><stop offset=".55" stop-color="#FFD36B"/><stop offset="1" stop-color="#FFD36B" stop-opacity="0"/></radialGradient>
+</defs>
+<rect width="800" height="360" fill="url(#sky)"/>
+<circle cx="690" cy="92" r="90" fill="url(#sun)"/>
+<circle cx="690" cy="92" r="30" fill="#FFE9A3"/>
+<g fill="#fff" opacity=".8"><ellipse cx="130" cy="70" rx="55" ry="14"/><ellipse cx="165" cy="58" rx="36" ry="13"/><ellipse cx="520" cy="46" rx="48" ry="11"/><ellipse cx="548" cy="37" rx="28" ry="10"/></g>
+<rect y="205" width="800" height="110" fill="url(#sea)"/>
+<rect y="205" width="800" height="3" fill="#fff" opacity=".5"/>
+<g fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" opacity=".55"><path d="M40 232q20-9 40 0t40 0t40 0"/><path d="M420 226q20-9 40 0t40 0t40 0"/><path d="M620 250q20-9 40 0t40 0"/><path d="M120 262q20-9 40 0t40 0t40 0"/><path d="M500 272q20-9 40 0t40 0t40 0"/></g>
+<path d="M0 300q50-16 100-4t100 2t100-6t100 4t100-2t100 4t100-6t100 6V360H0z" fill="url(#sand)"/>
+<path d="M0 300q50-16 100-4t100 2t100-6t100 4t100-2t100 4t100-6t100 6" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" opacity=".85"/>
+<g fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+<path transform="translate(70 120)" d="M0 0q12-14 24 0q12-14 24 0"/>
+<path transform="translate(125 92) scale(.7)" d="M0 0q12-14 24 0q12-14 24 0"/>
+<path transform="translate(640 150) scale(1.1)" d="M0 0q12-14 24 0q12-14 24 0"/>
+<path transform="translate(700 185) scale(.8)" d="M0 0q12-14 24 0q12-14 24 0"/>
+<path transform="translate(320 62) scale(.6)" d="M0 0q12-14 24 0q12-14 24 0"/>
+<path transform="translate(55 182) scale(.75)" d="M0 0q12-14 24 0q12-14 24 0"/>
+</g>
+<rect x="180" y="125" width="440" height="150" rx="26" fill="#05324B" opacity=".32"/>
+<text id="bnName" x="400" y="205" text-anchor="middle" font-family="Tajawal,'Segoe UI',Tahoma,sans-serif" font-size="68" font-weight="800" fill="#fff" stroke="#05324B" stroke-opacity=".35" stroke-width="6" paint-order="stroke">أحمد عادل</text>
+<path d="M250 245h70M480 245h70" stroke="#FFD36B" stroke-width="3" stroke-linecap="round"/>
+<text x="400" y="255" text-anchor="middle" font-family="Tajawal,'Segoe UI',Tahoma,sans-serif" font-size="30" font-weight="500" fill="#FFF3D1">عزبة صادق</text>
+</svg></div><h1 id="appName" style="position:absolute;left:-9999px">أحمد عادل</h1><div class="hint" id="hi"></div>
+
+<div class="hero" aria-live="polite">
+  <small>الموعد القادم</small>
+  <div class="t" id="nextT">لا توجد مواعيد قادمة</div>
+  <div class="c" id="nextC"></div>
+</div>
+
+<div class="panel"><label for="trk">شعبتك</label><select id="trk"><option value="sci">علمي علوم</option><option value="math">علمي رياضة</option><option value="lit">أدبي</option></select></div>
+
+<div class="tabs" role="tablist">
+  <button role="tab" aria-selected="true" data-tab="sched">الجدول</button>
+  <button role="tab" aria-selected="false" data-tab="notes">الملخصات</button>
+  <button role="tab" aria-selected="false" data-tab="eng">كلمات</button>
+  <button role="tab" aria-selected="false" data-tab="english2027">إنجليزي 2027</button>
+  <button role="tab" aria-selected="false" data-tab="chat">خبير الإنجليزي</button>
+  <button role="tab" aria-selected="false" data-tab="prac">التدريب والخطة</button>
+  <button role="tab" aria-selected="false" data-tab="tools">أدوات المذاكرة</button>
+</div>
+
+<section id="sched">
+  <div class="panel">
+    <form id="evForm">
+      <label for="evT">إيه اللي هتذاكره؟</label>
+      <input id="evT" required placeholder="مثلًا: مراجعة الفيزياء، الفصل الثالث">
+      <div class="row">
+        <div><label for="evD">اليوم</label><input id="evD" type="date" required></div>
+        <div><label for="evH">الساعة</label><input id="evH" type="time" required></div>
+      </div>
+      <label for="lead">نبهني قبلها بـ</label>
+      <select id="lead"><option value="0">في الميعاد</option><option value="10">10 دقائق</option><option value="30">30 دقيقة</option><option value="60">ساعة</option></select>
+      <button class="p" type="submit">أضف الموعد</button>
+      <button class="s" type="button" id="notifBtn">فعّل تنبيهات الجهاز</button>
+    </form>
+    <p class="hint">التنبيهات بتشتغل طول ما الصفحة مفتوحة. اترك التبويب مفتوحًا وقت المذاكرة.</p>
+  </div>
+  <h2>القادمة</h2><div class="panel" id="upList"></div>
+  <h2>المنتهية</h2><div class="panel" id="doneList"></div>
+</section>
+
+<section id="notes" hidden>
+  <div class="panel">
+    <form id="noteForm">
+      <label for="nS">المادة</label><select id="nS"></select>
+      <label for="nT">عنوان الدرس</label>
+      <input id="nT" required>
+      <label for="nB">نص الدرس أو ملاحظاتك</label>
+      <textarea id="nB" required placeholder="الصق شرح الدرس هنا"></textarea>
+      <button class="p" type="submit" id="nBtn">لخّص الدرس للامتحان</button> <span class="hint" id="nSt"></span>
+    </form>
+    <p class="hint">التلخيص بالذكاء الاصطناعي بيشتغل على النص اللي بتلصقه من كتاب الوزارة، فبيلتزم بمحتوى الدرس. أول مرة هيطلب موافقتك على استخدام Claude.</p>
+  </div>
+  <div id="noteList"></div>
+</section>
+
+<section id="chat" hidden>
+  <div class="panel">
+    <div class="row">
+      <div><label for="cMode">الوضع</label><select id="cMode"><option value="talk">محادثة يومية</option><option value="fix">صحّح جملتي</option><option value="rule">اشرح لي قاعدة</option></select></div>
+      <div><label for="cScn">الموقف</label><select id="cScn"><option>مع صديق جديد</option><option>في المطعم</option><option>في المطار</option><option>عند الطبيب</option><option>في المتجر</option><option>في الفندق</option><option>مقابلة شخصية</option><option>طلب مساعدة في الشارع</option><option>الدراسة والجامعة</option></select></div>
+      <div><label for="cLvl">مستواك</label><select id="cLvl"><option>مبتدئ</option><option selected>متوسط</option><option>متقدم</option></select></div>
+    </div>
+    <div class="row" style="align-items:center"><label style="display:flex;gap:6px;align-items:center;margin:0"><input type="checkbox" id="cAuto" checked style="width:auto">رد صوتي وإرسال تلقائي</label><select id="cLang"><option value="en-US">أتكلم إنجليزي</option><option value="ar-EG">أتكلم عربي</option></select></div>
+    <div class="log" id="cLog" aria-live="polite"></div>
+    <textarea id="cIn" style="min-height:70px" dir="auto" placeholder="اكتب بالإنجليزي، أو بالعربي لو عايز تسأل"></textarea>
+    <button class="p" id="cSend">أرسل</button> <button class="s" id="cMic" hidden>🎤 اتكلم</button> <button class="s" id="cClr">محادثة جديدة</button>
+    <p class="hint" id="cSt"></p>
+  </div>
+</section>
+
+<section id="prac" hidden>
+  <div class="panel"><div class="n" id="dl"></div>
+    <div class="hint">بداية امتحانات الثانوية العامة 26 يونيو 2027 حسب الجدول المعلن من الوزارة، والامتحان نصفه مقالي ونصفه اختيار من متعدد. اتأكد من موقع الوزارة لأن المواعيد ممكن تتغير.</div></div>
+  <h2>سجّل تدريبك</h2>
+  <div class="panel">
+    <form id="pForm"><label for="pS">المادة</label><select id="pS"></select>
+      <div class="row"><div><label for="pN">أسئلة حليتها</label><input id="pN" type="number" min="1" required></div><div><label for="pC">منها صح</label><input id="pC" type="number" min="0" required></div></div>
+      <button class="p" type="submit">سجّل</button></form>
+    <label for="goal">هدفك الأسبوعي (عدد أسئلة)</label><input id="goal" type="number" min="1">
+    <div class="hint" id="goalSt"></div><div class="bar"><i id="gbar"></i></div>
+  </div>
+  <h2>مستواك في كل مادة</h2><div class="panel" id="stats"></div>
+  <h2>أسئلة على درس</h2>
+  <div class="panel"><label for="qT">اسم الدرس أو نصه (للمادة المختارة فوق)</label><textarea id="qT"></textarea>
+    <button class="p" id="qBtn">ولّد أسئلة</button> <span class="hint" id="qSt"></span><div id="qOut"></div></div>
+  <h2>خطة مذاكرة</h2>
+  <div class="panel"><label for="hrs">ساعات المذاكرة في اليوم</label><input id="hrs" type="number" min="1" max="14" value="5">
+    <button class="p" id="plBtn">اقترح خطة أسبوعية</button> <button class="s" id="plAdd" hidden>ضيف الخطة للجدول</button> <span class="hint" id="plSt"></span><div id="plOut"></div></div>
+</section>
+
+<section id="tools" hidden>
+  <h2>تخصيص التطبيق</h2>
+  <div class="panel"><label for="cuA">اسم التطبيق</label><input id="cuA" placeholder="مثلًا: مذاكرتي"><label for="cuM">اسمك</label><input id="cuM"><label>اللون</label><div id="cuCols"></div></div>
+  <h2>كراسة الأخطاء</h2>
+  <div class="panel"><form id="mForm"><label for="mS">المادة</label><select id="mS"></select>
+    <label for="mQ">السؤال أو النقطة اللي غلطت فيها</label><textarea id="mQ" style="min-height:70px" required></textarea>
+    <label for="mR">سبب الغلط</label><select id="mR"><option>معلومة ناسيها</option><option>فهم غلط</option><option>سهو</option></select>
+    <button class="p" type="submit">سجّلها</button></form><div class="hint" id="mSt"></div><div id="mList"></div></div>
+  <h2>امتحان تجريبي</h2>
+  <div class="panel"><label for="xS">المادة</label><select id="xS"></select>
+    <label for="xT">الدرس أو الدروس (اسم أو نص)</label><textarea id="xT" style="min-height:70px"></textarea>
+    <label for="xM">الوقت بالدقائق</label><input id="xM" type="number" min="5" value="30">
+    <button class="p" id="xGo">ابدأ الامتحان</button> <span class="hint" id="xSt"></span>
+    <div id="xBox" hidden><div class="n" id="xTm"></div><div class="sum" id="xQ"></div><label for="xA">إجاباتك</label><textarea id="xA"></textarea><button class="p" id="xEnd">سلّم وصحّح</button></div><div id="xRes"></div></div>
+  <h2>اسأل عن نقطة</h2>
+  <div class="panel"><label for="aT">نص الدرس</label><textarea id="aT" style="min-height:90px"></textarea><label for="aQ">سؤالك</label><input id="aQ">
+    <button class="p" id="aGo">اشرح</button> <span class="hint" id="aSt"></span><div id="aOut"></div></div>
+  <h2>مؤقت التركيز</h2>
+  <div class="panel"><div class="n" id="pmT" style="font-size:34px">25:00</div><button class="p" id="pmGo">ابدأ 25 دقيقة</button> <button class="s" id="pmX">إلغاء</button><div class="hint" id="pmSt"></div></div>
+  <h2>ورقة مراجعة</h2>
+  <div class="panel"><label for="rS">المادة</label><select id="rS"></select><button class="p" id="rGo">حمّل ورقة المراجعة</button><div class="hint" id="rSt"></div></div>
+  <h2>نسخة احتياطية</h2>
+  <div class="panel"><button class="p" id="bkGo">حمّل بياناتك</button> <label style="display:inline-block;margin-top:10px;padding:10px 16px;border:1px solid var(--brand);border-radius:10px;cursor:pointer;color:var(--brand);font-weight:700">استرجع نسخة<input id="bkIn" type="file" accept=".json" hidden></label><div class="hint" id="bkSt"></div></div>
+</section>
+
+<section id="eng" hidden>
+  <div class="panel">
+    <form id="wForm">
+      <div class="row">
+        <div><label for="wE">الكلمة بالإنجليزي</label><input id="wE" required dir="ltr"></div>
+        <div><label for="wA">معناها</label><input id="wA" placeholder="سيبه فاضي وهترجمها لك"></div>
+      </div>
+      <button class="p" type="submit">أضف الكلمة</button>
+    </form>
+  </div>
+  <h2>مراجعة</h2>
+  <div class="panel">
+    <div class="card" id="card" tabindex="0" role="button" aria-label="اضغط لإظهار المعنى"></div>
+    <div class="row" id="rev" hidden>
+      <button class="s" id="again">أعيدها</button>
+      <button class="p" id="know">عرفتها</button>
+    </div>
+  </div>
+  <h2>كلماتك</h2><div class="panel" id="wList"></div>
+</section>
+
+<section id="english2027" hidden>
+  <div class="course-hero">
+    <h2>منهج اللغة الإنجليزية — تالتة ثانوي 2027</h2>
+    <p>مساحة مذاكرة منظمة للوحدات والقواعد والرواية والكلمات والقراءة والكتابة والتدريب.</p>
+    <div class="course-links">
+      <a href="https://elearnningcontent.blob.core.windows.net/elearnningcontent/2026_2027/Secondry/Secondry3/Term1/StudentBook/English_language_Sec3_tr1.pdf" target="_blank" rel="noopener">الكتاب المدرسي PDF</a>
+      <a href="https://zakermasr.com/الصف-الثالث-الثانوي/اللغة-الانجليزية/" target="_blank" rel="noopener">فهرس الدروس والمراجعات</a>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="row"><div><b>تقدمك في الوحدات</b><div class="hint" id="ecProgressText">0 من 12 وحدة</div></div><div style="text-align:left"><b id="ecProgressPct">0%</b></div></div>
+    <div class="course-meter"><span id="ecProgressBar"></span></div>
+    <label for="ecSearch">ابحث في المنهج</label><input id="ecSearch" placeholder="اسم وحدة أو قاعدة أو فصل من الرواية…">
+    <label for="ecTerm">عرض المحتوى</label><select id="ecTerm"><option value="all">الترمين</option><option value="1">الترم الأول</option><option value="2">الترم الثاني</option></select>
+  </div>
+  <div class="course-nav" aria-label="أقسام منهج الإنجليزي">
+    <button class="active" data-course-jump="ecUnits">الوحدات</button><button data-course-jump="ecGrammar">القواعد</button><button data-course-jump="ecVocab">الكلمات</button><button data-course-jump="ecReader">الرواية</button><button data-course-jump="ecSkills">المهارات</button><button data-course-jump="ecExam">التدريب</button>
+  </div>
+
+  <div id="ecUnits" class="course-section">
+    <h2>الوحدات والدروس</h2>
+    <p class="hint">علّم كل وحدة بعد مذاكرتها. أسماء الوحدات وموضوعات القواعد مبنية على فهرس كتاب الوزارة السنوي 2026/2027.</p>
+    <div id="ecUnitList"></div>
+  </div>
+
+  <div id="ecGrammar" class="course-section">
+    <h2>شرح قواعد المنهج</h2><div id="ecGrammarList" class="course-grid"></div>
+  </div>
+
+  <div id="ecVocab" class="course-section">
+    <h2>قاموس كلماتك للمنهج</h2>
+    <div class="panel">
+      <form id="ecWordForm">
+        <div class="row"><div><label for="ecWord">الكلمة أو التعبير</label><input id="ecWord" required dir="ltr" placeholder="e.g. care"></div><div><label for="ecMeaning">المعنى بالعربي</label><input id="ecMeaning" required placeholder="الرعاية"></div></div>
+        <label for="ecWordUnit">الوحدة</label><select id="ecWordUnit"></select>
+        <button class="p" type="submit">أضف للكلمات</button>
+      </form>
+    </div>
+    <div class="panel"><div class="row"><div><b>بطاقة المراجعة</b><div class="hint" id="ecFlashCount">ابدأ بإضافة كلماتك</div></div><button class="s" id="ecFlashNext" type="button">بطاقة تالية</button></div><div class="card" id="ecFlash" tabindex="0" role="button">أضف كلمات من الكتاب لتبدأ المراجعة</div><div class="course-actions"><button class="s" id="ecFlashShow" type="button">أظهر المعنى</button><button class="p" id="ecFlashKnown" type="button">عرفتها</button></div></div>
+    <div class="panel"><b>الكلمات المحفوظة</b><div id="ecWordList" class="hint">لا توجد كلمات بعد.</div></div>
+  </div>
+
+  <div id="ecReader" class="course-section">
+    <h2>الرواية — The Count of Monte Cristo</h2>
+    <p class="hint">12 فصلًا موزعة على جزأين. افتح كل فصل لتسجيل مذاكرته وملاحظاتك.</p>
+    <div id="ecReaderList"></div>
+  </div>
+
+  <div id="ecSkills" class="course-section">
+    <h2>مهارات اللغة</h2>
+    <div class="course-grid">
+      <div class="course-box"><h3>Reading — القطعة</h3><p>اقرأ السؤال أولًا، حدّد الفكرة الرئيسية، استخرج التفاصيل، وانتبه للضمائر والكلمات التي تربط السبب بالنتيجة.</p><span class="course-tag">Main idea</span><span class="course-tag">Details</span><span class="course-tag">Inference</span></div>
+      <div class="course-box"><h3>Writing — الكتابة</h3><p>تدرّب على تنظيم الفقرة: مقدمة واضحة، أفكار مرتبة، روابط مناسبة، وخاتمة. راجع الأزمنة وعلامات الترقيم والإملاء.</p><span class="course-tag">Blog post</span><span class="course-tag">Paragraph</span><span class="course-tag">Review</span></div>
+      <div class="course-box"><h3>Translation — الترجمة</h3><p>افهم المعنى قبل الترجمة، حافظ على الزمن، وتجنب الترجمة الحرفية للتعبيرات الاصطلاحية. راجع ترتيب الكلمات وأدوات الربط.</p><span class="course-tag">Arabic → English</span><span class="course-tag">English → Arabic</span></div>
+      <div class="course-box"><h3>Vocabulary in context</h3><p>احفظ الكلمة داخل جملة، وتعلّم المرادف والعكس والمشتقات، ولا تعتمد على معنى واحد إذا تغيّر السياق.</p><span class="course-tag">Synonyms</span><span class="course-tag">Antonyms</span><span class="course-tag">Word forms</span></div>
+    </div>
+    <div class="panel"><h3>تدريب كتابة أو ترجمة</h3><label for="ecWritingType">نوع التدريب</label><select id="ecWritingType"><option>ترجمة من العربية إلى الإنجليزية</option><option>ترجمة من الإنجليزية إلى العربية</option><option>Writing paragraph</option><option>Blog post</option><option>تلخيص فصل من الرواية</option></select><label for="ecWritingPrompt">السؤال أو المطلوب</label><textarea id="ecWritingPrompt" placeholder="اكتب المطلوب هنا…"></textarea><label for="ecWritingAnswer">إجابتك</label><textarea id="ecWritingAnswer" placeholder="اكتب إجابتك وراجعها…"></textarea><button class="p" id="ecWritingSave" type="button">احفظ إجابتي</button><span class="hint" id="ecWritingStatus"></span><div id="ecWritingSaved"></div></div>
+  </div>
+
+  <div id="ecExam" class="course-section">
+    <h2>تدريب وامتحان إنجليزي</h2>
+    <p class="hint">تدريب ذاتي على القواعد والمفردات. لا نثبت عدد الأسئلة أو الدرجات أو زمن الامتحان هنا قبل توفر مواصفة رسمية مؤكدة خاصة بامتحان ثالثة ثانوي 2027.</p>
+    <div class="panel"><div class="row"><div><b>اختبار سريع</b><div class="hint">اختيار من متعدد — قواعد المنهج</div></div><button class="p" id="ecQuizStart" type="button">ابدأ الاختبار</button></div><div id="ecQuizBox"></div></div>
+    <div class="panel"><h3>قائمة مراجعة قبل الامتحان</h3><div id="ecExamChecklist"></div></div>
+  </div>
+  <p class="hint">ملاحظة: المحتوى المضاف هنا خريطة منظمة للمنهج وأدوات متابعة شخصية. الكتاب الرسمي هو المرجع الأساسي للكلمات والنصوص والتدريبات الكاملة، وقد تتغير أي تفاصيل بصدور تحديث من الوزارة.</p>
+</section>
+</div>
+
+<script>
+const $=s=>document.querySelector(s),K='study-v1';
+let S={ev:[],notes:[],words:[],track:'sci',prac:[],goal:100,mist:[],focus:{}};
+try{const r=localStorage.getItem(K);if(r)S=Object.assign(S,JSON.parse(r))}catch(e){}
+S.courseDone=S.courseDone||{};S.courseWords=S.courseWords||[];S.courseWriting=S.courseWriting||[];S.courseExamChecks=S.courseExamChecks||{};
+const save=()=>{try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}};
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const at=e=>new Date(e.d+'T'+e.t);
+const fmt=e=>at(e).toLocaleString('ar-EG',{weekday:'long',day:'numeric',month:'long',hour:'numeric',minute:'2-digit'});
+
+function left(ms){
+  const m=Math.max(0,Math.round(ms/60000));
+  if(m<1)return 'دلوقتي';
+  const d=Math.floor(m/1440),h=Math.floor(m%1440/60),n=m%60,p=[];
+  if(d)p.push(d+' يوم');if(h)p.push(h+' ساعة');if(n&&!d)p.push(n+' دقيقة');
+  return 'بعد '+p.join(' و ');
+}
+function showAlert(t){$('#alertText').textContent=t;$('#alert').style.display='block'}
+$('#closeAlert').onclick=()=>$('#alert').style.display='none';
+
+/* Tabs */
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.tabs button').forEach(x=>x.setAttribute('aria-selected',x===b));
+  ['sched','notes','chat','prac','tools','eng','english2027'].forEach(id=>$('#'+id).hidden=id!==b.dataset.tab);if(b.dataset.tab==='english2027')ecRender();
+});
+
+/* Schedule */
+function renderSched(){
+  const now=Date.now(),sorted=[...S.ev].sort((a,b)=>at(a)-at(b));
+  const up=sorted.filter(e=>!e.done&&at(e)>=now-36e5),dn=sorted.filter(e=>!up.includes(e)).reverse();
+  const row=e=>`<div class="item ${e.done?'done':''}"><input type="checkbox" data-done="${e.id}" ${e.done?'checked':''} aria-label="تم"><div class="m"><div class="n">${esc(e.title)}</div><div class="d">${fmt(e)}</div></div><button class="x" data-del="${e.id}" aria-label="احذف">×</button></div>`;
+  $('#upList').innerHTML=up.length?up.map(row).join(''):'<div class="empty">ضيف أول موعد مذاكرة من الأعلى</div>';
+  $('#doneList').innerHTML=dn.length?dn.map(row).join(''):'<div class="empty">لا شيء هنا بعد</div>';
+  tickHero();
+}
+function tickHero(){
+  const n=S.ev.filter(e=>!e.done&&at(e)>=Date.now()).sort((a,b)=>at(a)-at(b))[0];
+  $('#nextT').textContent=n?n.title:'لا توجد مواعيد قادمة';
+  $('#nextC').textContent=n?left(at(n)-Date.now()):'';
+}
+$('#evForm').onsubmit=e=>{e.preventDefault();
+  S.ev.push({id:uid(),title:$('#evT').value.trim(),d:$('#evD').value,t:$('#evH').value,lead:+$('#lead').value,fired:false,done:false});
+  save();e.target.reset();renderSched()};
+document.addEventListener('click',e=>{
+  const del=e.target.dataset.del;
+  if(del){S.ev=S.ev.filter(x=>x.id!==del);save();renderSched()}
+});
+document.addEventListener('change',e=>{
+  const id=e.target.dataset.done;
+  if(id){const x=S.ev.find(v=>v.id===id);if(x){x.done=e.target.checked;save();renderSched()}}
+});
+$('#notifBtn').onclick=()=>{
+  try{Notification.requestPermission().then(p=>showAlert(p==='granted'?'تم تفعيل التنبيهات':'التنبيهات مقفولة من إعدادات المتصفح'))}
+  catch(e){showAlert('المتصفح ده مش بيدعم تنبيهات الجهاز، هتوصلك التنبيهات جوه الصفحة')}
+};
+function checkReminders(){
+  const now=Date.now();let ch=false;
+  S.ev.forEach(e=>{
+    if(e.done||e.fired)return;
+    const t=at(e).getTime();
+    if(now>=t-e.lead*60000&&now<t+36e5){
+      e.fired=true;ch=true;
+      const msg=(e.lead?left(t-now)+': ':'حان الآن: ')+e.title;
+      showAlert(msg);
+      try{if(Notification.permission==='granted')new Notification('مساعد المذاكرة',{body:msg})}catch(x){}
+    }
+  });
+  if(ch){save();renderSched()}
+}
+setInterval(()=>{tickHero();checkReminders()},15000);
+
+/* Notes */
+function summarize(t){
+  const s=t.split(/(?<=[.!؟?])\s+|\n+/).map(x=>x.trim()).filter(x=>x.length>20);
+  if(s.length<=3)return s.join(' ')||t.slice(0,200);
+  const f={},W=/[\p{L}]{3,}/gu;
+  (t.toLowerCase().match(W)||[]).forEach(w=>f[w]=(f[w]||0)+1);
+  const sc=s.map((x,i)=>({x,i,v:(x.toLowerCase().match(W)||[]).reduce((a,w)=>a+f[w],0)/Math.sqrt(x.length)}));
+  return sc.sort((a,b)=>b.v-a.v).slice(0,3).sort((a,b)=>a.i-b.i).map(o=>o.x).join(' ');
+}
+function renderNotes(){
+  $('#noteList').innerHTML=S.notes.length?S.notes.map(n=>`<div class="panel"><div class="item" style="border:0;padding:0"><div class="m"><div class="n">${esc(n.title)}</div><div class="d">${esc(n.sub||'')}</div></div><button class="x" data-ndel="${n.id}" aria-label="احذف">×</button></div><div class="sum">${esc(n.sum)}</div></div>`).join(''):'<div class="empty">ملخصاتك هتظهر هنا</div>';
+}
+$('#noteForm').onsubmit=async e=>{e.preventDefault();
+  const b=$('#nB').value.trim(),t=$('#nT').value.trim(),sub=$('#nS').value,st=$('#nSt'),btn=$('#nBtn');
+  let sum='';btn.disabled=true;
+  if(AI){st.textContent='جاري التلخيص…';
+    try{sum=(await AI(`أنت مدرس خبير لطلاب الثانوية العامة المصرية (الصف الثالث الثانوي، ${TN[S.track]}، امتحانات 2027: نصفها مقالي ونصفها اختيار من متعدد). المادة: ${sub}. لخّص الدرس التالي بالعربية المبسطة (والمصطلحات الأجنبية كما هي) بدون إضافة معلومات غير موجودة في النص، وبالترتيب ده:\nالفكرة العامة: سطرين\nأهم النقاط: من 5 إلى 8 نقاط مرقمة\nتعريفات وقوانين ومصطلحات لازم تتحفظ\nأسئلة متوقعة: سؤالين مقاليين و3 اختيار من متعدد مع إجاباتها\nلو النص ناقص حاجة مهمة قول إيه هي.\n\nالنص:\n${b}`)).text}catch(x){st.textContent=errMsg(x.code)+'، استخدمت تلخيصًا بسيطًا بدله'}}
+  if(!sum)sum=summarize(b);
+  S.notes.unshift({id:uid(),title:t,sub,sum});save();e.target.reset();$('#nS').value=sub;renderNotes();btn.disabled=false;if(AI&&sum)st.textContent=''};
+document.addEventListener('click',e=>{const d=e.target.dataset.ndel;if(d){S.notes=S.notes.filter(n=>n.id!==d);save();renderNotes()}});
+
+/* English */
+let cur=null,shown=false;
+function renderWords(){
+  $('#wList').innerHTML=S.words.length?S.words.map(w=>`<div class="item"><div class="m"><div class="n" dir="ltr" style="text-align:right">${esc(w.e)}</div><div class="d">${esc(w.a)}</div></div><button class="x" data-wdel="${w.id}" aria-label="احذف">×</button></div>`).join(''):'<div class="empty">ضيف كلمات جديدة من فوق</div>';
+  nextCard();
+}
+function nextCard(){
+  shown=false;$('#rev').hidden=true;
+  if(!S.words.length){cur=null;$('#card').innerHTML='<span class="hint">ضيف كلمة عشان تبدأ المراجعة</span>';return}
+  const min=Math.min(...S.words.map(w=>w.box||0));
+  const pool=S.words.filter(w=>(w.box||0)===min&&w!==cur);
+  cur=(pool.length?pool:S.words)[Math.floor(Math.random()*(pool.length||S.words.length))];
+  $('#card').innerHTML=`<div class="w">${esc(cur.e)}</div><div class="hint">اضغط لإظهار المعنى</div>`;
+}
+function flip(){if(!cur||shown)return;shown=true;
+  $('#card').innerHTML=`<div class="w">${esc(cur.e)}</div><div class="a">${esc(cur.a)}</div>`;$('#rev').hidden=false}
+$('#card').onclick=flip;
+$('#card').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();flip()}};
+$('#know').onclick=()=>{if(cur){cur.box=(cur.box||0)+1;save();nextCard()}};
+$('#again').onclick=()=>{if(cur){cur.box=0;save();nextCard()}};
+$('#wForm').onsubmit=async e=>{e.preventDefault();
+  const w=$('#wE').value.trim();let a=$('#wA').value.trim();e.target.reset();
+  if(!a){if(!AI){showAlert('اكتب المعنى بنفسك، الترجمة التلقائية مش متاحة');return}
+    try{a=(await AI('ترجم الكلمة أو التعبير ده من الإنجليزي للعربي بمعناه الأشهر في كلمتين أو تلات، وارجع الترجمة بس: '+w)).text.trim()}catch(x){showAlert(errMsg(x.code));return}}
+  S.words.push({id:uid(),e:w,a,box:0});save();renderWords()};
+document.addEventListener('click',e=>{const d=e.target.dataset.wdel;if(d){S.words=S.words.filter(w=>w.id!==d);save();renderWords()}});
+
+/* AI */
+let AI=null;
+(async()=>{try{AI=await claude.use('sample')}catch(e){}})();
+const errMsg=c=>({not_granted:'لازم توافق على استخدام Claude',rate_limited:'الاستخدام كتير، جرّب بعد شوية',sampling_disabled:'الذكاء الاصطناعي غير متاح لحسابك'}[c]||'حصلت مشكلة، جرّب تاني');
+const TN={sci:'علمي علوم',math:'علمي رياضة',lit:'أدبي'};
+const SUBJ={sci:['اللغة العربية','اللغة الإنجليزية','اللغة الأجنبية الثانية','الأحياء','الكيمياء','الفيزياء','الجيولوجيا'],math:['اللغة العربية','اللغة الإنجليزية','اللغة الأجنبية الثانية','الرياضيات','الفيزياء','الكيمياء'],lit:['اللغة العربية','اللغة الإنجليزية','اللغة الأجنبية الثانية','التاريخ','الجغرافيا','الفلسفة والمنطق','علم النفس والاجتماع']};
+function fillSubj(){
+  const o=SUBJ[S.track].concat('مادة أخرى').map(s=>`<option>${esc(s)}</option>`).join('');
+  ['#nS','#pS','#mS','#rS','#xS'].forEach(id=>{const el=$(id),v=el.value;el.innerHTML=o;if(v)el.value=v});
+  $('#trk').value=S.track}
+$('#trk').onchange=e=>{S.track=e.target.value;save();fillSubj()};
+
+/* English expert */
+let turns=[];
+const P=(t,k)=>{const m=t.match(new RegExp(k+':\\s*([\\s\\S]*?)(?=\\n(?:EN|FIX|WORD):|$)'));return m?m[1].trim():''};
+const rules=()=>`أنت خبير تعليم إنجليزي على أعلى مستوى، بتدرّس لطالب مصري في ثالثة ثانوي. مستواه: ${$('#cLvl').value}. الوضع: ${$('#cMode').selectedOptions[0].text}. الموقف: ${$('#cScn').value}.\nتكلم إنجليزي طبيعي بيستخدمه الناس فعلًا في الحياة اليومية بمستوى يناسبه. رد بالشكل ده بالظبط في 3 أسطر:\nEN: ردك بالإنجليزي في جملتين أو 3 على الأكتر، وفي وضع المحادثة اختم بسؤال يكمل الحوار\nFIX: تصحيح أخطاء آخر رسالة له بالعربي المبسط مع الجملة الصحيحة، أو اكتب ممتاز لو مفيش أخطاء\nWORD: كلمة أو تعبير مفيد من الموقف بالشكل english = المعنى بالعربي\nفي وضع صحّح جملتي: ضع الجملة الصحيحة في EN واشرح السبب في FIX. في وضع اشرح لي قاعدة: اشرح القاعدة بمثال إنجليزي بسيط في EN وبالتفصيل بالعربي في FIX. لو كتب بالعربي سؤالًا عن اللغة جاوبه بنفس الشكل.`;
+function renderChat(){
+  const bot=t=>{const en=P(t,'EN'),fx=P(t,'FIX'),w=P(t,'WORD');return `<div class="b a"><div dir="ltr">${esc(en||t)}</div><div><button class="s" data-say="${esc(en||t)}">🔊 اسمع</button> <button class="s" data-tr="${esc(en||t)}">ترجم</button></div><div class="tr" style="font-size:14px;color:var(--brand)"></div>${fx?`<div class="fx">${esc(fx)}</div>`:''}${w.includes('=')?`<button class="s" data-addw="${esc(w)}">+ ${esc(w)}</button>`:''}</div>`};
+  $('#cLog').innerHTML=turns.map(t=>t.role==='user'?`<div class="b u" dir="auto">${esc(t.content)}</div>`:bot(t.content)).join('')||'<div class="empty">اختار الموقف وابعت أول رسالة، حتى لو كلمة Hello</div>';
+  $('#cLog').scrollTop=1e9}
+$('#cSend').onclick=async()=>{
+  const m=$('#cIn').value.trim();if(!m)return;
+  if(!AI){$('#cSt').textContent='ميزة الذكاء الاصطناعي مش متاحة هنا';return}
+  turns.push({role:'user',content:m});$('#cIn').value='';renderChat();$('#cSt').textContent='الخبير بيكتب…';$('#cSend').disabled=true;
+  try{const {text}=await AI([{role:'user',content:rules()},...turns],{cache:false});turns.push({role:'assistant',content:text});$('#cSt').textContent='';say(P(text,'EN')||text)}
+  catch(e){turns.pop();$('#cIn').value=m;$('#cSt').textContent=errMsg(e.code)}
+  $('#cSend').disabled=false;while(turns.length>12)turns.splice(0,2);renderChat()};
+$('#cClr').onclick=()=>{turns=[];renderChat()};
+document.addEventListener('click',e=>{const w=e.target.dataset.addw;if(w){const [a,b]=w.split('=').map(x=>x.trim());if(a&&b){S.words.push({id:uid(),e:a,a:b,box:0});save();renderWords();showAlert('اتضافت للكلمات: '+a)}}});
+
+/* Practice and plan */
+function statsMap(){const by={};S.prac.forEach(p=>{const x=by[p.s]=by[p.s]||{n:0,c:0};x.n+=p.n;x.c+=p.c});return by}
+function daysLeft(){return Math.ceil((new Date('2027-06-26T00:00')-Date.now())/864e5)}
+function renderPrac(){
+  const d=daysLeft();$('#dl').textContent=d>0?`باقي ${d} يوم على بداية الامتحانات`:'الامتحانات بدأت';
+  const ws=new Date();ws.setHours(0,0,0,0);ws.setDate(ws.getDate()-((ws.getDay()+1)%7));
+  const wk=S.prac.filter(p=>new Date(p.d+'T00:00')>=ws).reduce((a,p)=>a+p.n,0);
+  $('#goalSt').textContent=`خلصت ${wk} من ${S.goal} سؤال الأسبوع ده`;$('#gbar').style.width=Math.min(100,wk/S.goal*100)+'%';
+  const rows=Object.entries(statsMap()).map(([s,x])=>({s,n:x.n,a:Math.round(x.c/x.n*100)})).sort((a,b)=>a.a-b.a);
+  $('#stats').innerHTML=rows.length?rows.map(r=>`<div class="item"><div class="m"><div class="n">${esc(r.s)}</div><div class="d">${r.n} سؤال، دقة ${r.a}%</div><div class="bar"><i style="width:${r.a}%"></i></div></div></div>`).join(''):'<div class="empty">سجّل أول جلسة تدريب عشان تشوف مستواك</div>'}
+$('#pForm').onsubmit=e=>{e.preventDefault();const n=+$('#pN').value,c=+$('#pC').value;
+  if(c>n){showAlert('عدد الإجابات الصح لازم يكون أقل من أو يساوي عدد الأسئلة');return}
+  const s=$('#pS').value;S.prac.push({id:uid(),s,n,c,d:new Date().toLocaleDateString('en-CA')});save();e.target.reset();$('#pS').value=s;renderPrac()};
+$('#goal').value=S.goal;$('#goal').onchange=e=>{S.goal=Math.max(1,+e.target.value||100);save();renderPrac()};
+$('#qBtn').onclick=async()=>{
+  const t=$('#qT').value.trim(),st=$('#qSt');
+  if(!AI){st.textContent='ميزة الذكاء الاصطناعي مش متاحة هنا';return}
+  if(!t){st.textContent='اكتب اسم الدرس أو الصق نصه';return}
+  st.textContent='جاري التوليد…';$('#qOut').innerHTML='';
+  try{const {text}=await AI(`أنت مدرس خبير في مادة ${$('#pS').value} لطلاب الثانوية العامة المصرية (${TN[S.track]}، امتحانات 2027 نصفها مقالي ونصفها اختيار من متعدد). اكتب 4 أسئلة اختيار من متعدد (أ، ب، ج، د) و3 أسئلة مقالية على الدرس التالي بمستوى امتحان الوزارة ومن غير معلومات خارج المنهج. اكتب الأسئلة كلها أولًا، ثم سطر فيه ===== فقط، ثم الإجابات النموذجية مرقمة بنفس الترتيب.\nالدرس:\n${t}`);
+    const [q,a]=text.split('=====');
+    $('#qOut').innerHTML=`<div class="sum">${esc(q.trim())}</div>${a?`<details><summary>الإجابات (حاول تحل الأول)</summary><div class="sum">${esc(a.trim())}</div></details>`:''}`;st.textContent=''}
+  catch(e){st.textContent=errMsg(e.code)}};
+$('#plBtn').onclick=async()=>{
+  const st=$('#plSt');
+  if(!AI){st.textContent='ميزة الذكاء الاصطناعي مش متاحة هنا';return}
+  const lv=Object.entries(statsMap()).map(([s,x])=>`${s}: ${Math.round(x.c/x.n*100)}%`).join('، ')||'لا توجد بيانات بعد';
+  st.textContent='جاري التخطيط…';
+  try{const {text}=await AI(`أنت مستشار مذاكرة لطالب ثانوية عامة مصرية (${TN[S.track]}). باقي ${Math.max(0,daysLeft())} يوم على الامتحانات، ويذاكر ${$('#hrs').value} ساعات يوميًا. مستواه حسب نسبة الصح في التدريب: ${lv}. المواد: ${SUBJ[S.track].join('، ')}. اعمل خطة أسبوعية واقعية بالعربي المبسط: وزّع المواد على الأيام وركّز أكتر على الأضعف، وخصص وقتًا للمراجعة وحل الأسئلة والراحة، واختم بـ3 نصائح عملية.`);
+    $('#plOut').innerHTML=`<div class="sum">${esc(text)}</div>`;plText=text;$('#plAdd').hidden=false;st.textContent=''}
+  catch(e){st.textContent=errMsg(e.code)}};
+
+document.addEventListener('click',async e=>{
+  const s=e.target.dataset.say,t=e.target.dataset.tr;
+  if(s){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(s);u.lang='en-US';u.rate=.9;speechSynthesis.speak(u)}catch(x){showAlert('المتصفح مش بيدعم النطق')}}
+  if(t){const box=e.target.closest('.b').querySelector('.tr');
+    if(!AI){box.textContent='ميزة الذكاء الاصطناعي مش متاحة';return}
+    box.textContent='جاري الترجمة…';
+    try{box.textContent=(await AI('ترجم النص ده للعربية المصرية المبسطة، وارجع الترجمة بس:\n'+t)).text}catch(x){box.textContent=errMsg(x.code)}}});
+(async()=>{try{const d=await claude.use('dictation');if(!d)return;DICT=d;dictInit();return;let base='',on=false;const b=null;
+  d.onPartial(({text})=>{$('#cIn').value=(base+' '+text).trim()});
+  d.onFinal(({text})=>{base=($('#cIn').value=(base+' '+text).trim())});
+  d.onState(({state})=>{on=state==='listening';b.textContent=on?'⏹ وقّف':'🎤 اتكلم'});
+  b.onclick=()=>{if(on){d.stop();return}base=$('#cIn').value.trim();d.start().catch(()=>showAlert('لازم تسمح باستخدام الميكروفون'))}}catch(e){}})();
+
+/* Voice conversation */
+let DICT=null,listening=false,rec=null;
+const micBtn=$('#cMic');micBtn.hidden=false;
+function speak(t){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='en-US';u.rate=.9;speechSynthesis.speak(u)}catch(x){}}
+function say(t){if($('#cAuto').checked)speak(t)}
+function setMic(on){listening=on;micBtn.textContent=on?'⏹ وقّف':'🎤 اتكلم'}
+function finish(t){$('#cIn').value=t;if($('#cAuto').checked&&t.trim())$('#cSend').click()}
+function dictInit(){let t='';
+  DICT.onPartial(({text})=>{if(listening)$('#cIn').value=(t+' '+text).trim()});
+  DICT.onFinal(({text})=>{t=(t+' '+text).trim();$('#cIn').value=t});
+  DICT.onState(({state})=>{const on=state==='listening';if(on){t='';setMic(true)}else if(listening){const x=t;t='';setMic(false);finish(x)}})}
+micBtn.onclick=()=>{
+  if(listening){try{rec?rec.stop():DICT.stop()}catch(e){}return}
+  speechSynthesis&&speechSynthesis.cancel();
+  const viaDict=()=>{if(!DICT){showAlert('الميكروفون مش متاح هنا، اكتب بالكيبورد');return}DICT.start().catch(()=>showAlert('لازم تسمح باستخدام الميكروفون'))};
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){viaDict();return}
+  try{rec=new SR();rec.lang=$('#cLang').value;rec.interimResults=true;rec.continuous=false;let txt='';
+    rec.onresult=ev=>{txt=[...ev.results].map(r=>r[0].transcript).join(' ');$('#cIn').value=txt};
+    rec.onerror=ev=>{setMic(false);rec=null;if(['not-allowed','service-not-allowed','audio-capture'].includes(ev.error))viaDict();else if(ev.error!=='no-speech'&&ev.error!=='aborted')showAlert('مسمعتش كويس، جرّب تاني')};
+    rec.onend=()=>{if(rec){rec=null;setMic(false);finish(txt)}};
+    rec.start();setMic(true)}catch(e){rec=null;viaDict()}};
+
+
+/* English 2027 curriculum */
+const EC_UNITS=[
+ {n:1,t:1,name:'Inside the World of Care',ar:'عالم الرعاية',grammar:'Present Perfect / Present Perfect Continuous',lessons:['My Day in the Hospital','Emergency Call','Tired Hands, Caring Hearts','Beyond the White Coat','My Blog Post']},
+ {n:2,t:1,name:'The Power of Machines',ar:'قوة الآلات',grammar:'Reported Statements and Commands',lessons:['Vocabulary and reading','Reported statements','Reported commands','Writing practice']},
+ {n:3,t:1,name:'Protect Nature, Protect Future',ar:'احمِ الطبيعة تحمِ المستقبل',grammar:'Modal Verbs: deduction, regret and blame',lessons:['Vocabulary and reading','Modal verbs for deduction','Regret and blame','Writing practice']},
+ {n:4,t:1,name:'Marine Life',ar:'الحياة البحرية',grammar:'Adjectives and Compound Adjectives',lessons:['Vocabulary and reading','Adjectives','Compound adjectives','Writing practice']},
+ {n:5,t:1,name:'From Muscles to Mindset',ar:'من العضلات إلى العقلية',grammar:'Causative Verbs: have / get',lessons:['Vocabulary and reading','Have something done','Get something done','Writing practice']},
+ {n:6,t:1,name:"Let's Hang Out!",ar:'هيا نقضي وقتًا ممتعًا',grammar:'Reported Questions',lessons:['Vocabulary and reading','Reported questions','Reporting verbs','Writing practice']},
+ {n:7,t:2,name:'At the Airport',ar:'في المطار',grammar:'Past Perfect / Past Perfect Continuous',lessons:['Vocabulary and reading','Past Perfect','Past Perfect Continuous','Writing practice']},
+ {n:8,t:2,name:'A Journey Through Time',ar:'رحلة عبر الزمن',grammar:'Active / Passive Voice',lessons:['Vocabulary and reading','Active voice','Passive voice','Writing practice']},
+ {n:9,t:2,name:"The Universe's Mysteries",ar:'أسرار الكون',grammar:'Verb Patterns',lessons:['Vocabulary and reading','Verb + infinitive','Verb + gerund','Verb patterns in context']},
+ {n:10,t:2,name:"Peoples' Hospitality and Kindness",ar:'كرم الضيافة واللطف',grammar:'Relative Clauses',lessons:['Vocabulary and reading','Defining relative clauses','Non-defining relative clauses','Writing practice']},
+ {n:11,t:2,name:'Literature',ar:'الأدب',grammar:'Comparative / Superlative Adjectives',lessons:['Vocabulary and reading','Comparatives','Superlatives','Writing practice']},
+ {n:12,t:2,name:'University Life',ar:'الحياة الجامعية',grammar:'Tag Questions',lessons:['Vocabulary and reading','Positive and negative tags','Special cases','Writing practice']}
+];
+const EC_GRAMMAR=[
+ ['Present Perfect Simple','have / has + past participle','نتيجة حالية أو خبرة أو فعل له صلة بالحاضر.','She has finished her work.'],
+ ['Present Perfect Continuous','have / has + been + V-ing','التركيز على مدة الفعل أو استمراره حتى الآن.','They have been studying for two hours.'],
+ ['Reported Statements','said (that) + reported clause','نقل الكلام مع مراعاة تغيّر الضمائر والزمن عند الحاجة.','“I am tired.” → He said that he was tired.'],
+ ['Reported Commands','told / asked + object + to-infinitive','نقل الأمر أو الطلب باستخدام to أو not to.','“Close the door.” → She told me to close the door.'],
+ ['Modal Verbs','must / may / might / can’t + infinitive','للاستنتاج والاحتمال، وتختلف قوة التأكد حسب الفعل المساعد.','He must be at home.'],
+ ['Adjectives & Compound Adjectives','adjective + noun / compound adjective','وصف الأشخاص والأشياء، وقد يتكون الوصف من كلمتين بشرطة.','a well-known writer'],
+ ['Causative: have / get','have / get + object + past participle','عندما نطلب من شخص آخر تنفيذ عمل لنا.','I had my phone repaired.'],
+ ['Reported Questions','asked + if / whether / question word + subject + verb','نستخدم ترتيب الجملة الخبرية ولا نستخدم ترتيب السؤال المباشر.','“Where do you live?” → He asked where I lived.'],
+ ['Past Perfect Simple','had + past participle','حدث اكتمل قبل حدث آخر في الماضي.','The train had left before we arrived.'],
+ ['Past Perfect Continuous','had + been + V-ing','مدة فعل استمر قبل نقطة أو حدث في الماضي.','She had been waiting for an hour.'],
+ ['Active / Passive Voice','object + be + past participle','نستخدم المبني للمجهول عندما نهتم بالفعل أو المفعول به.','The bridge was built in 1990.'],
+ ['Verb Patterns','verb + to-infinitive / gerund','بعض الأفعال يتبعها مصدر وبعضها يتبعها ing، ويجب حفظ النمط.','decide to go / enjoy reading'],
+ ['Relative Clauses','who / which / that / whose / where','لإضافة معلومات عن اسم، وقد تكون محددة أو غير محددة.','The woman who called is my teacher.'],
+ ['Comparatives & Superlatives','-er / more … than; the -est / most …','للمقارنة بين اثنين أو أكثر مع مراعاة الصفات الشاذة.','This is the most useful book.'],
+ ['Tag Questions','auxiliary + pronoun?','ذيل السؤال يعكس الإثبات أو النفي في الجملة الأساسية.','You are ready, aren’t you?']
+];
+const EC_READER=['The Arrival at Marseilles','A Treacherous Plot','Betrayal and Arrest',"The Prison of Château d'If",'A Ray of Hope','The Secret of the Treasure','Escape to Freedom','The Island of Monte Cristo','A New Identity','Justice and Revenge','The Fall of the Guilty','A New Dawn'];
+const EC_QUIZ=[
+ {q:'She ____ in this hospital since 2020.',o:['works','has worked','is working','worked'],a:1,e:'since مع فترة بدأت في الماضي وما زالت مرتبطة بالحاضر؛ Present Perfect.'},
+ {q:'He said, “I am busy.” → He said that he ____ busy.',o:['is','has been','was','will be'],a:2,e:'في reported speech قد يرجع المضارع إلى الماضي: am → was.'},
+ {q:'“Open your books.” The teacher told us ____ our books.',o:['open','opening','to open','opened'],a:2,e:'الأمر المنقول: told + object + to + infinitive.'},
+ {q:'You ____ be exhausted. You have worked all day.',o:['must','can’t','shouldn’t','needn’t'],a:0,e:'must للتأكد أو الاستنتاج القوي.'},
+ {q:'I had my laptop ____ yesterday.',o:['repair','repaired','repairing','to repair'],a:1,e:'صيغة causative: have + object + past participle.'},
+ {q:'She asked me where I ____.',o:['live','did live','lived','do live'],a:2,e:'في reported questions نستخدم ترتيب الجملة الخبرية.'},
+ {q:'By the time we arrived, the film ____.',o:['starts','has started','had started','was starting'],a:2,e:'الحدث الأسبق في الماضي: Past Perfect.'},
+ {q:'The emails ____ every morning.',o:['send','are sent','sent','are sending'],a:1,e:'المضارع البسيط المبني للمجهول: am/is/are + past participle.'},
+ {q:'I enjoy ____ English stories.',o:['read','to read','reading','reads'],a:2,e:'enjoy يأتي بعده gerund (V-ing).'},
+ {q:'The student ____ won the prize is my friend.',o:['which','who','where','whose'],a:1,e:'who للعاقل في relative clauses.'},
+ {q:'This is ____ interesting book I have read.',o:['more','most','the most','the more'],a:2,e:'صيغة التفضيل: the most + adjective.'},
+ {q:'They have finished the task, ____?',o:['haven’t they','don’t they','didn’t they','have they'],a:0,e:'الجملة مثبتة، فيأتي tag منفي وبنفس الفعل المساعد.'}
+];
+let ecFlashIndex=0,ecFlashOpen=false,ecQuizSet=[],ecQuizAnswers={};
+function ecRender(){
+ const term=$('#ecTerm').value,query=($('#ecSearch').value||'').trim().toLowerCase();
+ const units=EC_UNITS.filter(u=>(term==='all'||String(u.t)===term)&&(!query||`${u.name} ${u.ar} ${u.grammar} ${u.lessons.join(' ')}`.toLowerCase().includes(query)));
+ $('#ecUnitList').innerHTML=units.map(u=>`<details class="course-unit"><summary><input class="course-done" type="checkbox" data-ec-done="${u.n}" ${S.courseDone[u.n]?'checked':''} aria-label="تمت مذاكرة الوحدة ${u.n}"><span><b>Unit ${u.n}: ${esc(u.name)}</b><br><span class="course-muted">${esc(u.ar)} · الترم ${u.t===1?'الأول':'الثاني'}</span></span></summary><div class="course-unit-body"><p><b>Grammar:</b> ${esc(u.grammar)}</p><div>${u.lessons.map(x=>`<span class="course-tag">${esc(x)}</span>`).join('')}</div><p class="course-muted">راجع مفردات النصوص والأنشطة والكتابة من الكتاب المدرسي، ثم أضف الكلمات الصعبة إلى قاموسك هنا.</p><a href="https://elearnningcontent.blob.core.windows.net/elearnningcontent/2026_2027/Secondry/Secondry3/Term1/StudentBook/English_language_Sec3_tr1.pdf" target="_blank" rel="noopener">افتح الكتاب المدرسي</a></div></details>`).join('')||'<div class="empty">لا توجد نتائج مطابقة للبحث.</div>';
+ const done=EC_UNITS.filter(u=>S.courseDone[u.n]).length,pct=Math.round(done/12*100);$('#ecProgressText').textContent=`${done} من 12 وحدة`;$('#ecProgressPct').textContent=pct+'%';$('#ecProgressBar').style.width=pct+'%';
+ $('#ecGrammarList').innerHTML=EC_GRAMMAR.filter(g=>!query||g.join(' ').toLowerCase().includes(query)).map(g=>`<div class="course-box"><h3>${esc(g[0])}</h3><div class="course-tag" dir="ltr">${esc(g[1])}</div><p>${esc(g[2])}</p><p dir="ltr" class="course-muted"><b>Example:</b> ${esc(g[3])}</p></div>`).join('');
+ $('#ecReaderList').innerHTML=EC_READER.map((ch,i)=>`<details class="course-unit"><summary><input class="course-done" type="checkbox" data-ec-reader="${i+1}" ${S.courseDone['r'+(i+1)]?'checked':''} aria-label="تمت مذاكرة الفصل ${i+1}"><span><b>Chapter ${i+1}: ${esc(ch)}</b><br><span class="course-muted">${i<6?'Part 1 — Term 1':'Part 2 — Term 2'}</span></span></summary><div class="course-unit-body"><label for="ecReaderNote${i+1}">ملاحظاتك عن الفصل</label><textarea id="ecReaderNote${i+1}" data-reader-note="${i+1}" placeholder="الشخصيات، الأحداث، الكلمات الجديدة، وأسئلة الفصل…">${esc(S.courseWriting.find(x=>x.kind==='reader'&&x.id===i+1)?.answer||'')}</textarea><button class="s" type="button" data-save-reader="${i+1}">احفظ الملاحظات</button></div></details>`).join('');
+ $('#ecWordUnit').innerHTML=EC_UNITS.map(u=>`<option value="${u.n}">Unit ${u.n} — ${esc(u.name)}</option>`).join('');
+ ecRenderWords();ecRenderWriting();ecRenderChecklist();
+}
+function ecRenderWords(){const words=S.courseWords||[];$('#ecWordList').innerHTML=words.length?words.map((w,i)=>`<div class="course-word-row"><div><div class="course-en">${esc(w.word)}</div><div>${esc(w.meaning)}</div><div class="course-muted">Unit ${w.unit||'—'}</div></div><button class="x" type="button" data-ec-word-del="${i}" aria-label="حذف">×</button></div>`).join(''):'لا توجد كلمات بعد. أضف الكلمات من كتابك لتراجعها ببطاقات.';$('#ecFlashCount').textContent=words.length?`${words.length} كلمة محفوظة`:'ابدأ بإضافة كلماتك';if(words.length){ecFlashIndex%=words.length;ecFlashOpen=false;ecShowFlash()}else $('#ecFlash').textContent='أضف كلمات من الكتاب لتبدأ المراجعة'}
+function ecShowFlash(){const w=S.courseWords[ecFlashIndex];if(!w)return;$('#ecFlash').innerHTML=`<div class="w">${esc(w.word)}</div>${ecFlashOpen?`<div class="a">${esc(w.meaning)}</div>`:'<div class="hint">حاول تفتكر المعنى ثم اضغط أظهر المعنى</div>'}`}
+function ecRenderWriting(){const saved=(S.courseWriting||[]).filter(x=>x.kind==='practice');$('#ecWritingSaved').innerHTML=saved.length?'<h3>إجابات محفوظة</h3>'+saved.slice(-5).reverse().map(x=>`<div class="course-box"><b>${esc(x.type)}</b><p>${esc(x.prompt)}</p><div class="sum">${esc(x.answer)}</div></div>`).join(''):''}
+function ecRenderChecklist(){const items=['راجعت كلمات كل وحدة وتدربت على استخدامها في جمل','راجعت قواعد الوحدات الاثنتي عشرة وحللت عليها','تدربت على قطع Reading واستخراج الفكرة والتفاصيل','كتبت موضوعات Writing وراجعت القواعد والإملاء','تدربت على الترجمة في الاتجاهين','راجعت فصول The Count of Monte Cristo','حللت تدريبات متنوعة وراجعت أخطائي'];$('#ecExamChecklist').innerHTML=items.map((x,i)=>`<label style="display:flex;gap:8px;align-items:center"><input type="checkbox" data-ec-check="${i}" ${S.courseExamChecks[i]?'checked':''} style="width:auto">${x}</label>`).join('')}
+$('#ecSearch').oninput=ecRender;$('#ecTerm').onchange=ecRender;
+document.querySelectorAll('[data-course-jump]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-course-jump]').forEach(x=>x.classList.toggle('active',x===b));$('#'+b.dataset.courseJump).scrollIntoView({behavior:'smooth',block:'start'})});
+document.addEventListener('change',e=>{if(e.target.dataset.ecDone){S.courseDone[e.target.dataset.ecDone]=e.target.checked;save();ecRender()}if(e.target.dataset.ecReader){S.courseDone['r'+e.target.dataset.ecReader]=e.target.checked;save()}if(e.target.dataset.ecCheck!==undefined){S.courseExamChecks[e.target.dataset.ecCheck]=e.target.checked;save()}});
+document.addEventListener('click',e=>{if(e.target.dataset.ecWordDel!==undefined){S.courseWords.splice(+e.target.dataset.ecWordDel,1);save();ecRenderWords()}if(e.target.dataset.saveReader){const id=+e.target.dataset.saveReader,answer=$(`[data-reader-note="${id}"]`).value;const old=S.courseWriting.find(x=>x.kind==='reader'&&x.id===id);if(old)old.answer=answer;else S.courseWriting.push({kind:'reader',id,answer});save();showAlert('تم حفظ ملاحظات الفصل')} });
+$('#ecWordForm').onsubmit=e=>{e.preventDefault();S.courseWords.push({word:$('#ecWord').value.trim(),meaning:$('#ecMeaning').value.trim(),unit:+$('#ecWordUnit').value,known:false});save();e.target.reset();ecRenderWords();showAlert('اتضافت الكلمة لقاموسك')};
+$('#ecFlashShow').onclick=()=>{ecFlashOpen=true;ecShowFlash()};$('#ecFlash').onclick=()=>{ecFlashOpen=!ecFlashOpen;ecShowFlash()};$('#ecFlashNext').onclick=()=>{if(!S.courseWords.length)return;ecFlashIndex=(ecFlashIndex+1)%S.courseWords.length;ecFlashOpen=false;ecShowFlash()};$('#ecFlashKnown').onclick=()=>{if(!S.courseWords.length)return;S.courseWords.splice(ecFlashIndex,1);save();ecRenderWords()};
+$('#ecWritingSave').onclick=()=>{const prompt=$('#ecWritingPrompt').value.trim(),answer=$('#ecWritingAnswer').value.trim();if(!prompt||!answer){$('#ecWritingStatus').textContent='اكتب السؤال وإجابتك أولًا';return}S.courseWriting.push({kind:'practice',type:$('#ecWritingType').value,prompt,answer,date:new Date().toISOString()});save();$('#ecWritingStatus').textContent='تم الحفظ على هذا الجهاز';$('#ecWritingAnswer').value='';ecRenderWriting()};
+$('#ecQuizStart').onclick=()=>{ecQuizSet=[...EC_QUIZ].sort(()=>Math.random()-.5).slice(0,5);ecQuizAnswers={};$('#ecQuizBox').innerHTML=ecQuizSet.map((q,i)=>`<div class="course-question"><b>${i+1}. ${esc(q.q)}</b>${q.o.map((o,j)=>`<label><input type="radio" name="ecq${i}" value="${j}"> <span dir="ltr">${esc(o)}</span></label>`).join('')}<div class="course-feedback" id="ecqf${i}" hidden></div></div>`).join('')+'<button class="p" id="ecQuizSubmit" type="button">صحّح الاختبار</button><div id="ecQuizResult"></div>';$('#ecQuizSubmit').onclick=()=>{let score=0;ecQuizSet.forEach((q,i)=>{const v=document.querySelector(`input[name="ecq${i}"]:checked`),ok=v&&+v.value===q.a;if(ok)score++;const f=$('#ecqf'+i);f.hidden=false;f.textContent=(ok?'صحيح. ':'الإجابة الصحيحة: '+q.o[q.a]+'. ')+q.e});$('#ecQuizResult').innerHTML=`<div class="course-feedback"><b>نتيجتك: ${score} من ${ecQuizSet.length}</b></div>`}};
+ecRender();
+
+/* Tools */
+let plText='',xQ='',xTi=null,pmI=null;
+// تنزيل الملفات مباشرة من المتصفح بدل الاعتماد على بيئة Claude الخاصة.
+function downloadFile(filename,data,mime='text/plain;charset=utf-8'){
+  const blob=new Blob([data],{type:mime});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=filename;
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+const today=()=>new Date().toLocaleDateString('en-CA');
+const addDays=n=>{const d=new Date();d.setDate(d.getDate()+n);return d.toLocaleDateString('en-CA')};
+const tm=s=>String(Math.floor(Math.max(0,s)/60)).padStart(2,'0')+':'+String(Math.max(0,s)%60).padStart(2,'0');
+const noAI=el=>{el.textContent='ميزة الذكاء الاصطناعي مش متاحة هنا'};
+
+$('#plAdd').onclick=async()=>{const st=$('#plSt');if(!AI)return noAI(st);st.textContent='جاري الإضافة…';
+  try{const arr=await AI.json(`اليوم ${today()}. حوّل خطة المذاكرة دي لجلسات في الجدول للأيام السبعة الجاية فقط. ارجع JSON فقط: مصفوفة عناصرها {"title":"المادة وموضوع الجلسة","date":"YYYY-MM-DD","time":"HH:MM"} بحد أقصى 14 جلسة والوقت بنظام 24 ساعة.\nالخطة:\n${plText}`);
+    if(!Array.isArray(arr))throw {code:'invalid_json'};
+    arr.slice(0,14).forEach(x=>{if(x.title&&/^\d{4}-\d\d-\d\d$/.test(x.date)&&/^\d\d:\d\d$/.test(x.time))S.ev.push({id:uid(),title:String(x.title),d:x.date,t:x.time,lead:10,fired:false,done:false})});
+    save();renderSched();st.textContent='اتضافت للجدول'}catch(e){st.textContent=errMsg(e.code)}};
+
+function renderMist(){const due=S.mist.filter(m=>m.box<2&&m.due<=today()),done=S.mist.filter(m=>m.box>=2).length;
+  $('#mSt').textContent=`${S.mist.length} غلطة مسجلة، ${done} اتحلت صح، و${due.length} للمراجعة النهاردة`;
+  $('#mList').innerHTML=due.map(m=>`<div class="item"><div class="m"><div class="n">${esc(m.q)}</div><div class="d">${esc(m.s)} - ${esc(m.r)}</div></div><button class="s" data-mok="${m.id}">جاوبتها صح</button><button class="s" data-mno="${m.id}">غلطت تاني</button></div>`).join('')}
+$('#mForm').onsubmit=e=>{e.preventDefault();const s=$('#mS').value;S.mist.push({id:uid(),s,q:$('#mQ').value.trim(),r:$('#mR').value,box:0,due:addDays(2)});save();e.target.reset();$('#mS').value=s;renderMist()};
+document.addEventListener('click',e=>{const ok=e.target.dataset.mok,no=e.target.dataset.mno;if(!ok&&!no)return;const m=S.mist.find(x=>x.id===(ok||no));if(!m)return;if(ok){m.box++;m.due=addDays(7)}else{m.box=0;m.due=addDays(2)}save();renderMist()});
+
+$('#xGo').onclick=async()=>{const t=$('#xT').value.trim(),st=$('#xSt');
+  if(!AI)return noAI(st);if(!t){st.textContent='اكتب الدرس الأول';return}
+  st.textContent='جاري تجهيز الامتحان…';
+  try{xQ=(await AI(`أنت واضع امتحانات ثانوية عامة مصرية (${TN[S.track]}). اكتب امتحانًا قصيرًا في مادة ${$('#xS').value} على الدروس التالية: 5 أسئلة اختيار من متعدد (أ، ب، ج، د) و3 أسئلة مقالية، بمستوى امتحان الوزارة ومن غير معلومات خارج المنهج. اكتب الأسئلة فقط من غير إجابات.\nالدروس:\n${t}`)).text;
+    $('#xQ').textContent=xQ;$('#xA').value='';$('#xRes').innerHTML='';$('#xBox').hidden=false;st.textContent='';
+    const end=Date.now()+Math.max(5,+$('#xM').value||30)*60000;clearInterval(xTi);
+    const tick=()=>{const s=Math.round((end-Date.now())/1000);$('#xTm').textContent=tm(s);if(s<=0){clearInterval(xTi);showAlert('انتهى الوقت، سلّم إجاباتك')}};tick();xTi=setInterval(tick,1000)}
+  catch(e){st.textContent=errMsg(e.code)}};
+$('#xEnd').onclick=async()=>{clearInterval(xTi);const st=$('#xSt');st.textContent='جاري التصحيح…';
+  try{const {text}=await AI(`صحّح إجابات طالب ثانوية عامة على الامتحان ده بصرامة وعدل، وبالعربي المبسط: الدرجة من 20، وكل سؤال وهل إجابته صح وإيه الصح لو غلط، وبعدين أهم 3 نقاط ضعف يراجعها.\nالأسئلة:\n${xQ}\n\nإجابات الطالب:\n${$('#xA').value.trim()||'لم يجب'}`);
+    $('#xRes').innerHTML=`<div class="sum">${esc(text)}</div>`;$('#xBox').hidden=true;st.textContent=''}catch(e){st.textContent=errMsg(e.code)}};
+
+$('#aGo').onclick=async()=>{const t=$('#aT').value.trim(),q=$('#aQ').value.trim(),st=$('#aSt');
+  if(!AI)return noAI(st);if(!t||!q){st.textContent='الصق نص الدرس واكتب سؤالك';return}
+  st.textContent='جاري الشرح…';
+  try{const {text}=await AI(`اشرح للطالب النقطة دي بأسلوب مبسط وبأمثلة، وبالاعتماد على نص الدرس بس. لو الإجابة مش في النص قول كده بوضوح.\nالنص:\n${t}\nالسؤال: ${q}`);
+    $('#aOut').innerHTML=`<div class="sum">${esc(text)}</div>`;st.textContent=''}catch(e){st.textContent=errMsg(e.code)}};
+
+function pmShow(){$('#pmSt').textContent=`مذاكرتك الفعلية النهاردة: ${S.focus[today()]||0} دقيقة`}
+$('#pmGo').onclick=()=>{clearInterval(pmI);const end=Date.now()+25*60000;
+  const tick=()=>{const s=Math.round((end-Date.now())/1000);$('#pmT').textContent=tm(s);if(s<=0){clearInterval(pmI);S.focus[today()]=(S.focus[today()]||0)+25;save();pmShow();showAlert('خلصت 25 دقيقة، خد راحة 5 دقايق')}};tick();pmI=setInterval(tick,1000)};
+$('#pmX').onclick=()=>{clearInterval(pmI);$('#pmT').textContent='25:00'};
+
+$('#rGo').onclick=async()=>{const s=$('#rS').value,n=S.notes.filter(x=>x.sub===s),st=$('#rSt');
+  if(!n.length){st.textContent='مفيش ملخصات محفوظة للمادة دي';return}
+  try{downloadFile('revision-sheet.md',`# ورقة مراجعة: ${s}\n\n`+n.map(x=>`## ${x.title}\n${x.sum}`).join('\n\n'),'text/markdown;charset=utf-8');st.textContent='تم تجهيز ورقة المراجعة'}catch(e){st.textContent='مقدرتش أحفظ الملف'}};
+$('#bkGo').onclick=async()=>{
+  try{downloadFile('study-backup.json',JSON.stringify(S,null,2),'application/json;charset=utf-8');$('#bkSt').textContent='تم تنزيل النسخة الاحتياطية'}catch(e){$('#bkSt').textContent='مقدرتش أحفظ الملف'}};
+$('#bkIn').onchange=async e=>{const f=e.target.files[0];if(!f)return;
+  try{const d=JSON.parse(await f.text());if(!d||typeof d!=='object'||Array.isArray(d))throw 0;Object.assign(S,d);save();renderSched();renderNotes();renderWords();renderPrac();renderMist();pmShow();fillSubj();$('#bkSt').textContent='اترجعت بياناتك'}
+  catch(x){$('#bkSt').textContent='الملف ده مش نسخة صالحة'}};
+
+/* Personalization */
+const COLS=['#0F7C93','#7C4DCC','#2E8B57','#2F6FDE','#C2335F','#D2691E'];
+function applyTheme(){const r=document.documentElement.style,n=S.app||'أحمد عادل';
+  $('#appName').textContent=n;$('#bnName').textContent=n;$('#bnName').setAttribute('font-size',n.length>12?44:68);document.title=n;$('#hi').textContent=S.me?`أهلًا يا ${S.me}`:'';
+  if(S.color){r.setProperty('--brand',S.color);r.setProperty('--on-brand','#fff')}}
+$('#cuCols').innerHTML=COLS.map(c=>`<button type="button" data-col="${c}" aria-label="لون" style="width:38px;height:38px;border-radius:50%;border:2px solid var(--line);margin-inline-end:8px;cursor:pointer;background:${c}"></button>`).join('');
+$('#cuA').value=S.app||'';$('#cuM').value=S.me||'';
+$('#cuA').oninput=e=>{S.app=e.target.value.trim();save();applyTheme()};
+$('#cuM').oninput=e=>{S.me=e.target.value.trim();save();applyTheme()};
+document.addEventListener('click',e=>{const c=e.target.dataset.col;if(c){S.color=c;save();applyTheme()}});
+applyTheme();
+
+/* Cover screen */
+(function(){const src=$('#appName').previousElementSibling.querySelector('svg');if(!src)return;
+  const cv=document.createElement('div');cv.id='cover';
+  cv.style.cssText='position:fixed;inset:0;z-index:50;background:linear-gradient(#5FB6E0 50%,#DDB67A 50%)';
+  const s=src.cloneNode(true);const nm=s.querySelector('#bnName');if(nm)nm.removeAttribute('id');
+  s.setAttribute('width','100%');s.setAttribute('height','100%');s.setAttribute('preserveAspectRatio',innerWidth/innerHeight>=1.2?'xMidYMid slice':'xMidYMid meet');
+  s.style.cssText='position:absolute;inset:0';
+  const b=document.createElement('button');b.type='button';b.textContent='ابدأ المذاكرة';
+  b.style.cssText='position:absolute;bottom:calc(36px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);font:800 18px Tajawal,sans-serif;padding:14px 34px;border-radius:30px;border:0;background:var(--brand);color:var(--on-brand);cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.25)';
+  b.onclick=()=>cv.remove();cv.append(s,b);document.body.append(cv);b.focus()})();
+
+fillSubj();renderPrac();renderChat();renderMist();pmShow();
+renderSched();renderNotes();renderWords();checkReminders();
+// تسجيل عامل الخدمة لتشغيل التطبيق من الذاكرة المؤقتة عند توفره على HTTPS.
+if('serviceWorker' in navigator && (location.protocol==='https:' || location.hostname==='localhost')){
+  window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+}
+</script>
+</body>
+</html>

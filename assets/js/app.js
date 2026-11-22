@@ -30,6 +30,15 @@ const {render:renderNotes}=window.StudyNotes.init({
   getErrorMessage:code=>errMsg(code)
 });
 
+const {render:renderPrac}=window.StudyPractice.init({
+  state:S,save,escapeHtml:esc,
+  getAI:()=>AI,
+  getTrackLabel:()=>TN[S.track],
+  getSubjects:()=>SUBJ[S.track],
+  getErrorMessage:code=>errMsg(code),
+  setPlanText:text=>{plText=text}
+});
+
 function fillSubj(){
   const o=SUBJ[S.track].concat('مادة أخرى').map(s=>`<option>${esc(s)}</option>`).join('');
   ['#nS','#pS','#mS','#rS','#xS'].forEach(id=>{const el=$(id),v=el.value;el.innerHTML=o;if(v)el.value=v});
@@ -54,37 +63,6 @@ $('#cSend').onclick=async()=>{
 $('#cClr').onclick=()=>{turns=[];renderChat()};
 
 /* Practice and plan */
-function statsMap(){const by={};S.prac.forEach(p=>{const x=by[p.s]=by[p.s]||{n:0,c:0};x.n+=p.n;x.c+=p.c});return by}
-function daysLeft(){return null}
-function renderPrac(){
-  $('#dl').textContent='موعد الامتحانات الرسمي سيُضاف بعد تأكيده من الوزارة.';
-  const ws=new Date();ws.setHours(0,0,0,0);ws.setDate(ws.getDate()-((ws.getDay()+1)%7));
-  const wk=S.prac.filter(p=>new Date(p.d+'T00:00')>=ws).reduce((a,p)=>a+p.n,0);
-  $('#goalSt').textContent=`خلصت ${wk} من ${S.goal} سؤال الأسبوع ده`;$('#gbar').style.width=Math.min(100,wk/S.goal*100)+'%';
-  const rows=Object.entries(statsMap()).map(([s,x])=>({s,n:x.n,a:Math.round(x.c/x.n*100)})).sort((a,b)=>a.a-b.a);
-  $('#stats').innerHTML=rows.length?rows.map(r=>`<div class="item"><div class="m"><div class="n">${esc(r.s)}</div><div class="d">${r.n} سؤال، دقة ${r.a}%</div><div class="bar"><i style="width:${r.a}%"></i></div></div></div>`).join(''):'<div class="empty">سجّل أول جلسة تدريب عشان تشوف مستواك</div>'}
-$('#pForm').onsubmit=e=>{e.preventDefault();const n=+$('#pN').value,c=+$('#pC').value;
-  if(c>n){showAlert('عدد الإجابات الصح لازم يكون أقل من أو يساوي عدد الأسئلة');return}
-  const s=$('#pS').value;S.prac.push({id:uid(),s,n,c,d:new Date().toLocaleDateString('en-CA')});save();e.target.reset();$('#pS').value=s;renderPrac()};
-$('#goal').value=S.goal;$('#goal').onchange=e=>{S.goal=Math.max(1,+e.target.value||100);save();renderPrac()};
-$('#qBtn').onclick=async()=>{
-  const t=$('#qT').value.trim(),st=$('#qSt');
-  if(!AI){st.textContent='ميزة الذكاء الاصطناعي مش متاحة هنا';return}
-  if(!t){st.textContent='اكتب اسم الدرس أو الصق نصه';return}
-  st.textContent='جاري التوليد…';$('#qOut').innerHTML='';
-  try{const {text}=await AI(`أنت مدرس خبير في مادة ${$('#pS').value} لطلاب الثانوية العامة المصرية (${TN[S.track]}). اكتب 4 أسئلة اختيار من متعدد (أ، ب، ج، د) و3 أسئلة مقالية على الدرس التالي بمستوى امتحان الوزارة ومن غير معلومات خارج المنهج. اكتب الأسئلة كلها أولًا، ثم سطر فيه ===== فقط، ثم الإجابات النموذجية مرقمة بنفس الترتيب.\nالدرس:\n${t}`);
-    const [q,a]=text.split('=====');
-    $('#qOut').innerHTML=`<div class="sum">${esc(q.trim())}</div>${a?`<details><summary>الإجابات (حاول تحل الأول)</summary><div class="sum">${esc(a.trim())}</div></details>`:''}`;st.textContent=''}
-  catch(e){st.textContent=errMsg(e.code)}};
-$('#plBtn').onclick=async()=>{
-  const st=$('#plSt');
-  if(!AI){st.textContent='ميزة الذكاء الاصطناعي مش متاحة هنا';return}
-  const lv=Object.entries(statsMap()).map(([s,x])=>`${s}: ${Math.round(x.c/x.n*100)}%`).join('، ')||'لا توجد بيانات بعد';
-  st.textContent='جاري التخطيط…';
-  try{const {text}=await AI(`أنت مستشار مذاكرة لطالب ثانوية عامة مصرية (${TN[S.track]}). باقي ${Math.max(0,daysLeft())} يوم على الامتحانات، ويذاكر ${$('#hrs').value} ساعات يوميًا. مستواه حسب نسبة الصح في التدريب: ${lv}. المواد: ${SUBJ[S.track].join('، ')}. اعمل خطة أسبوعية واقعية بالعربي المبسط: وزّع المواد على الأيام وركّز أكتر على الأضعف، وخصص وقتًا للمراجعة وحل الأسئلة والراحة، واختم بـ3 نصائح عملية.`);
-    $('#plOut').innerHTML=`<div class="sum">${esc(text)}</div>`;plText=text;$('#plAdd').hidden=false;st.textContent=''}
-  catch(e){st.textContent=errMsg(e.code)}};
-
 document.addEventListener('click',async e=>{
   const s=e.target.dataset.say,t=e.target.dataset.tr;
   if(s){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(s);u.lang='en-US';u.rate=.9;speechSynthesis.speak(u)}catch(x){showAlert('المتصفح مش بيدعم النطق')}}

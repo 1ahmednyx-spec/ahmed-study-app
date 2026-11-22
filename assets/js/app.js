@@ -22,7 +22,7 @@ const {render:renderWords}=window.StudyWords.init({
 });
 
 const TN={sci:'علمي علوم',math:'علمي رياضة',lit:'أدبي'};
-const SUBJ={sci:['اللغة العربية','اللغة الإنجليزية','اللغة الأجنبية الثانية','الأحياء','الكيمياء','الفيزياء','الجيولوجيا'],math:['اللغة العربية','اللغة الإنجليزية','اللغة الأجنبية الثانية','الرياضيات','الفيزياء','الكيمياء'],lit:['اللغة العربية','اللغة الإنجليزية','اللغة الأجنبية الثانية','التاريخ','الجغرافيا','الفلسفة والمنطق','علم النفس والاجتماع']};
+const SUBJ={sci:['اللغة العربية','اللغة الأجنبية الأولى','الأحياء','الكيمياء','الفيزياء','اللغة الأجنبية الثانية','التربية الدينية','التربية الوطنية'],math:['اللغة العربية','اللغة الأجنبية الأولى','الرياضيات','الكيمياء','الفيزياء','اللغة الأجنبية الثانية','التربية الدينية','التربية الوطنية'],lit:['اللغة العربية','اللغة الأجنبية الأولى','التاريخ','الجغرافيا','الإحصاء','اللغة الأجنبية الثانية','التربية الدينية','التربية الوطنية']};
 const {render:renderNotes}=window.StudyNotes.init({
   state:S,save,uid,escapeHtml:esc,
   getAI:()=>AI,
@@ -51,6 +51,7 @@ $('#trk').onchange=e=>{S.track=e.target.value;save();fillSubj()};
 window.StudyEnglishCoach.init({getAI:()=>AI,errMsg,escapeHtml:esc,showAlert});
 
 window.StudyEnglishCourse.init({state:S,save,escapeHtml:esc,showAlert});
+window.StudyMinistryLibrary.init();
 
 const {render:renderMist}=window.StudyMistakes.init({state:S,save,uid,today,addDays,escapeHtml:esc});
 

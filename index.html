@@ -31,6 +31,7 @@
       <button type="button" role="tab" aria-selected="false" data-tab="sched"><span>▦</span> جدول المذاكرة</button>
       <button type="button" role="tab" aria-selected="false" data-tab="notes"><span>▤</span> الملخصات</button>
       <button type="button" role="tab" aria-selected="false" data-tab="eng"><span>文</span> قاموس الكلمات</button>
+      <button type="button" role="tab" aria-selected="false" data-tab="library"><span>📚</span> مكتبة الوزارة</button>
       <button type="button" role="tab" aria-selected="false" data-tab="english2027"><span>EN</span> إنجليزي 2027</button>
       <button type="button" role="tab" aria-selected="false" data-tab="chat"><span>✦</span> خبير الإنجليزي</button>
       <button type="button" role="tab" aria-selected="false" data-tab="prac"><span>✓</span> التدريب والخطة</button>
@@ -52,6 +53,7 @@
         <div class="dashboard-panel"><div class="section-heading"><div><span class="eyebrow">QUICK ACCESS</span><h2>وصول سريع</h2></div></div><div class="quick-links">
           <button type="button" data-go-tab="notes"><span>▤</span><b>ملخصاتي</b><small>احفظ وراجع ملخصات الدروس</small></button>
           <button type="button" data-go-tab="prac"><span>✓</span><b>التدريب والخطة</b><small>سجّل حل الأسئلة ونظّم أسبوعك</small></button>
+          <button type="button" data-go-tab="library"><span>📚</span><b>مكتبة الوزارة</b><small>كتب الصف الثالث الثانوي حسب المادة</small></button>
           <button type="button" data-go-tab="english2027"><span>EN</span><b>إنجليزي 2027</b><small>تابع وحدات ومراجعة الإنجليزية</small></button>
           <button type="button" data-go-tab="eng"><span>文</span><b>قاموس الكلمات</b><small>راجع مفرداتك ببطاقات تفاعلية</small></button>
           <button type="button" data-go-tab="chat"><span>✦</span><b>خبير الإنجليزي</b><small>تدرّب على المحادثة والتصحيح</small></button>
@@ -177,12 +179,29 @@
   <h2>كلماتك</h2><div class="panel" id="wList"></div>
 </section>
 
+<section id="library" hidden>
+  <div class="course-hero ministry-library-hero">
+    <span class="welcome-kicker">OFFICIAL MINISTRY LIBRARY</span>
+    <h2>مكتبة كتب الوزارة — الصف الثالث الثانوي</h2>
+    <p>اختر المادة لفتح صفحة كتابها، والوصول إلى النسخة الرسمية من مكتبة وزارة التربية والتعليم.</p>
+    <div class="course-links"><a href="https://studentbooks.moe.gov.eg/Books" target="_blank" rel="noopener">مكتبة الكتب الرسمية ↗</a></div>
+  </div>
+  <div class="panel">
+    <label for="ministryBookSearch">ابحث عن مادة</label>
+    <input id="ministryBookSearch" type="search" placeholder="اكتب اسم المادة…">
+    <p class="hint">المواد المعروضة تتغير تلقائيًا حسب الشعبة المختارة أعلى المنصة.</p>
+  </div>
+  <div id="ministrySubjectGrid" class="ministry-subject-grid" aria-label="مواد الشعبة"></div>
+  <div id="ministrySubjectDetail" class="panel ministry-subject-detail" aria-live="polite"></div>
+  <p class="hint">تنبيه: هذا القسم يوجّه إلى المصدر الرسمي. لا تُعرض ملفات PDF داخل الموقع ولا نوفر تحميلًا مباشرًا إلا بعد التحقق من رابط الكتاب الرسمي وإتاحة تنزيله.</p>
+</section>
+
 <section id="english2027" hidden>
   <div class="course-hero">
     <h2>منهج اللغة الإنجليزية — تالتة ثانوي 2027</h2>
     <p>خريطة مذاكرة للترمين: 12 وحدة، مع متابعة القواعد والكلمات والرواية والمهارات والتدريب.</p>
     <div class="course-links">
-      <a href="https://ellibrary.moe.gov.eg/Books-sec/" target="_blank" rel="noopener">مكتبة الكتب الرسمية — اختر ثالثة ثانوي والإنجليزي</a>
+      <a href="https://studentbooks.moe.gov.eg/Books" target="_blank" rel="noopener">مكتبة الكتب الرسمية — اختر ثالثة ثانوي والإنجليزي</a>
       <a href="https://zakermasr.com/الصف-الثالث-الثانوي/اللغة-الانجليزية/" target="_blank" rel="noopener">فهرس مساعد غير رسمي</a>
     </div>
     <p class="course-muted">المصدر الأساسي هو كتاب الوزارة. رابط المكتبة الرسمية يفتح صفحة اختيار الكتاب، وليس ملف PDF مباشرًا.</p>
@@ -258,6 +277,7 @@
 <script src="./assets/js/features/mistakes.js"></script>
 <script src="./assets/js/features/tools.js"></script>
 <script src="./assets/js/features/english-course.js"></script>
+<script src="./assets/js/features/ministry-library.js"></script>
 <script src="./assets/js/features/english-coach.js"></script>
 <script src="./assets/js/features/preferences.js"></script>
 <script src="./assets/js/app.js"></script>

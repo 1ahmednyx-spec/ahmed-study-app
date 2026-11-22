@@ -80,3 +80,23 @@ body{background:var(--bg);color:var(--ink);font-family:Tajawal,"Segoe UI",Tahoma
 @media(max-width:1000px){.wrap{padding:0 18px 30px}.app-shell{grid-template-columns:minmax(0,1fr);gap:16px;min-width:0}.sidebar{position:static;min-height:0;min-width:0;width:100%;max-width:100%;padding:10px;border-radius:15px}.sidebar-label,.sidebar-footer{display:none}.tabs{display:flex;width:100%;min-width:0;max-width:100%;overflow-x:auto;gap:5px;padding:0 0 2px}.tabs button{width:auto;flex:none;white-space:nowrap;padding:9px 11px}.main-content,.content-sections,#home{min-width:0;max-width:100%;scroll-margin-top:12px}}
 @media(max-width:650px){.wrap{padding:0 12px 24px}.app-topbar{min-height:70px;margin-bottom:16px}.brand-symbol{width:40px;height:40px}.brand-copy strong{font-size:15px}.topbar-pill{display:none}.topbar-meta{font-size:12px}.page-heading{align-items:stretch;flex-direction:column;gap:12px;margin-bottom:16px}.page-heading h1{font-size:24px}.track-control{width:100%}.welcome-banner{padding:21px 18px;border-radius:16px}.welcome-banner h2{font-size:20px;max-width:340px}.welcome-banner p{font-size:12px;max-width:300px}.welcome-mark{font-size:76px;padding:0}.dashboard-grid{grid-template-columns:1fr}.hero{min-height:185px}.dashboard-panel{padding:14px}.quick-links{gap:7px}.quick-links button{padding:10px;grid-template-columns:30px minmax(0,1fr);column-gap:8px}.quick-links button>span{width:30px;height:30px}.quick-links small{font-size:10px}.page-subtitle{font-size:12px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+
+/* Official Ministry book library */
+.ministry-library-hero{background:linear-gradient(125deg,#10284A,#145A87)}
+.ministry-subject-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px;margin:12px 0}
+.ministry-subject-card{display:flex;align-items:center;gap:12px;text-align:start;width:100%;padding:14px;border:1px solid var(--line);border-radius:14px;background:var(--surface);color:var(--ink);cursor:pointer;min-width:0}
+.ministry-subject-card:hover,.ministry-subject-card.active{border-color:var(--brand);background:rgba(22,119,232,.06)}
+.ministry-subject-icon{width:44px;height:44px;display:grid;place-items:center;border-radius:12px;background:var(--bg);font-size:23px;flex:none}
+.ministry-subject-card>span:nth-child(2){display:grid;gap:2px;min-width:0}
+.ministry-subject-card b{font-size:15px}.ministry-subject-card small{font-size:12px;color:var(--muted)}
+.ministry-subject-arrow{margin-inline-start:auto;color:var(--brand);font-size:20px}
+.ministry-detail-heading{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.ministry-detail-heading h2{font-size:22px;margin:4px 0}.ministry-detail-heading p{color:var(--muted);margin:0;font-size:13px}
+.ministry-detail-icon{font-size:38px}
+.ministry-book-row{display:flex;align-items:center;gap:13px;padding:14px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin:14px 0}
+.ministry-book-cover{width:58px;height:72px;display:grid;place-items:center;border-radius:8px;background:linear-gradient(145deg,#dbeafe,#93c5fd);font-size:28px;box-shadow:0 5px 12px rgba(15,23,42,.12);flex:none}
+.ministry-book-info{display:grid;gap:3px}.ministry-book-info small{color:var(--muted);font-size:12px}.ministry-source-status{font-size:11px;color:var(--ok);font-weight:800}
+.ministry-open-link{display:inline-flex;gap:8px;align-items:center;text-decoration:none;margin:0}
+.ministry-book-actions{margin:12px 0}
+@media(max-width:520px){.ministry-subject-grid{grid-template-columns:1fr}}

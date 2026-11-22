@@ -19,13 +19,14 @@ try {
   const mistakesResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/mistakes.js');
   const toolsResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/tools.js');
   const englishCourseResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/english-course.js');
+  const ministryLibraryResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/ministry-library.js');
   const englishCoachResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/english-coach.js');
   const preferencesResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/preferences.js');
   const serviceWorkerResponse = await page.request.get('http://127.0.0.1:4173/sw.js');
   assert.equal(serviceWorkerResponse.status(), 200, 'Service worker must be served');
   const serviceWorkerSource = await serviceWorkerResponse.text();
-  assert.match(serviceWorkerSource, /ahmed-study-platform-v15/, 'Service worker cache must be versioned');
-  for (const modulePath of ['./assets/js/features/preferences.js', './assets/js/features/english-course.js', './assets/js/features/english-coach.js']) {
+  assert.match(serviceWorkerSource, /ahmed-study-platform-v16/, 'Service worker cache must be versioned');
+  for (const modulePath of ['./assets/js/features/preferences.js', './assets/js/features/english-course.js', './assets/js/features/ministry-library.js', './assets/js/features/english-coach.js']) {
     assert.ok(serviceWorkerSource.includes(modulePath), `Service worker must precache ${modulePath}`);
   }
 
@@ -43,6 +44,7 @@ try {
   assert.match(toolsSource, /const ai=\(\)=>getAI\(\)/, 'Study tools must resolve the AI client when an action runs');
   assert.doesNotMatch(toolsSource, /const S=state,\s*AI=getAI\(\)/, 'Study tools must not capture an unavailable AI client during startup');
   assert.equal(englishCourseResponse.status(), 200, 'English course module must be served');
+  assert.equal(ministryLibraryResponse.status(), 200, 'Ministry library module must be served');
   assert.equal(englishCoachResponse.status(), 200, 'English coach module must be served');
   assert.equal(preferencesResponse.status(), 200, 'Preferences module must be served');
   const scriptOrder = await page.locator('script[src]').evaluateAll(nodes => nodes.map(node => node.getAttribute('src')));
@@ -54,7 +56,8 @@ try {
   assert.ok(scriptOrder.indexOf('./assets/js/features/practice.js') < scriptOrder.indexOf('./assets/js/features/mistakes.js'), 'Practice must load before mistakes feature');
   assert.ok(scriptOrder.indexOf('./assets/js/features/mistakes.js') < scriptOrder.indexOf('./assets/js/features/tools.js'), 'Mistakes must load before tools feature');
   assert.ok(scriptOrder.indexOf('./assets/js/features/tools.js') < scriptOrder.indexOf('./assets/js/features/english-course.js'), 'Tools must load before English course feature');
-  assert.ok(scriptOrder.indexOf('./assets/js/features/english-course.js') < scriptOrder.indexOf('./assets/js/features/english-coach.js'), 'English course must load before English coach feature');
+  assert.ok(scriptOrder.indexOf('./assets/js/features/english-course.js') < scriptOrder.indexOf('./assets/js/features/ministry-library.js'), 'English course must load before Ministry library feature');
+  assert.ok(scriptOrder.indexOf('./assets/js/features/ministry-library.js') < scriptOrder.indexOf('./assets/js/features/english-coach.js'), 'Ministry library must load before English coach feature');
   assert.ok(scriptOrder.indexOf('./assets/js/features/english-coach.js') < scriptOrder.indexOf('./assets/js/features/preferences.js'), 'English coach must load before preferences feature');
   assert.ok(scriptOrder.indexOf('./assets/js/features/preferences.js') < scriptOrder.indexOf('./assets/js/app.js'), 'Preferences must load before app bootstrap');
   const appSource = await jsResponse.text();
@@ -65,6 +68,7 @@ try {
   assert.equal(await page.evaluate(() => typeof window.StudyMistakes?.init), 'function', 'Mistakes module must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.StudyTools?.init), 'function', 'Tools module must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.StudyEnglishCourse?.init), 'function', 'English course module must expose its initializer');
+  assert.equal(await page.evaluate(() => typeof window.StudyMinistryLibrary?.init), 'function', 'Ministry library module must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.ecRender), 'function', 'English course renderer must be available to tab navigation');
   assert.equal(await page.evaluate(() => typeof window.StudyEnglishCoach?.init), 'function', 'English coach module must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.StudyPreferences?.init), 'function', 'Preferences module must expose its initializer');
@@ -72,7 +76,7 @@ try {
   assert.equal(await page.evaluate(() => typeof window.activateTab), 'function', 'Navigation module must expose tab activation');
   assert.match(await page.title(), /Ahmed Study Platform/);
   await page.locator('#home').waitFor({ state: 'visible' });
-  assert.equal(await page.locator('.tabs [role="tab"]').count(), 8);
+  assert.equal(await page.locator('.tabs [role="tab"]').count(), 9);
 
   // Every navigation tab must activate its matching content section.
   for (const tab of await page.locator('.tabs [role="tab"]').all()) {
@@ -81,6 +85,23 @@ try {
     await page.locator('#' + target).waitFor({ state: 'visible' });
     assert.equal(await page.locator('.tabs [aria-selected="true"]').getAttribute('data-tab'), target);
   }
+
+  // Ministry library must show the 2026/2027 track subjects and shared pass/fail subjects.
+  await page.locator('[data-tab="library"]').click();
+  await page.locator('#ministrySubjectGrid [data-ministry-subject="الأحياء"]').waitFor({ state: 'visible' });
+  await page.locator('#ministrySubjectGrid [data-ministry-subject="اللغة الأجنبية الأولى"]').waitFor({ state: 'visible' });
+  await page.locator('#ministrySubjectGrid [data-ministry-subject="اللغة الأجنبية الثانية"]').waitFor({ state: 'visible' });
+  await page.locator('#ministrySubjectGrid [data-ministry-subject="التربية الدينية"]').waitFor({ state: 'visible' });
+  await page.locator('#ministrySubjectGrid [data-ministry-subject="التربية الوطنية"]').waitFor({ state: 'visible' });
+  assert.equal(await page.locator('#ministrySubjectGrid [data-ministry-subject="الجيولوجيا"]').count(), 0);
+  await page.locator('#ministrySubjectGrid [data-ministry-subject="الفيزياء"]').click();
+  await page.locator('#ministrySubjectDetail h2').getByText('الفيزياء').waitFor({ state: 'visible' });
+  assert.equal(await page.locator('#ministrySubjectDetail a').getAttribute('href'), 'https://studentbooks.moe.gov.eg/Books');
+  await page.locator('#trk').selectOption('math');
+  await page.locator('#ministrySubjectGrid [data-ministry-subject="الرياضيات"]').waitFor({ state: 'visible' });
+  assert.equal(await page.locator('#ministrySubjectGrid [data-ministry-subject="الأحياء"]').count(), 0);
+  assert.equal(await page.locator('#ministrySubjectGrid [data-ministry-subject="الجيولوجيا"]').count(), 0);
+  await page.locator('#trk').selectOption('sci');
 
   // Dashboard quick links must return to the home screen.
   await page.locator('[data-go-tab="home"]').first().click();
@@ -149,7 +170,7 @@ try {
   // English 2027 course tools should render, save vocabulary locally, and start a quiz.
   await page.locator('[data-tab="english2027"]').click();
   await page.locator('#ecProgressText').getByText('0 من 12 وحدة').waitFor({ state: 'visible' });
-  const officialEnglishLibrary = page.locator('#english2027 a[href="https://ellibrary.moe.gov.eg/Books-sec/"]');
+  const officialEnglishLibrary = page.locator('#english2027 a[href="https://studentbooks.moe.gov.eg/Books"]');
   assert.ok(await officialEnglishLibrary.count() >= 1, 'English course must link to the official Ministry book library');
   assert.ok(await page.locator('#ecUnitList').getByText('محاور للمذاكرة وليست قائمة رسمية بعناوين الدروس').count() > 0, 'Unit details must identify lesson prompts as unverified official titles');
   assert.ok(await page.locator('#english2027').getByText('فهرس مساعد غير رسمي').count() === 1, 'Supplementary curriculum index must be labeled unofficial');

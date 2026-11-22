@@ -174,7 +174,7 @@ body{background:var(--bg);color:var(--ink);font-family:Tajawal,"Segoe UI",Tahoma
       <textarea id="nB" required placeholder="الصق شرح الدرس هنا"></textarea>
       <button class="p" type="submit" id="nBtn">لخّص الدرس للامتحان</button> <span class="hint" id="nSt"></span>
     </form>
-    <p class="hint">التلخيص بالذكاء الاصطناعي بيشتغل على النص اللي بتلصقه من كتاب الوزارة، فبيلتزم بمحتوى الدرس. أول مرة هيطلب موافقتك على استخدام Claude.</p>
+    <p class="hint">التلخيص الذكي يحتاج ربط مزوّد ذكاء اصطناعي. في نسخة GitHub Pages الحالية، احفظ ملخصاتك محليًا أو استخدم التلخيص البسيط؛ لن نطلب منك مفتاح API داخل المتصفح.</p>
   </div>
   <div id="noteList"></div>
 </section>
@@ -196,7 +196,7 @@ body{background:var(--bg);color:var(--ink);font-family:Tajawal,"Segoe UI",Tahoma
 
 <section id="prac" hidden>
   <div class="panel"><div class="n" id="dl"></div>
-    <div class="hint">بداية امتحانات الثانوية العامة 26 يونيو 2027 حسب الجدول المعلن من الوزارة، والامتحان نصفه مقالي ونصفه اختيار من متعدد. اتأكد من موقع الوزارة لأن المواعيد ممكن تتغير.</div></div>
+    <div class="hint">موعد الامتحانات ومواصفاتها الرسمية لم تُثبت هنا بعد. اعتمد على آخر بيانات وزارة التربية والتعليم، وسيُحدّث هذا القسم عند تأكيدها.</div></div>
   <h2>سجّل تدريبك</h2>
   <div class="panel">
     <form id="pForm"><label for="pS">المادة</label><select id="pS"></select>
@@ -420,7 +420,7 @@ $('#noteForm').onsubmit=async e=>{e.preventDefault();
   const b=$('#nB').value.trim(),t=$('#nT').value.trim(),sub=$('#nS').value,st=$('#nSt'),btn=$('#nBtn');
   let sum='';btn.disabled=true;
   if(AI){st.textContent='جاري التلخيص…';
-    try{sum=(await AI(`أنت مدرس خبير لطلاب الثانوية العامة المصرية (الصف الثالث الثانوي، ${TN[S.track]}، امتحانات 2027: نصفها مقالي ونصفها اختيار من متعدد). المادة: ${sub}. لخّص الدرس التالي بالعربية المبسطة (والمصطلحات الأجنبية كما هي) بدون إضافة معلومات غير موجودة في النص، وبالترتيب ده:\nالفكرة العامة: سطرين\nأهم النقاط: من 5 إلى 8 نقاط مرقمة\nتعريفات وقوانين ومصطلحات لازم تتحفظ\nأسئلة متوقعة: سؤالين مقاليين و3 اختيار من متعدد مع إجاباتها\nلو النص ناقص حاجة مهمة قول إيه هي.\n\nالنص:\n${b}`)).text}catch(x){st.textContent=errMsg(x.code)+'، استخدمت تلخيصًا بسيطًا بدله'}}
+    try{sum=(await AI(`أنت مدرس خبير لطلاب الثانوية العامة المصرية (الصف الثالث الثانوي، ${TN[S.track]}). المادة: ${sub}. لخّص الدرس التالي بالعربية المبسطة (والمصطلحات الأجنبية كما هي) بدون إضافة معلومات غير موجودة في النص، وبالترتيب ده:\nالفكرة العامة: سطرين\nأهم النقاط: من 5 إلى 8 نقاط مرقمة\nتعريفات وقوانين ومصطلحات لازم تتحفظ\nأسئلة متوقعة: سؤالين مقاليين و3 اختيار من متعدد مع إجاباتها\nلو النص ناقص حاجة مهمة قول إيه هي.\n\nالنص:\n${b}`)).text}catch(x){st.textContent=errMsg(x.code)+'، استخدمت تلخيصًا بسيطًا بدله'}}
   if(!sum)sum=summarize(b);
   S.notes.unshift({id:uid(),title:t,sub,sum});save();e.target.reset();$('#nS').value=sub;renderNotes();btn.disabled=false;if(AI&&sum)st.textContent=''};
 document.addEventListener('click',e=>{const d=e.target.dataset.ndel;if(d){S.notes=S.notes.filter(n=>n.id!==d);save();renderNotes()}});
@@ -484,9 +484,9 @@ document.addEventListener('click',e=>{const w=e.target.dataset.addw;if(w){const 
 
 /* Practice and plan */
 function statsMap(){const by={};S.prac.forEach(p=>{const x=by[p.s]=by[p.s]||{n:0,c:0};x.n+=p.n;x.c+=p.c});return by}
-function daysLeft(){return Math.ceil((new Date('2027-06-26T00:00')-Date.now())/864e5)}
+function daysLeft(){return null}
 function renderPrac(){
-  const d=daysLeft();$('#dl').textContent=d>0?`باقي ${d} يوم على بداية الامتحانات`:'الامتحانات بدأت';
+  $('#dl').textContent='موعد الامتحانات الرسمي سيُضاف بعد تأكيده من الوزارة.';
   const ws=new Date();ws.setHours(0,0,0,0);ws.setDate(ws.getDate()-((ws.getDay()+1)%7));
   const wk=S.prac.filter(p=>new Date(p.d+'T00:00')>=ws).reduce((a,p)=>a+p.n,0);
   $('#goalSt').textContent=`خلصت ${wk} من ${S.goal} سؤال الأسبوع ده`;$('#gbar').style.width=Math.min(100,wk/S.goal*100)+'%';
@@ -501,7 +501,7 @@ $('#qBtn').onclick=async()=>{
   if(!AI){st.textContent='ميزة الذكاء الاصطناعي مش متاحة هنا';return}
   if(!t){st.textContent='اكتب اسم الدرس أو الصق نصه';return}
   st.textContent='جاري التوليد…';$('#qOut').innerHTML='';
-  try{const {text}=await AI(`أنت مدرس خبير في مادة ${$('#pS').value} لطلاب الثانوية العامة المصرية (${TN[S.track]}، امتحانات 2027 نصفها مقالي ونصفها اختيار من متعدد). اكتب 4 أسئلة اختيار من متعدد (أ، ب، ج، د) و3 أسئلة مقالية على الدرس التالي بمستوى امتحان الوزارة ومن غير معلومات خارج المنهج. اكتب الأسئلة كلها أولًا، ثم سطر فيه ===== فقط، ثم الإجابات النموذجية مرقمة بنفس الترتيب.\nالدرس:\n${t}`);
+  try{const {text}=await AI(`أنت مدرس خبير في مادة ${$('#pS').value} لطلاب الثانوية العامة المصرية (${TN[S.track]}). اكتب 4 أسئلة اختيار من متعدد (أ، ب، ج، د) و3 أسئلة مقالية على الدرس التالي بمستوى امتحان الوزارة ومن غير معلومات خارج المنهج. اكتب الأسئلة كلها أولًا، ثم سطر فيه ===== فقط، ثم الإجابات النموذجية مرقمة بنفس الترتيب.\nالدرس:\n${t}`);
     const [q,a]=text.split('=====');
     $('#qOut').innerHTML=`<div class="sum">${esc(q.trim())}</div>${a?`<details><summary>الإجابات (حاول تحل الأول)</summary><div class="sum">${esc(a.trim())}</div></details>`:''}`;st.textContent=''}
   catch(e){st.textContent=errMsg(e.code)}};
@@ -636,7 +636,7 @@ function downloadFile(filename,data,mime='text/plain;charset=utf-8'){
 const today=()=>new Date().toLocaleDateString('en-CA');
 const addDays=n=>{const d=new Date();d.setDate(d.getDate()+n);return d.toLocaleDateString('en-CA')};
 const tm=s=>String(Math.floor(Math.max(0,s)/60)).padStart(2,'0')+':'+String(Math.max(0,s)%60).padStart(2,'0');
-const noAI=el=>{el.textContent='ميزة الذكاء الاصطناعي مش متاحة هنا'};
+const noAI=el=>{el.textContent='الذكاء الاصطناعي غير مفعّل في نسخة GitHub Pages الحالية. الأدوات الأساسية والحفظ المحلي يعملان.'};
 
 $('#plAdd').onclick=async()=>{const st=$('#plSt');if(!AI)return noAI(st);st.textContent='جاري الإضافة…';
   try{const arr=await AI.json(`اليوم ${today()}. حوّل خطة المذاكرة دي لجلسات في الجدول للأيام السبعة الجاية فقط. ارجع JSON فقط: مصفوفة عناصرها {"title":"المادة وموضوع الجلسة","date":"YYYY-MM-DD","time":"HH:MM"} بحد أقصى 14 جلسة والوقت بنظام 24 ساعة.\nالخطة:\n${plText}`);
@@ -644,16 +644,16 @@ $('#plAdd').onclick=async()=>{const st=$('#plSt');if(!AI)return noAI(st);st.text
     arr.slice(0,14).forEach(x=>{if(x.title&&/^\d{4}-\d\d-\d\d$/.test(x.date)&&/^\d\d:\d\d$/.test(x.time))S.ev.push({id:uid(),title:String(x.title),d:x.date,t:x.time,lead:10,fired:false,done:false})});
     save();renderSched();st.textContent='اتضافت للجدول'}catch(e){st.textContent=errMsg(e.code)}};
 
-function renderMist(){const due=S.mist.filter(m=>m.box<2&&m.due<=today()),done=S.mist.filter(m=>m.box>=2).length;
-  $('#mSt').textContent=`${S.mist.length} غلطة مسجلة، ${done} اتحلت صح، و${due.length} للمراجعة النهاردة`;
-  $('#mList').innerHTML=due.map(m=>`<div class="item"><div class="m"><div class="n">${esc(m.q)}</div><div class="d">${esc(m.s)} - ${esc(m.r)}</div></div><button class="s" data-mok="${m.id}">جاوبتها صح</button><button class="s" data-mno="${m.id}">غلطت تاني</button></div>`).join('')}
+function renderMist(){const active=S.mist.filter(m=>m.box<2),due=active.filter(m=>m.due<=today()).length,done=S.mist.filter(m=>m.box>=2).length;
+  $('#mSt').textContent=`${S.mist.length} غلطة مسجلة، ${done} اتراجعت بنجاح، و${due} مستحقة للمراجعة الآن`;
+  $('#mList').innerHTML=active.length?active.map(m=>{const dueNow=m.due<=today();return `<div class="item"><div class="m"><div class="n">${esc(m.q)}</div><div class="d">${esc(m.s)} - ${esc(m.r)} · ${dueNow?'مستحقة للمراجعة':`موعد المراجعة: ${esc(m.due)}`}</div></div><button class="s" data-mok="${m.id}">جاوبتها صح</button><button class="s" data-mno="${m.id}">غلطت تاني</button></div>`}).join(''):'<div class="empty">لا توجد أخطاء للمراجعة حاليًا. سجّل أول نقطة تحتاج مراجعتها.</div>'}
 $('#mForm').onsubmit=e=>{e.preventDefault();const s=$('#mS').value;S.mist.push({id:uid(),s,q:$('#mQ').value.trim(),r:$('#mR').value,box:0,due:addDays(2)});save();e.target.reset();$('#mS').value=s;renderMist()};
 document.addEventListener('click',e=>{const ok=e.target.dataset.mok,no=e.target.dataset.mno;if(!ok&&!no)return;const m=S.mist.find(x=>x.id===(ok||no));if(!m)return;if(ok){m.box++;m.due=addDays(7)}else{m.box=0;m.due=addDays(2)}save();renderMist()});
 
 $('#xGo').onclick=async()=>{const t=$('#xT').value.trim(),st=$('#xSt');
   if(!AI)return noAI(st);if(!t){st.textContent='اكتب الدرس الأول';return}
   st.textContent='جاري تجهيز الامتحان…';
-  try{xQ=(await AI(`أنت واضع امتحانات ثانوية عامة مصرية (${TN[S.track]}). اكتب امتحانًا قصيرًا في مادة ${$('#xS').value} على الدروس التالية: 5 أسئلة اختيار من متعدد (أ، ب، ج، د) و3 أسئلة مقالية، بمستوى امتحان الوزارة ومن غير معلومات خارج المنهج. اكتب الأسئلة فقط من غير إجابات.\nالدروس:\n${t}`)).text;
+  try{xQ=(await AI(`أنت مدرس يساعد الطالب على التدريب في مادة ${$('#xS').value} على الدروس التالية: 5 أسئلة اختيار من متعدد (أ، ب، ج، د) و3 أسئلة مقالية، بمستوى مناسب للثانوية العامة، واعتمد على الدروس التي أرسلها الطالب فقط. اكتب الأسئلة فقط من غير إجابات.\nالدروس:\n${t}`)).text;
     $('#xQ').textContent=xQ;$('#xA').value='';$('#xRes').innerHTML='';$('#xBox').hidden=false;st.textContent='';
     const end=Date.now()+Math.max(5,+$('#xM').value||30)*60000;clearInterval(xTi);
     const tick=()=>{const s=Math.round((end-Date.now())/1000);$('#xTm').textContent=tm(s);if(s<=0){clearInterval(xTi);showAlert('انتهى الوقت، سلّم إجاباتك')}};tick();xTi=setInterval(tick,1000)}
@@ -679,7 +679,7 @@ $('#rGo').onclick=async()=>{const s=$('#rS').value,n=S.notes.filter(x=>x.sub===s
 $('#bkGo').onclick=async()=>{
   try{downloadFile('study-backup.json',JSON.stringify(S,null,2),'application/json;charset=utf-8');$('#bkSt').textContent='تم تنزيل النسخة الاحتياطية'}catch(e){$('#bkSt').textContent='مقدرتش أحفظ الملف'}};
 $('#bkIn').onchange=async e=>{const f=e.target.files[0];if(!f)return;
-  try{const d=JSON.parse(await f.text());if(!d||typeof d!=='object'||Array.isArray(d))throw 0;Object.assign(S,d);save();renderSched();renderNotes();renderWords();renderPrac();renderMist();pmShow();fillSubj();$('#bkSt').textContent='اترجعت بياناتك'}
+  try{const d=JSON.parse(await f.text());if(!d||typeof d!=='object'||Array.isArray(d))throw 0;const arrayKeys=['ev','notes','words','prac','mist'];if(arrayKeys.some(k=>k in d&&!Array.isArray(d[k])))throw 0;if('track' in d&&!['sci','math','lit'].includes(d.track))throw 0;const allowed=['ev','notes','words','track','prac','goal','mist','focus','courseDone','courseWords','courseWriting','courseExamChecks','theme','app','me','color'];if(Object.keys(d).some(k=>!allowed.includes(k)))throw 0;Object.assign(S,d);save();renderSched();renderNotes();renderWords();renderPrac();renderMist();pmShow();fillSubj();$('#bkSt').textContent='اترجعت بياناتك'}
   catch(x){$('#bkSt').textContent='الملف ده مش نسخة صالحة'}};
 
 /* Personalization */

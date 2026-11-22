@@ -107,7 +107,7 @@ try {
   await firstSubjectLesson.locator('[data-subject-check]').click();
   await firstSubjectLesson.locator('[data-subject-feedback]').waitFor({ state: 'visible' });
   await page.locator('#biology2027 .subject-lesson').first().locator('[data-subject-done]').check();
-  assert.ok((await page.locator('#biology2027 [data-subject-progress]').textContent()).includes('1 درس'));
+  assert.ok((await page.locator('#biology2027 [data-subject-progress]').textContent()).includes('1 من'));
 
   // Ministry library must show the 2026/2027 track subjects and shared pass/fail subjects.
   await page.locator('[data-tab="library"]').click();

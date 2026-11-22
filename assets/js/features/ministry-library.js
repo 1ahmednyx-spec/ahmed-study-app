@@ -1,7 +1,7 @@
 /* Official Ministry textbook library for Egypt's 2026/2027 Thanaweya Amma. */
 (function () {
   const $ = selector => document.querySelector(selector);
-  const MINISTRY_LIBRARY = 'https://ellibrary.moe.gov.eg/Books-sec/';
+  const MINISTRY_LIBRARY = 'https://studentbooks.moe.gov.eg/Books';
   const commonSubjects = [
     { name: 'اللغة الأجنبية الثانية', icon: '🌐' },
     { name: 'التربية الدينية', icon: '🕌' },
@@ -81,10 +81,10 @@
       '<small>العام الدراسي 2026/2027 — عند توفر النسخة على مكتبة الوزارة</small>' +
       '<span class="ministry-source-status">المصدر: وزارة التربية والتعليم</span></div></div>' +
       '<div class="ministry-book-actions"><a class="p ministry-open-link" href="' + MINISTRY_LIBRARY +
-      '" target="_blank" rel="noopener">افتح مكتبة الوزارة واختر الكتاب <span aria-hidden="true">↗</span></a></div>' +
+      '" target="_blank" rel="noopener">افتح مكتبة الكتب الرسمية واختر الكتاب <span aria-hidden="true">↗</span></a></div>' +
       '<ol class="ministry-book-steps"><li>اختر المرحلة الثانوية.</li><li>اختر الصف الثالث الثانوي والعام الدراسي 2026/2027.</li>' +
       '<li>اختر مادة ' + current.name + ' ثم افتح الكتاب أو حمّله إذا أتاح الموقع ذلك.</li></ol>' +
-      '<p class="hint">هذا رابط المكتبة الرسمية وليس رابط PDF مباشرًا. لم نعرض قارئًا داخليًا أو زر تنزيل مستقلًا لأن رابط ملف الكتاب لم يُتحقق منه بعد.</p>';
+      '<p class="hint">هذا رابط بوابة الكتب الرسمية وليس رابط PDF مباشرًا. لم نعرض قارئًا داخليًا أو زر تنزيل مستقلًا لأن رابط ملف الكتاب لم يُتحقق منه بعد.</p>';
   }
 
   function init() {

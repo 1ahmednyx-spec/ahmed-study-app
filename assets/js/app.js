@@ -30,6 +30,8 @@ const {render:renderNotes}=window.StudyNotes.init({
   getErrorMessage:code=>errMsg(code)
 });
 
+const today=()=>new Date().toLocaleDateString('en-CA');
+const addDays=n=>{const d=new Date();d.setDate(d.getDate()+n);return d.toLocaleDateString('en-CA')};
 let plText='';
 const {render:renderPrac}=window.StudyPractice.init({
   state:S,save,uid,escapeHtml:esc,showAlert,

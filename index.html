@@ -83,7 +83,7 @@ body{background:var(--bg);color:var(--ink);font-family:Tajawal,"Segoe UI",Tahoma
 .brand-lockup{display:flex;align-items:center;gap:12px;color:var(--ink);text-decoration:none;min-width:0}
 .brand-symbol{width:46px;height:46px;display:grid;place-items:center;border-radius:14px;background:#0B1930;color:#4CA6FF;box-shadow:0 8px 22px rgba(22,119,232,.18)}
 .brand-symbol svg{width:34px;height:34px}.brand-copy{display:grid;line-height:1.25}.brand-copy strong{font-size:18px;font-weight:800;letter-spacing:.1px}.brand-copy small{font-size:12px;color:var(--muted);margin-top:4px}
-.topbar-meta{display:flex;align-items:center;gap:16px;color:var(--muted);font-size:13px}.topbar-pill{display:flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--line);border-radius:999px;background:var(--surface)}.topbar-pill i{width:8px;height:8px;border-radius:50%;background:#22C55E;box-shadow:0 0 0 4px rgba(34,197,94,.12)}
+.topbar-meta{display:flex;align-items:center;gap:16px;color:var(--muted);font-size:13px}.theme-toggle{width:38px;height:38px;border:1px solid var(--line);border-radius:11px;background:var(--surface);color:var(--ink);font:700 20px Tajawal;cursor:pointer}.theme-toggle:hover{border-color:var(--brand);color:var(--brand)}.topbar-pill{display:flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--line);border-radius:999px;background:var(--surface)}.topbar-pill i{width:8px;height:8px;border-radius:50%;background:#22C55E;box-shadow:0 0 0 4px rgba(34,197,94,.12)}
 .app-shell{display:grid;grid-template-columns:248px minmax(0,1fr);gap:26px;align-items:start}.sidebar{position:sticky;top:18px;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:16px 12px;min-height:calc(100vh - 124px);display:flex;flex-direction:column;box-shadow:0 10px 30px rgba(15,23,42,.035)}.sidebar-label{font-size:12px;font-weight:800;color:var(--muted);padding:7px 12px 12px}
 .tabs{display:grid;gap:5px;overflow:visible;background:transparent;padding:0;margin:0;border:0;border-radius:0}.tabs button{width:100%;display:flex;align-items:center;justify-content:flex-start;gap:12px;white-space:normal;flex:none;text-align:start;border:0;background:transparent;color:var(--muted);font:700 14px Tajawal,sans-serif;padding:11px 12px;border-radius:11px;cursor:pointer;transition:background .18s ease,color .18s ease,transform .18s ease}.tabs button>span{width:25px;height:25px;display:grid;place-items:center;border-radius:8px;background:var(--bg);color:var(--brand);font-size:13px;font-weight:800;flex:none}.tabs button:hover{background:var(--bg);color:var(--ink)}.tabs button[aria-selected="true"]{background:rgba(22,119,232,.11);color:var(--brand)}.tabs button[aria-selected="true"]>span{background:var(--brand);color:#fff}.sidebar-footer{margin-top:auto;border-top:1px solid var(--line);padding:16px 12px 4px;color:var(--muted);font-size:12px;direction:ltr}.sidebar-footer span{color:var(--brand);font-weight:800}
 .main-content{min-width:0}.page-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin:3px 0 22px}.page-heading h1{font-size:29px;line-height:1.3;margin:3px 0 5px}.eyebrow{font-size:10px;letter-spacing:1.2px;font-weight:800;color:var(--brand);margin:0}.eyebrow span{color:var(--muted);padding:0 4px}.page-subtitle{font-size:14px;color:var(--muted);margin:0}.track-control{width:190px;flex:none}.track-control label{margin:0 0 5px;font-weight:700}.track-control select{background:var(--surface)}
@@ -103,7 +103,7 @@ body{background:var(--bg);color:var(--ink);font-family:Tajawal,"Segoe UI",Tahoma
     <span class="brand-symbol" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M7 35V13l17 7 17-7v22l-17 7-17-7Z" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/><path d="M24 20v22M13 16l11 5 11-5M15 30l7 3m11-3-7 3" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"/><path d="m16 15 8-10 8 10" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
     <span class="brand-copy"><strong id="brandName">Ahmed Study Platform</strong><small>منصة أحمد التعليمية</small></span>
   </a>
-  <div class="topbar-meta"><span class="topbar-pill"><i></i> مساحة التعلم الخاصة بك</span><span id="hi" aria-live="polite"></span></div>
+  <div class="topbar-meta"><span class="topbar-pill"><i></i> مساحة التعلم الخاصة بك</span><button type="button" class="theme-toggle" id="themeToggle" aria-label="تفعيل الوضع الداكن" title="تفعيل الوضع الداكن">☾</button><span id="hi" aria-live="polite"></span></div>
 </header>
 
 <div class="app-shell">
@@ -684,11 +684,14 @@ $('#bkIn').onchange=async e=>{const f=e.target.files[0];if(!f)return;
 
 /* Personalization */
 const COLS=['#1677E8','#2563EB','#4F46E5','#0891B2','#0F766E','#475569'];
-function applyTheme(){const r=document.documentElement.style,n=S.app||'Ahmed Study Platform';
+function applyTheme(){const r=document.documentElement.style,n=S.app||'Ahmed Study Platform',theme=S.theme||'light';
+  document.documentElement.dataset.theme=theme;
   $('#brandName').textContent=n;document.title=n+' | منصة أحمد التعليمية';$('#hi').textContent=S.me?`أهلًا يا ${S.me}`:'';
+  const toggle=$('#themeToggle');if(toggle){toggle.textContent=theme==='dark'?'☀':'☾';toggle.setAttribute('aria-label',theme==='dark'?'تفعيل الوضع الفاتح':'تفعيل الوضع الداكن');toggle.title=theme==='dark'?'تفعيل الوضع الفاتح':'تفعيل الوضع الداكن'}
   if(S.color){r.setProperty('--brand',S.color);r.setProperty('--on-brand','#fff')}}
 $('#cuCols').innerHTML=COLS.map(c=>`<button type="button" data-col="${c}" aria-label="لون" style="width:38px;height:38px;border-radius:50%;border:2px solid var(--line);margin-inline-end:8px;cursor:pointer;background:${c}"></button>`).join('');
 $('#cuA').value=S.app||'';$('#cuM').value=S.me||'';
+$('#themeToggle').onclick=()=>{S.theme=(S.theme||'light')==='dark'?'light':'dark';save();applyTheme()};
 $('#cuA').oninput=e=>{S.app=e.target.value.trim();save();applyTheme()};
 $('#cuM').oninput=e=>{S.me=e.target.value.trim();save();applyTheme()};
 document.addEventListener('click',e=>{const c=e.target.dataset.col;if(c){S.color=c;save();applyTheme()}});

@@ -91,8 +91,16 @@ try {
   assert.ok(mobile.document <= mobile.viewport + 1, `Mobile page overflow: ${JSON.stringify(mobile)}`);
   assert.ok(['auto', 'scroll'].includes(mobile.nav), `Mobile navigation should scroll horizontally: ${mobile.nav}`);
 
+  // A narrow 320px viewport must also remain usable.
+  await page.setViewportSize({ width: 320, height: 740 });
+  const narrow = await page.evaluate(() => ({
+    viewport: document.documentElement.clientWidth,
+    document: document.documentElement.scrollWidth
+  }));
+  assert.ok(narrow.document <= narrow.viewport + 1, `Narrow mobile page overflow: ${JSON.stringify(narrow)}`);
+
   assert.deepEqual(pageErrors, [], `Uncaught browser errors: ${pageErrors.join('; ')}`);
-  console.log('PASS: homepage, navigation, schedule creation, local notes, theme persistence, local data preservation, mobile overflow, and browser console.');
+  console.log('PASS: homepage, navigation, schedule creation, local notes, theme persistence, local data preservation, mistake review, AI fallback, backup validation, mobile overflow at 390px and 320px, and browser console.');
 } finally {
   await browser.close();
 }

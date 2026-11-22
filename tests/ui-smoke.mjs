@@ -25,7 +25,7 @@ try {
   const serviceWorkerResponse = await page.request.get('http://127.0.0.1:4173/sw.js');
   assert.equal(serviceWorkerResponse.status(), 200, 'Service worker must be served');
   const serviceWorkerSource = await serviceWorkerResponse.text();
-  assert.match(serviceWorkerSource, /ahmed-study-platform-v17/, 'Service worker cache must be versioned');
+  assert.match(serviceWorkerSource, /ahmed-study-platform-v\d+/, 'Service worker cache must be versioned');
   for (const modulePath of ['./assets/js/features/preferences.js', './assets/js/features/english-course.js', './assets/js/features/ministry-library.js', './assets/js/features/english-coach.js']) {
     assert.ok(serviceWorkerSource.includes(modulePath), `Service worker must precache ${modulePath}`);
   }
@@ -76,7 +76,11 @@ try {
   assert.equal(await page.evaluate(() => typeof window.activateTab), 'function', 'Navigation module must expose tab activation');
   assert.match(await page.title(), /Ahmed Study Platform/);
   await page.locator('#home').waitFor({ state: 'visible' });
-  assert.equal(await page.locator('.tabs [role="tab"]').count(), 9);
+  assert.equal(await page.locator('.tabs [role="tab"]').count(), 14, 'Five new subject tabs must be added without removing existing tabs');
+  for (const subject of ['arabic2027', 'chemistry2027', 'physics2027', 'math2027', 'biology2027']) {
+    assert.equal(await page.locator(`.tabs [role="tab"][data-tab="${subject}"]`).count(), 1, `${subject} must have one navigation tab`);
+    assert.equal(await page.locator(`#${subject}`).count(), 1, `${subject} must have one content section`);
+  }
 
   // Every navigation tab must activate its matching content section.
   for (const tab of await page.locator('.tabs [role="tab"]').all()) {

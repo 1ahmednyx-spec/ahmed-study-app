@@ -5,6 +5,7 @@ on:
     branches:
       - phase-1-ui-foundation
       - phase-2-modular-foundation
+      - feature/subjects-2027-on-main
   pull_request:
     branches:
       - main

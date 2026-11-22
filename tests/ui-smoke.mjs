@@ -71,7 +71,7 @@ try {
   await page.locator('#noteList').getByText('ملاحظة اختبارية ثانية').waitFor({ state: 'visible' });
 
   // Vocabulary words should support manual entry, flashcard reveal, spaced review, deletion, and AI-chat import.
-  await page.locator('[data-tab="english"]').click();
+  await page.locator('[data-tab="eng"]').click();
   await page.locator('#wE').fill('resilient');
   await page.locator('#wA').fill('مرن وقادر على التعافي');
   await page.locator('#wForm button[type="submit"]').click();

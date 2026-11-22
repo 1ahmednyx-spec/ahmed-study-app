@@ -57,6 +57,8 @@ try {
   assert.ok(scriptOrder.indexOf('./assets/js/features/english-course.js') < scriptOrder.indexOf('./assets/js/features/english-coach.js'), 'English course must load before English coach feature');
   assert.ok(scriptOrder.indexOf('./assets/js/features/english-coach.js') < scriptOrder.indexOf('./assets/js/features/preferences.js'), 'English coach must load before preferences feature');
   assert.ok(scriptOrder.indexOf('./assets/js/features/preferences.js') < scriptOrder.indexOf('./assets/js/app.js'), 'Preferences must load before app bootstrap');
+  const appSource = await jsResponse.text();
+  assert.ok(appSource.indexOf('StudyPreferences.init') < appSource.indexOf('StudyTools.init'), 'Preferences must initialize before tools receive its refresh callback');
   assert.equal(await page.evaluate(() => typeof window.StudyNotes?.init), 'function', 'Notes module must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.StudyWords?.init), 'function', 'Words module must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.StudyPractice?.init), 'function', 'Practice module must expose its initializer');

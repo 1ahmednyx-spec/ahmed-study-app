@@ -53,10 +53,12 @@ window.StudyEnglishCoach.init({getAI:()=>AI,errMsg,escapeHtml:esc,showAlert});
 window.StudyEnglishCourse.init({state:S,save,escapeHtml:esc,showAlert});
 
 const {render:renderMist}=window.StudyMistakes.init({state:S,save,uid,today,addDays,escapeHtml:esc});
+
+/* Preferences must initialize before tools receive its refresh callback. */
+const {refresh:refreshPreferences}=window.StudyPreferences.init({state:S,save});
 const {pmShow}=window.StudyTools.init({state:S,save,uid,today,addDays,escapeHtml:esc,showAlert,getAI:()=>AI,errMsg,getPlanText:()=>plText,renderSched,renderNotes,renderWords,renderPrac,renderMist,fillSubjects:fillSubj,refreshPreferences});
 
 /* Tools and personalization are initialized in feature modules. */
-const {refresh:refreshPreferences}=window.StudyPreferences.init({state:S,save});
 
 fillSubj();renderPrac();renderMist();pmShow();
 renderSched();renderNotes();renderWords();checkReminders();

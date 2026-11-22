@@ -10,10 +10,16 @@
       term: 'الفصل الدراسي الأول',
       url: 'https://elearnningcontent.blob.core.windows.net/elearnningcontent/2026_2027/Secondry/Secondry3/Term1/StudentBook/Arabic_language_Sec3.pdf',
       note: 'رابط ملف PDF الذي أرسله المستخدم؛ لم نتمكن من فحص استجابة خادم الملفات آليًا.',
-      supplementaryBooks: [{
-        title: 'كتاب اللغة العربية — القصة — الفصل الدراسي الأول',
-        url: 'https://elearnningcontent.blob.core.windows.net/elearnningcontent/2026_2027/Secondry/Secondry3/Term1/StudentBook/Arabic_language_Story_Sec3.pdf'
-      }]
+      supplementaryBooks: [
+        {
+          title: 'كتاب اللغة العربية — القصة — الفصل الدراسي الأول',
+          url: 'https://elearnningcontent.blob.core.windows.net/elearnningcontent/2026_2027/Secondry/Secondry3/Term1/StudentBook/Arabic_language_Story_Sec3.pdf'
+        },
+        {
+          title: 'كتاب اللغة العربية — القواعد الأساسية للنحو والصرف — الفصل الدراسي الأول',
+          url: 'https://elearnningcontent.blob.core.windows.net/elearnningcontent/2026_2027/Secondry/Secondry3/Term1/StudentBook/Arabic_language_NAHO_Sec3.pdf'
+        }
+      ]
     },
     'الكيمياء': {
       title: 'كتاب الكيمياء باللغة العربية — الفصل الدراسي الأول',

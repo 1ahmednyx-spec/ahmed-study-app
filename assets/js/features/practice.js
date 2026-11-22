@@ -2,7 +2,7 @@
 (function () {
   const $ = selector => document.querySelector(selector);
 
-  function init({ state, save, escapeHtml, getAI, getTrackLabel, getSubjects, getErrorMessage, setPlanText }) {
+  function init({ state, save, uid, escapeHtml, showAlert, getAI, getTrackLabel, getSubjects, getErrorMessage, setPlanText }) {
     function statsMap() {
       const bySubject = {};
       state.prac.forEach(record => {
@@ -36,11 +36,11 @@
       const total = +$('#pN').value;
       const correct = +$('#pC').value;
       if (correct > total) {
-        window.alert && window.alert('عدد الإجابات الصح لازم يكون أقل من أو يساوي عدد الأسئلة');
+        showAlert('عدد الإجابات الصح لازم يكون أقل من أو يساوي عدد الأسئلة');
         return;
       }
       const subject = $('#pS').value;
-      state.prac.push({ id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), s: subject, n: total, c: correct, d: new Date().toLocaleDateString('en-CA') });
+      state.prac.push({ id: uid(), s: subject, n: total, c: correct, d: new Date().toLocaleDateString('en-CA') });
       save();
       event.target.reset();
       $('#pS').value = subject;

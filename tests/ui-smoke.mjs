@@ -198,6 +198,18 @@ try {
   await page.locator('#themeToggle').click();
   assert.equal(await page.locator('html').getAttribute('data-theme'), 'light');
 
+  // Appearance preferences must update the live UI and persist locally.
+  await page.locator('[data-tab="tools"]').click();
+  await page.locator('#cuA').fill('My Study Space');
+  await page.locator('#cuM').fill('Student');
+  await page.locator('#cuCols [data-col="#4F46E5"]').click();
+  assert.equal(await page.locator('#brandName').textContent(), 'My Study Space');
+  assert.equal(await page.locator('#hi').textContent(), 'أهلًا يا Student');
+  assert.equal(await page.evaluate(() => document.documentElement.style.getPropertyValue('--brand')), '#4F46E5');
+  await page.reload({ waitUntil: 'domcontentloaded' });
+  assert.equal(await page.locator('#brandName').textContent(), 'My Study Space');
+  assert.equal(await page.locator('#hi').textContent(), 'أهلًا يا Student');
+
   // Malformed legacy storage must fall back safely instead of crashing app startup.
   await page.evaluate(() => localStorage.setItem('study-v1', '{ malformed json'));
   await page.reload({ waitUntil: 'domcontentloaded' });

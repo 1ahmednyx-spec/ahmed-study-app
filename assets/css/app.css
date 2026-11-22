@@ -106,3 +106,17 @@ body{background:var(--bg);color:var(--ink);font-family:Tajawal,"Segoe UI",Tahoma
 .ministry-open-link{display:inline-flex;gap:8px;align-items:center;text-decoration:none;margin:0}
 .ministry-book-actions{margin:12px 0}
 @media(max-width:520px){.ministry-subject-grid{grid-template-columns:1fr}}
+
+
+/* 2027 subject-course lesson layout */
+.subject-progress{display:flex;flex-direction:column;align-items:flex-end;gap:2px;color:var(--brand);font-weight:800}
+.subject-unit{margin:18px 0}
+.subject-unit>h3{font-size:18px;margin:14px 0 8px;padding-bottom:7px;border-bottom:1px solid var(--line)}
+.subject-lesson summary{align-items:center}
+.subject-lesson summary .course-muted{font-weight:500}
+.subject-lesson h4{font-size:15px;margin:12px 0 4px;color:var(--brand)}
+.subject-lesson p{margin:6px 0}
+.subject-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:6px;margin:8px 0}
+.subject-options label{display:flex;align-items:center;gap:8px;padding:8px;border:1px solid var(--line);border-radius:9px;background:var(--bg);color:var(--ink);margin:0}
+.subject-options input{width:auto;flex:none;accent-color:var(--brand)}
+.subject-lesson .course-feedback{line-height:1.8}

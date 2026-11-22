@@ -15,6 +15,8 @@ try {
   const scheduleResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/schedule.js');
   const notesResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/notes.js');
   const wordsResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/words.js');
+  const practiceResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/practice.js');
+  const mistakesResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/mistakes.js');
   assert.equal(cssResponse.status(), 200, 'External stylesheet must be served');
   assert.equal(jsResponse.status(), 200, 'External application script must be served');
   assert.equal(storageResponse.status(), 200, 'Storage module must be served');
@@ -22,15 +24,20 @@ try {
   assert.equal(scheduleResponse.status(), 200, 'Schedule module must be served');
   assert.equal(notesResponse.status(), 200, 'Notes module must be served');
   assert.equal(wordsResponse.status(), 200, 'Words module must be served');
+  assert.equal(practiceResponse.status(), 200, 'Practice module must be served');
+  assert.equal(mistakesResponse.status(), 200, 'Mistakes module must be served');
   const scriptOrder = await page.locator('script[src]').evaluateAll(nodes => nodes.map(node => node.getAttribute('src')));
   assert.ok(scriptOrder.indexOf('./assets/js/core/storage.js') < scriptOrder.indexOf('./assets/js/core/navigation.js'), 'Storage must load before navigation');
   assert.ok(scriptOrder.indexOf('./assets/js/core/navigation.js') < scriptOrder.indexOf('./assets/js/features/schedule.js'), 'Navigation must load before feature modules');
   assert.ok(scriptOrder.indexOf('./assets/js/features/schedule.js') < scriptOrder.indexOf('./assets/js/features/notes.js'), 'Schedule must load before notes feature');
   assert.ok(scriptOrder.indexOf('./assets/js/features/notes.js') < scriptOrder.indexOf('./assets/js/features/words.js'), 'Notes must load before words feature');
-  assert.ok(scriptOrder.indexOf('./assets/js/features/words.js') < scriptOrder.indexOf('./assets/js/app.js'), 'Words must load before app bootstrap');
+  assert.ok(scriptOrder.indexOf('./assets/js/features/words.js') < scriptOrder.indexOf('./assets/js/features/practice.js'), 'Words must load before practice feature');
+  assert.ok(scriptOrder.indexOf('./assets/js/features/practice.js') < scriptOrder.indexOf('./assets/js/features/mistakes.js'), 'Practice must load before mistakes feature');
+  assert.ok(scriptOrder.indexOf('./assets/js/features/mistakes.js') < scriptOrder.indexOf('./assets/js/app.js'), 'Mistakes must load before app bootstrap');
   assert.equal(await page.evaluate(() => typeof window.StudyNotes?.init), 'function', 'Notes module must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.StudyWords?.init), 'function', 'Words module must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.StudyPractice?.init), 'function', 'Practice module must expose its initializer');
+  assert.equal(await page.evaluate(() => typeof window.StudyMistakes?.init), 'function', 'Mistakes module must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.StudySchedule?.init), 'function', 'Schedule module must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.activateTab), 'function', 'Navigation module must expose tab activation');
   assert.match(await page.title(), /Ahmed Study Platform/);
@@ -117,6 +124,15 @@ try {
   await page.locator('#mQ').fill('سؤال يحتاج مراجعة لاحقًا');
   await page.locator('#mForm button[type="submit"]').click();
   await page.locator('#mList').getByText('سؤال يحتاج مراجعة لاحقًا').waitFor({ state: 'visible' });
+  await page.locator('#mList [data-mno]').click();
+  await page.locator('#mList').getByText('موعد المراجعة:').waitFor({ state: 'visible' });
+  await page.locator('#mList [data-mok]').click();
+  await page.locator('#mList [data-mok]').click();
+  await page.locator('#mSt').getByText('1 اتراجعت بنجاح').waitFor({ state: 'visible' });
+  assert.equal(await page.locator('#mList').getByText('سؤال يحتاج مراجعة لاحقًا').count(), 0);
+  await page.locator('#mQ').fill('خطأ ثانٍ لاختبار استعادة النسخة الاحتياطية');
+  await page.locator('#mForm button[type="submit"]').click();
+  await page.locator('#mList').getByText('خطأ ثانٍ لاختبار استعادة النسخة الاحتياطية').waitFor({ state: 'visible' });
 
   // AI-dependent tools must explain the Pages limitation instead of failing silently.
   await page.locator('#aT').fill('A short lesson about photosynthesis.');

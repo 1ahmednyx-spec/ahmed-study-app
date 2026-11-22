@@ -19,6 +19,7 @@ try {
   const mistakesResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/mistakes.js');
   const toolsResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/tools.js');
   const englishCourseResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/english-course.js');
+  const subjectCoursesResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/subject-courses.js');
   const ministryLibraryResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/ministry-library.js');
   const englishCoachResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/english-coach.js');
   const preferencesResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/preferences.js');
@@ -26,7 +27,7 @@ try {
   assert.equal(serviceWorkerResponse.status(), 200, 'Service worker must be served');
   const serviceWorkerSource = await serviceWorkerResponse.text();
   assert.match(serviceWorkerSource, /ahmed-study-platform-v\d+/, 'Service worker cache must be versioned');
-  for (const modulePath of ['./assets/js/features/preferences.js', './assets/js/features/english-course.js', './assets/js/features/ministry-library.js', './assets/js/features/english-coach.js']) {
+  for (const modulePath of ['./assets/js/features/preferences.js', './assets/js/features/english-course.js', './assets/js/features/subject-courses.js', './assets/js/features/ministry-library.js', './assets/js/features/english-coach.js']) {
     assert.ok(serviceWorkerSource.includes(modulePath), `Service worker must precache ${modulePath}`);
   }
 
@@ -44,6 +45,7 @@ try {
   assert.match(toolsSource, /const ai=\(\)=>getAI\(\)/, 'Study tools must resolve the AI client when an action runs');
   assert.doesNotMatch(toolsSource, /const S=state,\s*AI=getAI\(\)/, 'Study tools must not capture an unavailable AI client during startup');
   assert.equal(englishCourseResponse.status(), 200, 'English course module must be served');
+  assert.equal(subjectCoursesResponse.status(), 200, '2027 subject courses module must be served');
   assert.equal(ministryLibraryResponse.status(), 200, 'Ministry library module must be served');
   assert.equal(englishCoachResponse.status(), 200, 'English coach module must be served');
   assert.equal(preferencesResponse.status(), 200, 'Preferences module must be served');
@@ -56,7 +58,8 @@ try {
   assert.ok(scriptOrder.indexOf('./assets/js/features/practice.js') < scriptOrder.indexOf('./assets/js/features/mistakes.js'), 'Practice must load before mistakes feature');
   assert.ok(scriptOrder.indexOf('./assets/js/features/mistakes.js') < scriptOrder.indexOf('./assets/js/features/tools.js'), 'Mistakes must load before tools feature');
   assert.ok(scriptOrder.indexOf('./assets/js/features/tools.js') < scriptOrder.indexOf('./assets/js/features/english-course.js'), 'Tools must load before English course feature');
-  assert.ok(scriptOrder.indexOf('./assets/js/features/english-course.js') < scriptOrder.indexOf('./assets/js/features/ministry-library.js'), 'English course must load before Ministry library feature');
+  assert.ok(scriptOrder.indexOf('./assets/js/features/english-course.js') < scriptOrder.indexOf('./assets/js/features/subject-courses.js'), 'English course must load before subject courses');
+  assert.ok(scriptOrder.indexOf('./assets/js/features/subject-courses.js') < scriptOrder.indexOf('./assets/js/features/ministry-library.js'), 'Subject courses must load before Ministry library feature');
   assert.ok(scriptOrder.indexOf('./assets/js/features/ministry-library.js') < scriptOrder.indexOf('./assets/js/features/english-coach.js'), 'Ministry library must load before English coach feature');
   assert.ok(scriptOrder.indexOf('./assets/js/features/english-coach.js') < scriptOrder.indexOf('./assets/js/features/preferences.js'), 'English coach must load before preferences feature');
   assert.ok(scriptOrder.indexOf('./assets/js/features/preferences.js') < scriptOrder.indexOf('./assets/js/app.js'), 'Preferences must load before app bootstrap');
@@ -68,6 +71,7 @@ try {
   assert.equal(await page.evaluate(() => typeof window.StudyMistakes?.init), 'function', 'Mistakes module must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.StudyTools?.init), 'function', 'Tools module must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.StudyEnglishCourse?.init), 'function', 'English course module must expose its initializer');
+  assert.equal(await page.evaluate(() => typeof window.StudySubjectCourses?.init), 'function', 'Subject courses module must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.StudyMinistryLibrary?.init), 'function', 'Ministry library module must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.ecRender), 'function', 'English course renderer must be available to tab navigation');
   assert.equal(await page.evaluate(() => typeof window.StudyEnglishCoach?.init), 'function', 'English coach module must expose its initializer');
@@ -89,6 +93,21 @@ try {
     await page.locator('#' + target).waitFor({ state: 'visible' });
     assert.equal(await page.locator('.tabs [aria-selected="true"]').getAttribute('data-tab'), target);
   }
+
+  // Every added 2027 subject page must contain real lesson explanations and practice.
+  for (const subject of ['arabic2027', 'chemistry2027', 'physics2027', 'math2027', 'biology2027']) {
+    await page.locator('[data-tab="' + subject + '"]').click();
+    assert.ok(await page.locator('#' + subject + ' .subject-lesson').count() >= 5, subject + ' must render its lesson list');
+    assert.ok(await page.locator('#' + subject + ' [data-subject-progress]').textContent().then(value => value.includes('0%')), subject + ' must show initial progress');
+  }
+  await page.locator('[data-tab="biology2027"]').click();
+  const firstSubjectLesson = page.locator('#biology2027 .subject-lesson').first();
+  await firstSubjectLesson.locator('summary').click();
+  await firstSubjectLesson.locator('input[type="radio"]').first().check();
+  await firstSubjectLesson.locator('[data-subject-check]').click();
+  await firstSubjectLesson.locator('[data-subject-feedback]').waitFor({ state: 'visible' });
+  await page.locator('#biology2027 .subject-lesson').first().locator('[data-subject-done]').check();
+  assert.ok((await page.locator('#biology2027 [data-subject-progress]').textContent()).includes('1 درس'));
 
   // Ministry library must show the 2026/2027 track subjects and shared pass/fail subjects.
   await page.locator('[data-tab="library"]').click();

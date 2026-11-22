@@ -10,7 +10,7 @@
 - `assets/js/features/words.js`: vocabulary entry, AI-assisted translation, flashcard review, spaced-repetition levels, and importing vocabulary from the English helper.
 - `assets/js/features/practice.js`: practice records, subject accuracy statistics, weekly question goals, AI question generation, and AI weekly-plan suggestions.
 - `assets/js/features/mistakes.js`: mistake notebook, retry/correct actions, review scheduling, and completion tracking.
-- `assets/js/features/tools.js`: exam generation and grading, lesson explanation, focus timer, revision-sheet export, local backup/restore, and appearance personalization.
+- `assets/js/features/tools.js`: exam generation and grading, lesson explanation, focus timer, revision-sheet export, and local backup/restore.
 - `assets/js/features/english-course.js`: English 2027 unit map, grammar reference, reader notes, vocabulary flashcards, writing practice, and curriculum quiz.
 - `assets/js/features/english-coach.js`: English conversation helper, response correction, translation, speech playback, and optional voice input.
 - `assets/js/features/preferences.js`: theme switching, brand name and greeting customization, and accent-color selection.
@@ -34,20 +34,8 @@ There is no account system, cloud database, or server-side AI integration yet. N
 5. Validate imports, backup restore, responsive layouts, and browser console output in CI.
 6. Keep official curriculum and exam facts sourced and clearly labeled.
 
-## Next modularization targets
+## Modularization status
 
-- `core/storage.js`: validated local persistence and backup compatibility.
-- `core/navigation.js`: section and tab switching (extracted).
-- `features/schedule.js`: schedule and in-app reminder behavior (extracted).
-- `features/notes.js`: local notes and fallback summaries (extracted).
-- `features/words.js`: vocabulary management and flashcard review (extracted).
-- `features/practice.js`: practice tracking, progress statistics, and study-plan suggestions (extracted).
-- `features/mistakes.js`: mistake notebook and spaced review (extracted).
-- `features/tools.js`: study tools and personalization (extracted).
-- `features/english-course.js`: English 2027 course tracking and practice (extracted).
-- `features/english-coach.js`: English chat and voice interaction (extracted).
-- `features/preferences.js`: appearance and personalization settings (extracted).
-- `features/tools.js`: remaining tool behavior.
-- `app.js`: bootstrap and orchestration.
+All feature modules listed in the current structure above have been extracted and are loaded before the bootstrap. `app.js` now contains only shared helpers, dependency wiring, initial rendering, and service-worker registration. Further changes should be driven by concrete maintenance needs rather than splitting the small bootstrap into artificial modules.
 
 These are migration targets, not modules already implemented.

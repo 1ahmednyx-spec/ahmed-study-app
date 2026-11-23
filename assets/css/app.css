@@ -235,3 +235,7 @@ body{background:var(--bg);color:var(--ink);font-family:Tajawal,"Segoe UI",Tahoma
 .past-exam-key-grid span{padding:7px;border-radius:7px;background:var(--bg);font-size:11px}
 .past-exam-key-grid .is-correct{color:var(--ok)}.past-exam-key-grid .is-wrong{color:var(--danger)}
 @media(max-width:600px){.past-exam-answer-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.past-exam-key-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.past-exam-quiz-toolbar{align-items:flex-start;flex-direction:column}}
+
+/* Model selector shared by interactive archive exams */
+.past-exam-model-picker{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:10px 0;font-size:13px;font-weight:700}
+.past-exam-model-picker select{min-width:150px;width:auto;padding:8px 10px;border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--text)}

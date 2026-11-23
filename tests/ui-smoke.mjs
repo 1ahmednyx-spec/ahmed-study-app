@@ -112,7 +112,22 @@ try {
     assert.equal(await page.locator(`#${subject}`).count(), 1, `${subject} must have one content section`);
   }
 
-  // Past exam archive renders its independent filters and honest empty state until verified files are added.\n  await page.locator('[data-tab="pastExamArchive"]').click();\n  assert.equal(await page.locator('#pastExamArchiveRoot #pastExamSystem option').count(), 4);\n  assert.equal(await page.locator('#pastExamArchiveRoot #pastExamYear option').count(), 9);\n  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 6, 'Archive must render the six currently verified official resources');\n  await page.locator('#pastExamYear').selectOption('2020');\n  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 4, 'Year filter must isolate the four verified 2020 resources');\n  await page.locator('#pastExamYear').selectOption('all');\n  assert.equal(await page.locator('#pastExamArchiveRoot a[href="https://moe.gov.eg/"]').count(), 1);\n\n  // Every navigation tab must activate its matching content section.
+  // Past exam archive renders verified Ministry resources and filters them accurately.
+  await page.locator('[data-tab="pastExamArchive"]').click();
+  assert.equal(await page.locator('#pastExamArchiveRoot #pastExamSystem option').count(), 4);
+  assert.equal(await page.locator('#pastExamArchiveRoot #pastExamYear option').count(), 9);
+  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 8, 'Archive must render eight verified Ministry resources');
+  await page.locator('#pastExamYear').selectOption('2020');
+  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 3, 'Year filter must isolate the three verified 2020 resources');
+  await page.locator('#pastExamYear').selectOption('2023');
+  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 3, 'Year filter must isolate the three verified 2023 answer files');
+  await page.locator('#pastExamYear').selectOption('all');
+  await page.locator('#pastExamSubject').selectOption('علم النفس والاجتماع');
+  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 2, 'Subject filter must return both verified psychology and sociology resources');
+  await page.locator('#pastExamSubject').selectOption('all');
+  assert.equal(await page.locator('#pastExamArchiveRoot a[href="https://moe.gov.eg/"]').count(), 1);
+
+  // Every navigation tab must activate its matching content section.
   for (const tab of await page.locator('.tabs [role="tab"]').all()) {
     const target = await tab.getAttribute('data-tab');
     await tab.click();

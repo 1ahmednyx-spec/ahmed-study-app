@@ -96,6 +96,21 @@ try {
   assert.match(pastExamArchiveSource, /pastExamBiologyModel/, 'Biology quiz must allow selecting all four official models');
   assert.ok(pastExamArchiveSource.includes('scinece-exammodels.pdf#page=98'), 'Biology quiz must link to the official Ministry answer-key page');
   assert.ok(pastExamArchiveSource.includes('ta3lemkonline.com/2023/08/2023_33.html'), 'Biology quiz must link to a separate exam-paper archive page');
+  for (const branch of ['statics', 'dynamics', 'calculus', 'algebra']) {
+    assert.match(pastExamArchiveSource, new RegExp(branch + ': \\{'), 'Math archive must include the ' + branch + ' branch');
+    for (const model of ['أ', 'ب', 'ج', 'د']) {
+      const branchStart = pastExamArchiveSource.indexOf(branch + ': {', pastExamArchiveSource.indexOf('const MATH_2023_KEYS'));
+      const branchEnd = pastExamArchiveSource.indexOf('\\n    },', branchStart);
+      const branchSource = pastExamArchiveSource.slice(branchStart, branchEnd);
+      const keyMatch = branchSource.match(new RegExp(model + ': \\\\[([^\\\\]]+)\\\\]'));
+      assert.ok(keyMatch, 'Math archive must include ' + branch + ' model ' + model);
+      assert.equal(keyMatch[1].split(',').length, 18, branch + ' model ' + model + ' must contain 18 objective answers');
+    }
+  }
+  assert.ok(pastExamArchiveSource.includes('mathematica-exammodels.pdf#page=82'), 'Math archive must link to the official Statics paper');
+  assert.ok(pastExamArchiveSource.includes('mathematica-exammodels.pdf#page=97'), 'Math archive must link to the official Dynamics paper');
+  assert.ok(pastExamArchiveSource.includes('mathematica-exammodels.pdf#page=112'), 'Math archive must link to the official Calculus paper');
+  assert.ok(pastExamArchiveSource.includes('mathematica-exammodels.pdf#page=127'), 'Math archive must link to the official Algebra and Geometry paper');
   assert.match(pastExamArchiveSource, /44 سؤالًا موضوعيًا/, 'Physics quiz must grade 44 objective questions');
   assert.match(pastExamArchiveSource, /PHYSICS_2023_WEIGHTS/, 'Physics quiz must apply the Ministry mark distribution');
   assert.match(pastExamArchiveSource, /scinece-exammodels\.pdf#page=68/, 'Physics quiz must link to the official Ministry answer-key PDF');
@@ -336,6 +351,21 @@ try {
   assert.ok((await page.locator('#pastExamBiologyQuiz .past-exam-quiz-result').innerText()).includes('درجتك: 3 من 56'), 'Biology quiz must apply the official one-point and two-point weights');
   assert.ok((await page.locator('#pastExamBiologyQuiz .past-exam-quiz-result').innerText()).includes('60 درجة'), 'Biology result must disclose the official 60-point total and excluded essay questions');
   assert.equal(await page.locator('#pastExamBiologyQuiz .past-exam-key-review .is-correct').count(), 2, 'Biology answer review must mark correct answers');
+  // 2023 Mathematics: all four Arabic branches, four models, and weighted objective grading.
+  await page.locator('#pastExamMathStart').click();
+  assert.equal(await page.locator('#pastExamMathQuiz [data-math-answer]').count(), 18, 'Math answer sheet must render 18 objective questions');
+  assert.equal(await page.locator('#pastExamMathQuiz .past-exam-answer-cell').filter({ hasText: 'سؤال 11' }).count(), 1, 'Math questions 11–18 must be marked as two-point questions');
+  await page.locator('#pastExamMathQuiz [data-math-answer="0"]').selectOption('ب');
+  await page.locator('#pastExamMathQuiz [data-math-answer="10"]').selectOption('أ');
+  await page.locator('#pastExamMathSubmit').click();
+  assert.ok((await page.locator('#pastExamMathQuiz .past-exam-quiz-result').innerText()).includes('درجتك: 3 من 26'), 'Math quiz must apply the official one-point and two-point weights');
+  assert.ok((await page.locator('#pastExamMathQuiz .past-exam-quiz-result').innerText()).includes('السؤالين المقاليين (19 و20)'), 'Math result must disclose excluded essay questions');
+  assert.equal(await page.locator('#pastExamMathQuiz .past-exam-key-review .is-correct').count(), 2, 'Math answer review must mark correct answers');
+  await page.locator('#pastExamMathRetry').click();
+  await page.locator('#pastExamMathBranch').selectOption('dynamics');
+  await page.locator('#pastExamMathModel').selectOption('د');
+  await page.locator('#pastExamMathStart').click();
+  assert.equal(await page.locator('#pastExamMathQuiz [data-math-answer]').count(), 18, 'Math selector must switch branches and models');
   await page.locator('[data-tab="notes"]').click();
   // A saved note should survive a full page reload.
   await page.reload({ waitUntil: 'domcontentloaded' });

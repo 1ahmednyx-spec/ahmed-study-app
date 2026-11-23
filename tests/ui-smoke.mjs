@@ -100,11 +100,10 @@ try {
     assert.match(pastExamArchiveSource, new RegExp(branch + ': \\{'), 'Math archive must include the ' + branch + ' branch');
     for (const model of ['أ', 'ب', 'ج', 'د']) {
       const branchStart = pastExamArchiveSource.indexOf(branch + ': {', pastExamArchiveSource.indexOf('const MATH_2023_KEYS'));
-      const branchEnd = pastExamArchiveSource.indexOf('\\n    },', branchStart);
-      const branchSource = pastExamArchiveSource.slice(branchStart, branchEnd);
-      const keyMatch = branchSource.match(new RegExp(model + ': \\\\[([^\\\\]]+)\\\\]'));
-      assert.ok(keyMatch, 'Math archive must include ' + branch + ' model ' + model);
-      assert.equal(keyMatch[1].split(',').length, 18, branch + ' model ' + model + ' must contain 18 objective answers');
+      const branchSource = pastExamArchiveSource.slice(branchStart, branchStart + 1800);
+      const keyLine = branchSource.split('\\n').find(line => line.trim().startsWith(model + ': ['));
+      assert.ok(keyLine, 'Math archive must include ' + branch + ' model ' + model);
+      assert.equal((keyLine.match(/'[^']+'/g) || []).length, 18, branch + ' model ' + model + ' must contain 18 objective answers');
     }
   }
   assert.ok(pastExamArchiveSource.includes('mathematica-exammodels.pdf#page=82'), 'Math archive must link to the official Statics paper');

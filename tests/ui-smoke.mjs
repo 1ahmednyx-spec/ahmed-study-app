@@ -90,6 +90,12 @@ try {
     assert.match(pastExamArchiveSource, new RegExp('PHYSICS_2023_MODEL_' + model + '_KEY'), 'Archive must include the 2023 Physics model ' + model + ' answer key');
   }
   assert.match(pastExamArchiveSource, /pastExamPhysicsModel/, 'Physics quiz must allow selecting all four official models');
+  for (const model of ['A', 'B', 'C', 'D']) {
+    assert.match(pastExamArchiveSource, new RegExp('BIOLOGY_2023_MODEL_' + model + '_KEY'), 'Archive must include the 2023 Biology model ' + model + ' answer key');
+  }
+  assert.match(pastExamArchiveSource, /pastExamBiologyModel/, 'Biology quiz must allow selecting all four official models');
+  assert.match(pastExamArchiveSource, /scinece-exammodels\\.pdf#page=98/, 'Biology quiz must link to the official Ministry answer-key page');
+  assert.match(pastExamArchiveSource, /ta3lemkonline\\.com\\/2023\\/08\\/2023_33\\.html/, 'Biology quiz must link to a separate exam-paper archive page');
   assert.match(pastExamArchiveSource, /44 سؤالًا موضوعيًا/, 'Physics quiz must grade 44 objective questions');
   assert.match(pastExamArchiveSource, /PHYSICS_2023_WEIGHTS/, 'Physics quiz must apply the Ministry mark distribution');
   assert.match(pastExamArchiveSource, /scinece-exammodels\.pdf#page=68/, 'Physics quiz must link to the official Ministry answer-key PDF');
@@ -320,6 +326,16 @@ try {
   assert.equal(await page.locator('#pastExamPhysicsQuiz .past-exam-key-review .is-correct').count(), 3, 'Accepted alternative answers must also be marked correct in the answer review');
   assert.ok((await page.locator('#pastExamPhysicsQuiz .past-exam-quiz-result').innerText()).includes('من 56'), 'Physics result must use the official 56-point objective subtotal');
   assert.ok((await page.locator('#pastExamPhysicsQuiz .past-exam-quiz-result').innerText()).includes('60 درجة'), 'Physics result must disclose that two essay questions are excluded from the automated score');
+  // Biology 2023 interactive answer sheet: official Arabic keys and weighted grading.
+  await page.locator('#pastExamBiologyStart').click();
+  assert.equal(await page.locator('#pastExamBiologyQuiz [data-biology-answer]').count(), 44, 'Biology answer sheet must render 44 objective questions');
+  assert.equal(await page.locator('#pastExamBiologyQuiz .past-exam-answer-cell').filter({ hasText: 'سؤال 33' }).count(), 1, 'Biology questions 33–44 must be marked as two-point questions');
+  await page.locator('#pastExamBiologyQuiz [data-biology-answer="0"]').selectOption('أ');
+  await page.locator('#pastExamBiologyQuiz [data-biology-answer="32"]').selectOption('ج');
+  await page.locator('#pastExamBiologySubmit').click();
+  assert.ok((await page.locator('#pastExamBiologyQuiz .past-exam-quiz-result').innerText()).includes('درجتك: 3 من 56'), 'Biology quiz must apply the official one-point and two-point weights');
+  assert.ok((await page.locator('#pastExamBiologyQuiz .past-exam-quiz-result').innerText()).includes('60 درجة'), 'Biology result must disclose the official 60-point total and excluded essay questions');
+  assert.equal(await page.locator('#pastExamBiologyQuiz .past-exam-key-review .is-correct').count(), 2, 'Biology answer review must mark correct answers');
   await page.locator('[data-tab="notes"]').click();
   // A saved note should survive a full page reload.
   await page.reload({ waitUntil: 'domcontentloaded' });

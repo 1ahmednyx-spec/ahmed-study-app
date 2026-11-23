@@ -14,7 +14,7 @@ ${english?'عند تدريس الإنجليزية، استخدم الإنجلي�
       const m=$('#cIn').value.trim();if(!m)return;
       if(!getAI()){$('#cSt').textContent='المدرّس الذكي غير مفعّل';return}
       turns.push({role:'user',content:m});$('#cIn').value='';renderChat();$('#cSt').textContent='المدرّس بيجهّز الإجابة…';$('#cSend').disabled=true;
-      try{const {text}=await getAI()([{role:'user',content:rules()},...turns],{cache:false});turns.push({role:'assistant',content:text});$('#cSt').textContent='';say(P(text,'EN')||text)}
+      try{const {text}=await getAI()([{role:'system',content:rules()},...turns],{cache:false});turns.push({role:'assistant',content:text});$('#cSt').textContent='';say(P(text,'EN')||text)}
       catch(e){turns.pop();$('#cIn').value=m;$('#cSt').textContent=errMsg(e.code)}
       $('#cSend').disabled=false;while(turns.length>12)turns.splice(0,2);renderChat()};
     $('#cClr').onclick=()=>{turns=[];renderChat()};

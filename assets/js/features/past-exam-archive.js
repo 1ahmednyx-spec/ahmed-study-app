@@ -19,7 +19,7 @@
     { value: 'model', label: 'نموذج استرشادي' }
   ];
 
-  // Verified resources hosted on official Ministry domains; this is a partial catalogue.
+  // Verified Ministry-hosted files. Answers and model papers are classified separately from exam papers.
   const EXAMS = [
   {
     "id": "2020-chemistry-first",
@@ -28,7 +28,8 @@
     "systemLabel": "نظام الثانوية العامة 2020",
     "subject": "الكيمياء",
     "type": "official",
-    "typeLabel": "امتحان رسمي — فئات خاصة",
+    "typeLabel": "امتحان وزارة رسمي — فئات خاصة",
+    "fileKind": "paper",
     "title": "امتحان الكيمياء — نسخة دمج للمكفوفين",
     "round": "الدور الأول",
     "pdfUrl": "https://moe.gov.eg/media/ivpmsmdj/الكيمياء-دمج_مكفوفين_1.pdf",
@@ -41,23 +42,11 @@
     "systemLabel": "نظام الثانوية العامة 2020",
     "subject": "علم النفس والاجتماع",
     "type": "official",
-    "typeLabel": "امتحان رسمي — فئات خاصة",
+    "typeLabel": "امتحان وزارة رسمي — فئات خاصة",
+    "fileKind": "paper",
     "title": "امتحان علم النفس والاجتماع — نسخة دمج (الدور الثاني)",
     "round": "الدور الثاني",
     "pdfUrl": "https://moe.gov.eg/media/sh5lfevy/علم_نفس_دور_ثانى-شلل.pdf",
-    "fileLabel": "فتح ورقة الامتحان"
-  },
-  {
-    "id": "2020-national-education-first",
-    "year": "2020",
-    "system": "modern",
-    "systemLabel": "نظام الثانوية العامة 2020",
-    "subject": "التربية الوطنية",
-    "type": "official",
-    "typeLabel": "امتحان رسمي — فئات خاصة",
-    "title": "امتحان التربية الوطنية — نسخة للإعاقة السمعية",
-    "round": "الدور الأول",
-    "pdfUrl": "https://moe.gov.eg/media/yijn2dhn/التربيه_الوطنيه-إعاقة_سمعية.pdf",
     "fileLabel": "فتح ورقة الامتحان"
   },
   {
@@ -67,24 +56,68 @@
     "systemLabel": "نظام الثانوية العامة 2020",
     "subject": "الاقتصاد",
     "type": "official",
-    "typeLabel": "نموذج إجابة رسمي",
+    "typeLabel": "نموذج إجابة رسمي — فئات خاصة",
+    "fileKind": "answer",
     "title": "نموذج إجابة الاقتصاد — نسخة لضعاف السمع",
     "round": "الدور الأول",
     "pdfUrl": "https://moe.gov.eg/media/rnkh43k0/نموذج_اجابه_الاقتصاد-ضعاف_سمع.pdf",
     "fileLabel": "فتح نموذج الإجابة"
   },
   {
-    "id": "2023-arabic-answer",
+    "id": "2023-science-answer",
     "year": "2023",
     "system": "modern",
     "systemLabel": "النظام الحديث",
-    "subject": "اللغة العربية",
+    "subject": "الأحياء",
     "type": "official",
-    "typeLabel": "نماذج إجابة رسمية",
-    "title": "نماذج إجابة اللغة العربية — الشعبة الأدبية",
+    "typeLabel": "نموذج إجابة رسمي",
+    "fileKind": "answer",
+    "title": "نموذج إجابة الثانوية العامة — الشعبة العلمية (علوم)",
+    "round": "الدور الأول",
+    "pdfUrl": "https://moe.gov.eg/media/evqfv1il/scinece-exammodels.pdf",
+    "fileLabel": "فتح نموذج الإجابة"
+  },
+  {
+    "id": "2023-math-answer",
+    "year": "2023",
+    "system": "modern",
+    "systemLabel": "النظام الحديث",
+    "subject": "الرياضيات",
+    "type": "official",
+    "typeLabel": "نموذج إجابة رسمي",
+    "fileKind": "answer",
+    "title": "نماذج إجابة الرياضيات — الشعبة العلمية",
+    "round": "الدور الأول",
+    "pdfUrl": "https://moe.gov.eg/media/tzfj0lya/mathematica-exammodels.pdf",
+    "fileLabel": "فتح نموذج الإجابة"
+  },
+  {
+    "id": "2023-literary-answer",
+    "year": "2023",
+    "system": "modern",
+    "systemLabel": "النظام الحديث",
+    "subject": "علم النفس والاجتماع",
+    "type": "official",
+    "typeLabel": "نماذج إجابة رسمية — الشعبة الأدبية",
+    "fileKind": "answer",
+    "title": "نماذج إجابة علم النفس والاجتماع — الشعبة الأدبية",
     "round": "الدور الأول",
     "pdfUrl": "https://moe.gov.eg/media/xmhd3sow/arts-answermodels.pdf",
     "fileLabel": "فتح نماذج الإجابة"
+  },
+  {
+    "id": "2019-history-model",
+    "year": "2019",
+    "system": "legacy",
+    "systemLabel": "نظام الثانوية العامة 2019",
+    "subject": "التاريخ",
+    "type": "model",
+    "typeLabel": "نموذج استرشادي رسمي — فئة ضعاف السمع",
+    "fileKind": "model",
+    "title": "نموذج امتحان التاريخ — نظام الدمج (ضعاف السمع)",
+    "round": "نموذج استرشادي",
+    "pdfUrl": "https://moe.gov.eg/media/y1hdk03m/history_hearing_weakness_guide_19.pdf",
+    "fileLabel": "فتح النموذج الاسترشادي"
   },
   {
     "id": "2026-applied-math-model-5",
@@ -94,6 +127,7 @@
     "subject": "الرياضيات",
     "type": "model",
     "typeLabel": "نموذج استرشادي رسمي",
+    "fileKind": "model",
     "title": "النموذج الاسترشادي الخامس — الرياضيات التطبيقية",
     "round": "العام الدراسي 2025/2026",
     "pdfUrl": "https://ellibrary.moe.gov.eg/sec3guideforms/publish5/Applid_Math_EN_Model_5.pdf",

@@ -271,11 +271,16 @@ try {
   await page.locator('#ecQuizStart').click();
   assert.equal(await page.locator('#ecQuizBox .course-question').count(), 5, 'English course quiz should generate five questions');
 
-  // English conversation helper should show a clear static-host AI fallback.
+  // Universal tutor should report a clear gateway error when the Worker is not deployed.
+  await page.route('https://sparkling-disk-d582ahmed-study-ai.1ahmednyx.workers.dev/**', route =>
+    route.fulfill({ status: 503, contentType: 'application/json', body: JSON.stringify({ error: 'server_not_configured' }) })
+  );
   await page.locator('[data-tab="chat"]').click();
-  await page.locator('#cIn').fill('Hello, how are you?');
+  await page.locator('#cSubject').selectOption('الفيزياء');
+  await page.locator('#cMode').selectOption('explain');
+  await page.locator('#cIn').fill('اشرح قانون نيوتن الثاني');
   await page.locator('#cSend').click();
-  await page.locator('#cSt').getByText('مش متاحة هنا').waitFor({ state: 'visible' });
+  await page.locator('#cSt').getByText('لم يتم إعداد مفتاح Gemini').waitFor({ state: 'visible' });
 
   // Practice tracking should validate answers, persist a valid session, and update the weekly goal.
   await page.locator('[data-tab="prac"]').click();

@@ -198,6 +198,20 @@
     "fileLabel": "فتح النموذج الاسترشادي"
   },
   {
+    "id": "2026-physics-french-model-4",
+    "year": "2026",
+    "system": "modern",
+    "systemLabel": "النظام الحديث",
+    "subject": "الفيزياء",
+    "type": "model",
+    "typeLabel": "نموذج استرشادي رسمي — باللغة الفرنسية",
+    "fileKind": "model",
+    "title": "النموذج الاسترشادي الرابع — الفيزياء باللغة الفرنسية",
+    "round": "العام الدراسي 2025/2026",
+    "pdfUrl": "https://ellibrary.moe.gov.eg/sec3guideforms/publish4/Physics_FR_Model_4.pdf",
+    "fileLabel": "فتح النموذج الاسترشادي"
+  },
+  {
     "id": "2026-applied-math-model-5",
     "year": "2026",
     "system": "modern",

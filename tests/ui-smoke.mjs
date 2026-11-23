@@ -249,7 +249,9 @@ try {
   assert.equal(await page.locator('#pastExamArchiveRoot #pastExamYear option').count(), 9);
   assert.equal(await page.locator('#pastExamArchiveRoot #pastExamFileKind option').count(), 5, 'Archive must provide separate filters for papers, answer keys, models, and portals');
   assert.ok((await page.locator('#pastExamArchiveRoot p.past-exam-note').innerText()).includes('2021 و2022'), 'Archive must disclose years whose official exam papers are not yet verified');
-  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 58, 'Archive must render fifty-eight catalogued resources');
+  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 59, 'Archive must render fifty-nine catalogued resources');
+  await page.locator('#pastExamYear').selectOption('2019');
+  assert.ok((await page.locator('#pastExamResults').innerText()).includes('نموذج اختبار الفيزياء — فئة الدمج'), '2019 Physics mobility model must be listed and clearly identified as a special-category resource');
   await page.locator('#pastExamYear').selectOption('2020');
   assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 7, 'Year filter must isolate the seven in-scope 2020 resources');
   await page.locator('#pastExamYear').selectOption('2023');
@@ -260,7 +262,7 @@ try {
   await page.locator('#pastExamFileKind').selectOption('answer');
   assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 31, 'Official answer keys must be independently filterable');
   await page.locator('#pastExamFileKind').selectOption('model');
-  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 10, 'Official practice and indicative models must be independently filterable');
+  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 11, 'Official practice and indicative models must be independently filterable');
   await page.locator('#pastExamFileKind').selectOption('portal');
   assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 9, 'Portal links must be independently filterable');
   await page.locator('#pastExamFileKind').selectOption('all');

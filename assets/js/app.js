@@ -46,7 +46,7 @@ function fillSubj(){
   const o=SUBJ[S.track].concat('مادة أخرى').map(s=>`<option>${esc(s)}</option>`).join('');
   ['#nS','#pS','#mS','#rS','#xS'].forEach(id=>{const el=$(id),v=el.value;el.innerHTML=o;if(v)el.value=v});
   $('#trk').value=S.track}
-$('#trk').onchange=e=>{S.track=e.target.value;save();fillSubj()};
+$('#trk').onchange=e=>{S.track=e.target.value;save();fillSubj();if(window.ministryLibraryRender)window.ministryLibraryRender()};
 
 window.StudyEnglishCoach.init({getAI:()=>AI,errMsg,escapeHtml:esc,showAlert});
 
@@ -58,6 +58,8 @@ const dashboard=window.StudyDashboard.init({state:S,escapeHtml:esc});
 window.dashboardRender=dashboard.render;
 const smartRevision=window.StudySmartRevision.init({state:S,save,escapeHtml:esc});
 window.smartReviewRender=smartRevision.render;
+const smartPlanner=window.StudySmartPlanner.init({state:S,save,escapeHtml:esc});
+window.smartPlannerRender=smartPlanner.render;
 window.examCenterRender=examCenter.render;
 window.StudyMinistryLibrary.init();
 

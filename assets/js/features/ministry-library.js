@@ -142,6 +142,8 @@
   }
 
   function render() {
+    const currentTrack = $('#trk')?.value;
+    if (currentTrack && trackSubjects[currentTrack]) track = currentTrack;
     const grid = $('#ministrySubjectGrid');
     const detail = $('#ministrySubjectDetail');
     if (!grid || !detail) return;

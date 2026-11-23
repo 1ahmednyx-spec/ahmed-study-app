@@ -207,7 +207,8 @@ body{background:var(--bg);color:var(--ink);font-family:Tajawal,"Segoe UI",Tahoma
 .past-exam-card{padding:16px;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
 .past-exam-card-top,.past-exam-card-meta{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .past-exam-card-top span{font-size:11px;color:var(--brand)}.past-exam-card-top b{font-size:13px;padding:4px 9px;border-radius:8px;background:var(--bg)}
-.past-exam-card h3{font-size:17px;margin:12px 0 3px}.past-exam-card p{font-size:12px;color:var(--muted)}
+.past-exam-card h3{font-size:17px;margin:12px 0 3px}
+.past-exam-card .past-exam-subject-title{display:flex;align-items:center;gap:9px}.past-exam-subject-icon{width:34px;height:34px;display:inline-grid;place-items:center;flex:none;border-radius:10px;background:rgba(22,119,232,.09);font-size:20px;line-height:1}.past-exam-card p{font-size:12px;color:var(--muted)}
 .past-exam-card-meta{padding-top:10px;border-top:1px solid var(--line);font-size:12px}.past-exam-card-meta a,.past-exam-answer{color:var(--brand);font-weight:700;text-decoration:none}
 .past-exam-answer{display:inline-block;margin-top:10px;font-size:12px}
 .past-exam-source-note{display:block;margin-top:9px;color:var(--muted);font-size:11px;line-height:1.7}

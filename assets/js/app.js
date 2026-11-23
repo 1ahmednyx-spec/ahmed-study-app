@@ -54,6 +54,8 @@ window.StudyEnglishCourse.init({state:S,save,escapeHtml:esc,showAlert});
 window.StudyEnglishPath.init({state:S,save,escapeHtml:esc,showAlert});
 window.StudySubjectCourses.init({state:S,save,escapeHtml:esc,showAlert});
 const examCenter=window.StudyExamCenter.init({state:S,save,escapeHtml:esc});
+const dashboard=window.StudyDashboard.init({state:S,escapeHtml:esc});
+window.dashboardRender=dashboard.render;
 window.examCenterRender=examCenter.render;
 window.StudyMinistryLibrary.init();
 

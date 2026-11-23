@@ -22,6 +22,7 @@ try {
   const englishLearningPathResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/english-learning-path.js');
   const subjectCoursesResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/subject-courses.js');
   const examCenterResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/exam-center.js');
+  const dashboardResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/dashboard.js');
   const ministryLibraryResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/ministry-library.js');
   const englishCoachResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/english-coach.js');
   const preferencesResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/preferences.js');
@@ -29,7 +30,7 @@ try {
   assert.equal(serviceWorkerResponse.status(), 200, 'Service worker must be served');
   const serviceWorkerSource = await serviceWorkerResponse.text();
   assert.match(serviceWorkerSource, /ahmed-study-platform-v\d+/, 'Service worker cache must be versioned');
-  for (const modulePath of ['./assets/js/features/preferences.js', './assets/js/features/english-course.js', './assets/js/features/english-learning-path.js', './assets/js/features/subject-courses.js', './assets/js/features/exam-center.js', './assets/js/features/ministry-library.js', './assets/js/features/english-coach.js']) {
+  for (const modulePath of ['./assets/js/features/preferences.js', './assets/js/features/english-course.js', './assets/js/features/english-learning-path.js', './assets/js/features/subject-courses.js', './assets/js/features/exam-center.js', './assets/js/features/dashboard.js', './assets/js/features/ministry-library.js', './assets/js/features/english-coach.js']) {
     assert.ok(serviceWorkerSource.includes(modulePath), `Service worker must precache ${modulePath}`);
   }
 
@@ -50,6 +51,7 @@ try {
   assert.equal(englishLearningPathResponse.status(), 200, 'Separate English learning path module must be served');
   assert.equal(subjectCoursesResponse.status(), 200, '2027 subject courses module must be served');
   assert.equal(examCenterResponse.status(), 200, 'Exam center module must be served');
+  assert.equal(dashboardResponse.status(), 200, 'Smart dashboard module must be served');
   assert.equal(ministryLibraryResponse.status(), 200, 'Ministry library module must be served');
   assert.equal(englishCoachResponse.status(), 200, 'English coach module must be served');
   assert.equal(preferencesResponse.status(), 200, 'Preferences module must be served');
@@ -65,6 +67,8 @@ try {
   assert.ok(scriptOrder.indexOf('./assets/js/features/english-course.js') < scriptOrder.indexOf('./assets/js/features/english-learning-path.js'), 'English summary course must load before separate learning path');
   assert.ok(scriptOrder.indexOf('./assets/js/features/english-learning-path.js') < scriptOrder.indexOf('./assets/js/features/subject-courses.js'), 'English learning path must load before subject courses');
   assert.ok(scriptOrder.indexOf('./assets/js/features/subject-courses.js') < scriptOrder.indexOf('./assets/js/features/exam-center.js'), 'Subject course bank must load before exam center');
+  assert.ok(scriptOrder.indexOf('./assets/js/features/english-learning-path.js') < scriptOrder.indexOf('./assets/js/features/dashboard.js'), 'English progress source must load before dashboard');
+  assert.ok(scriptOrder.indexOf('./assets/js/features/dashboard.js') < scriptOrder.indexOf('./assets/js/app.js'), 'Dashboard module must load before app initialization');
   assert.ok(scriptOrder.indexOf('./assets/js/features/exam-center.js') < scriptOrder.indexOf('./assets/js/features/ministry-library.js'), 'Exam center must load before Ministry library feature');
   assert.ok(scriptOrder.indexOf('./assets/js/features/ministry-library.js') < scriptOrder.indexOf('./assets/js/features/english-coach.js'), 'Ministry library must load before English coach feature');
   assert.ok(scriptOrder.indexOf('./assets/js/features/english-coach.js') < scriptOrder.indexOf('./assets/js/features/preferences.js'), 'English coach must load before preferences feature');
@@ -89,6 +93,12 @@ try {
   assert.match(await page.title(), /Ahmed Study Platform/);
   await page.locator('#home').waitFor({ state: 'visible' });
   assert.equal(await page.locator('.tabs [role="tab"]').count(), 16, 'Exam center, English learning path, and five subject tabs must preserve all existing tabs');
+  assert.equal(await page.locator('#smartDashboard .smart-metric').count(), 4, 'Homepage dashboard must show four live learning metrics');
+  assert.equal(await page.locator('#smartDashboard .smart-subject').count(), 6, 'Homepage dashboard must show five school subjects and the English learning path');
+  assert.equal(await page.evaluate(() => typeof window.StudyDashboard?.init), 'function', 'Dashboard module must expose its initializer');
+  const progressStats = await page.evaluate(() => ({biology:window.StudySubjectCourses.getProgressStats({subjectLessonDone:{biology2027:{'0-0':true}}}).find(item=>item.id==='biology2027'),english:window.StudyEnglishPath.getProgressStats({englishPathDone:{0:true}})}));
+  assert.equal(progressStats.biology.completed, 1, 'Subject dashboard stats must count completed lessons from saved state');
+  assert.equal(progressStats.english.completed, 1, 'English dashboard stats must count completed lessons from saved state');
   for (const subject of ['arabic2027', 'chemistry2027', 'physics2027', 'math2027', 'biology2027']) {
     assert.equal(await page.locator(`.tabs [role="tab"][data-tab="${subject}"]`).count(), 1, `${subject} must have one navigation tab`);
     assert.equal(await page.locator(`#${subject}`).count(), 1, `${subject} must have one content section`);

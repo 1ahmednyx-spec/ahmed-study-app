@@ -69,5 +69,11 @@
       explanation: lesson.quiz.why
     }));
   }
-  global.StudyEnglishPath=Object.freeze({init, getExamQuestions});
+  function getProgressStats(state) {
+    const done = state && state.englishPathDone || {};
+    const total = lessonBank.length;
+    const completed = lessonBank.reduce((sum, lesson, index) => sum + (done[index] ? 1 : 0), 0);
+    return {id:'englishPath', name:'تعلم الإنجليزية', total, completed, percent:total ? Math.round(completed / total * 100) : 0};
+  }
+  global.StudyEnglishPath=Object.freeze({init, getExamQuestions, getProgressStats});
 })(window);

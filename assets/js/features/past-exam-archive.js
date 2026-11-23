@@ -5,8 +5,7 @@
   // Prioritize the core subjects requested for the first archive-completion pass.
   const SUBJECTS = [
     'اللغة العربية', 'اللغة الأجنبية الأولى', 'اللغة الأجنبية الثانية',
-    'الرياضيات', 'الكيمياء', 'الفيزياء', 'الأحياء',
-    'التاريخ', 'الجغرافيا', 'الإحصاء', 'الفلسفة والمنطق', 'علم النفس والاجتماع', 'الاقتصاد', 'التربية الوطنية', 'كل المواد'
+    'الرياضيات', 'الكيمياء', 'الفيزياء', 'الأحياء', 'التاريخ', 'الجغرافيا', 'كل المواد'
   ];
   const SYSTEMS = [
     { value: 'all', label: 'كل الأنظمة' },
@@ -37,20 +36,6 @@
     "fileLabel": "فتح ورقة الامتحان"
   },
   {
-    "id": "2020-psychology-second",
-    "year": "2020",
-    "system": "modern",
-    "systemLabel": "نظام الثانوية العامة 2020",
-    "subject": "علم النفس والاجتماع",
-    "type": "official",
-    "typeLabel": "امتحان وزارة رسمي — فئات خاصة",
-    "fileKind": "paper",
-    "title": "امتحان علم النفس والاجتماع — نسخة دمج (الدور الثاني)",
-    "round": "الدور الثاني",
-    "pdfUrl": "https://moe.gov.eg/media/sh5lfevy/علم_نفس_دور_ثانى-شلل.pdf",
-    "fileLabel": "فتح ورقة الامتحان"
-  },
-  {
     "id": "2020-arabic-second-blind-paper",
     "year": "2020",
     "system": "modern",
@@ -76,20 +61,6 @@
     "title": "نماذج إجابة اللغة العربية — نسخ دمج لفئات خاصة",
     "round": "الدور الأول",
     "pdfUrl": "https://moe.gov.eg/media/y4aa4wct/نموذج_إجابة_اللغه_العربيه-شلل_دماغى.pdf",
-    "fileLabel": "فتح نموذج الإجابة"
-  },
-  {
-    "id": "2020-economics-answer",
-    "year": "2020",
-    "system": "modern",
-    "systemLabel": "نظام الثانوية العامة 2020",
-    "subject": "الاقتصاد",
-    "type": "official",
-    "typeLabel": "نموذج إجابة رسمي — فئات خاصة",
-    "fileKind": "answer",
-    "title": "نموذج إجابة الاقتصاد — نسخة لضعاف السمع",
-    "round": "الدور الأول",
-    "pdfUrl": "https://moe.gov.eg/media/rnkh43k0/نموذج_اجابه_الاقتصاد-ضعاف_سمع.pdf",
     "fileLabel": "فتح نموذج الإجابة"
   },
   {
@@ -472,21 +443,6 @@
     "fileLabel": "فتح نموذج الإجابة"
   },
   {
-    "id": "2023-science-geology-answer",
-    "year": "2023",
-    "system": "modern",
-    "systemLabel": "النظام الحديث — 2022/2023",
-    "subject": "كل المواد",
-    "type": "official",
-    "typeLabel": "نموذج إجابة رسمي — الدور الأول 2023",
-    "fileKind": "answer",
-    "title": "نموذج إجابة الجيولوجيا باللغة العربية — الشعبة العلمية علوم",
-    "round": "الدور الأول",
-    "pdfPage": 83,
-    "pdfUrl": "https://moe.gov.eg/media/evqfv1il/scinece-exammodels.pdf",
-    "fileLabel": "فتح نموذج الإجابة"
-  },
-  {
     "id": "2023-science-biology-en-answer",
     "year": "2023",
     "system": "modern",
@@ -588,36 +544,6 @@
     "title": "نموذج إجابة الجغرافيا — الشعبة الأدبية",
     "round": "الدور الأول",
     "pdfPage": 58,
-    "pdfUrl": "https://moe.gov.eg/media/xmhd3sow/arts-answermodels.pdf",
-    "fileLabel": "فتح نموذج الإجابة"
-  },
-  {
-    "id": "2023-arts-psychology-answer",
-    "year": "2023",
-    "system": "modern",
-    "systemLabel": "النظام الحديث — 2022/2023",
-    "subject": "علم النفس والاجتماع",
-    "type": "official",
-    "typeLabel": "نموذج إجابة رسمي — الدور الأول 2023",
-    "fileKind": "answer",
-    "title": "نموذج إجابة علم النفس — الشعبة الأدبية",
-    "round": "الدور الأول",
-    "pdfPage": 63,
-    "pdfUrl": "https://moe.gov.eg/media/xmhd3sow/arts-answermodels.pdf",
-    "fileLabel": "فتح نموذج الإجابة"
-  },
-  {
-    "id": "2023-arts-philosophy-answer",
-    "year": "2023",
-    "system": "modern",
-    "systemLabel": "النظام الحديث — 2022/2023",
-    "subject": "الفلسفة والمنطق",
-    "type": "official",
-    "typeLabel": "نموذج إجابة رسمي — الدور الأول 2023",
-    "fileKind": "answer",
-    "title": "نموذج إجابة الفلسفة — الشعبة الأدبية",
-    "round": "الدور الأول",
-    "pdfPage": 68,
     "pdfUrl": "https://moe.gov.eg/media/xmhd3sow/arts-answermodels.pdf",
     "fileLabel": "فتح نموذج الإجابة"
   },

@@ -60,6 +60,10 @@ try {
   assert.match(pastExamArchiveSource, /biology-emtehan-2026/, 'Archive must include the Biology previous-exam book reference');
   assert.match(pastExamArchiveSource, /french-bravo-2026/, 'Archive must include the French second-language book reference');
   assert.match(pastExamArchiveSource, /نماذج تدريبية — ليست امتحانات سابقة مؤكدة/, 'Practice models must not be mislabeled as previous official exams');
+  assert.match(pastExamArchiveSource, /النماذج 1–11 تبدأ من صفحة 102/, 'Chemistry previous-year model page range must be visible');
+  assert.match(pastExamArchiveSource, /2021–2024/, 'Biology previous-year coverage must be visible');
+  assert.match(pastExamArchiveSource, /الصفحات 129–209/, 'French booklet index page range must be visible');
+  assert.match(pastExamArchiveSource, /تفاصيل الفهرس/, 'External-book records must expose index details');
   assert.equal(dashboardResponse.status(), 200, 'Smart dashboard module must be served');
   assert.equal(smartRevisionResponse.status(), 200, 'Smart revision module must be served');
   assert.equal(ministryLibraryResponse.status(), 200, 'Ministry library module must be served');

@@ -13,10 +13,12 @@ const {render:renderSched,checkReminders}=window.StudySchedule.init({state:S,sav
 /* AI gateway — the API key stays on the Cloudflare Worker. */
 const AI_ENDPOINT='https://sparkling-disk-d582ahmed-study-ai.1ahmednyx.workers.dev';
 const AI=async(input)=>{
-  const prompt=Array.isArray(input)
-    ? input.map(item=>`${item.role==='assistant'?'المدرّس':item.role==='system'?'تعليمات المدرّس':'الطالب'}: ${item.content}`).join('\n\n')
+  const messages=Array.isArray(input)?input:[];
+  const systemInstruction=messages.filter(item=>item.role==='system').map(item=>item.content).join('\n\n');
+  const prompt=messages.length
+    ? messages.filter(item=>item.role!=='system').map(item=>`${item.role==='assistant'?'المدرّس':'الطالب'}: ${item.content}`).join('\n\n')
     : String(input??'');
-  const response=await fetch(AI_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt})});
+  const response=await fetch(AI_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt,systemInstruction})});
   const data=await response.json().catch(()=>({}));
   if(!response.ok){const code=data.error|| (response.status===429?'rate_limited':'request_failed');throw {code};}
   if(typeof data.text!=='string'||!data.text.trim())throw {code:'empty_response'};

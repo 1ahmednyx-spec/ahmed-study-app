@@ -68,6 +68,10 @@ try {
   assert.match(pastExamArchiveSource, /2023-science-biology-fr-answer/, 'Archive must include official 2023 Biology French answer key');
   assert.match(pastExamArchiveSource, /2023-math-algebra-answer/, 'Archive must include official 2023 mathematics answer key');
   assert.match(pastExamArchiveSource, /2023-arts-history-answer/, 'Archive must include official 2023 literary-division history answer key');
+  assert.match(pastExamArchiveSource, /2023-arts-history-paper-portal/, 'Archive must include official 2023 literary-division History question-paper portal');
+  assert.match(pastExamArchiveSource, /2023-arts-geography-paper-portal/, 'Archive must include official 2023 literary-division Geography question-paper portal');
+  assert.match(pastExamArchiveSource, /2023-arts-geography-answer/, 'Archive must include official 2023 literary-division Geography answer key');
+
   assert.match(pastExamArchiveSource, /2023-official-question-paper-portal/, 'Archive must link to the official Ministry question-paper portal');
   assert.match(pastExamArchiveSource, /2024-official-question-and-answer-portal/, 'Archive must link to the official 2024 questions and answer resource');
   assert.match(pastExamArchiveSource, /2026-official-models-portal/, 'Archive must link to the official 2026 model-exam portal');

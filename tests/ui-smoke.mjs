@@ -326,18 +326,22 @@ try {
   await page.locator('#bkSt').getByText('مش نسخة صالحة').waitFor({ state: 'visible' });
   assert.equal(await page.locator('#mList').getByText('خطأ ثانٍ لاختبار استعادة النسخة الاحتياطية').count(), 1);
 
-  // Backup export must produce a readable JSON snapshot of current study data.
+  // Versioned backup export must include all current data groups and metadata.
   const [backupDownload] = await Promise.all([
     page.waitForEvent('download'),
     page.locator('#bkGo').click()
   ]);
-  assert.equal(backupDownload.suggestedFilename(), 'study-backup.json');
+  assert.equal(backupDownload.suggestedFilename(), 'ahmed-study-backup.json');
   const backupStream = await backupDownload.createReadStream();
   const backupChunks = [];
   for await (const chunk of backupStream) backupChunks.push(chunk);
   const exportedBackup = JSON.parse(Buffer.concat(backupChunks).toString('utf8'));
-  assert.ok(Array.isArray(exportedBackup.ev));
-  assert.ok(exportedBackup.mist.some(item => item.q === 'خطأ ثانٍ لاختبار استعادة النسخة الاحتياطية'));
+  assert.equal(exportedBackup.format, 'ahmed-study-platform-backup');
+  assert.equal(exportedBackup.version, 2);
+  assert.ok(Array.isArray(exportedBackup.data.ev));
+  assert.ok(exportedBackup.data.mist.some(item => item.q === 'خطأ ثانٍ لاختبار استعادة النسخة الاحتياطية'));
+  assert.ok('subjectLessonDone' in exportedBackup.data && 'examHistory' in exportedBackup.data && 'smartReview' in exportedBackup.data);
+  assert.equal(await page.evaluate(() => JSON.parse(localStorage.getItem('study-v1-weekly-backups') || '[]').length), 1, 'A weekly local snapshot must be created on app startup');
 
   // A valid backup must restore schedule, notes, study track, and appearance immediately.
   const validBackup = {
@@ -352,7 +356,10 @@ try {
     mimeType: 'application/json',
     buffer: Buffer.from(JSON.stringify(validBackup))
   });
-  await page.locator('#bkSt').getByText('اترجعت بياناتك').waitFor({ state: 'visible' });
+  await page.locator('#bkSt').getByText('جاهزة للمعاينة').waitFor({ state: 'visible' });
+  await page.locator('#bkRestore').click();
+  await page.locator('#bkSt').getByText('اترجعت بياناتك بنجاح').waitFor({ state: 'visible' });
+  assert.equal(await page.locator('#bkUndo').isVisible(), true, 'Undo must be available after a successful restore');
   await page.locator('[data-tab="sched"]').click();
   await page.locator('#upList').getByText('موعد مستعاد من النسخة').waitFor({ state: 'visible' });
   await page.locator('[data-tab="notes"]').click();
@@ -369,6 +376,18 @@ try {
   await page.locator('#upList').getByText('موعد مستعاد من النسخة').waitFor({ state: 'visible' });
   await page.locator('[data-tab="notes"]').click();
   await page.locator('#noteList').getByText('ملاحظة مستعادة').waitFor({ state: 'visible' });
+
+  // Undo must restore the pre-import state, then re-apply the fixture for later checks.
+  await page.locator('[data-tab="tools"]').click();
+  await page.locator('#bkUndo').click();
+  await page.locator('#bkSt').getByText('تم التراجع عن آخر استعادة').waitFor({ state: 'visible' });
+  await page.locator('#bkIn').setInputFiles({
+    name: 'valid-backup-again.json',
+    mimeType: 'application/json',
+    buffer: Buffer.from(JSON.stringify(validBackup))
+  });
+  await page.locator('#bkRestore').click();
+  await page.locator('#bkSt').getByText('اترجعت بياناتك بنجاح').waitFor({ state: 'visible' });
 
   // Focus timer can start and cancel without corrupting the timer display.
   await page.locator('[data-tab="tools"]').click();

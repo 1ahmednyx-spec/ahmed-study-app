@@ -179,8 +179,14 @@
   <div class="panel"><div class="n" id="pmT" style="font-size:34px">25:00</div><button class="p" id="pmGo">ابدأ 25 دقيقة</button> <button class="s" id="pmX">إلغاء</button><div class="hint" id="pmSt"></div></div>
   <h2>ورقة مراجعة</h2>
   <div class="panel"><label for="rS">المادة</label><select id="rS"></select><button class="p" id="rGo">حمّل ورقة المراجعة</button><div class="hint" id="rSt"></div></div>
-  <h2>نسخة احتياطية</h2>
-  <div class="panel"><button class="p" id="bkGo">حمّل بياناتك</button> <label style="display:inline-block;margin-top:10px;padding:10px 16px;border:1px solid var(--brand);border-radius:10px;cursor:pointer;color:var(--brand);font-weight:700">استرجع نسخة<input id="bkIn" type="file" accept=".json" hidden></label><div class="hint" id="bkSt"></div></div>
+  <h2>نسخة احتياطية وحماية بياناتك</h2>
+  <div class="panel backup-panel">
+    <p class="hint">صدّر نسخة خارج جهازك بانتظام. النسخ الأسبوعية التلقائية تحفظ على هذا المتصفح فقط، ولا تحمي من فقدان الجهاز أو مسح بيانات المتصفح.</p>
+    <div class="backup-actions"><button class="p" id="bkGo" type="button">حمّل نسخة كاملة</button><label class="backup-file-label">اختر ملف نسخة للاستعادة<input id="bkIn" type="file" accept=".json,application/json" hidden></label></div>
+    <div id="bkPreview" class="backup-preview" hidden><b>معاينة النسخة قبل الاستعادة</b><div id="bkVersion" class="hint"></div><p id="bkSummary" class="backup-summary"></p><button class="p" id="bkRestore" type="button" disabled>تأكيد الاستعادة</button></div>
+    <button class="s" id="bkUndo" type="button" hidden>تراجع عن آخر استعادة</button>
+    <div class="hint" id="bkWeekly"></div><div class="hint" id="bkSt" role="status" aria-live="polite"></div>
+  </div>
 </section>
 
 <section id="eng" hidden>

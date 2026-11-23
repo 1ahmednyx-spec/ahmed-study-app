@@ -47,12 +47,81 @@
     $('#rGo').onclick=async()=>{const s=$('#rS').value,n=S.notes.filter(x=>x.sub===s),st=$('#rSt');
       if(!n.length){st.textContent='مفيش ملخصات محفوظة للمادة دي';return}
       try{downloadFile('revision-sheet.md',`# ورقة مراجعة: ${s}\n\n`+n.map(x=>`## ${x.title}\n${x.sum}`).join('\n\n'),'text/markdown;charset=utf-8');st.textContent='تم تجهيز ورقة المراجعة'}catch(e){st.textContent='مقدرتش أحفظ الملف'}};
-    $('#bkGo').onclick=async()=>{
-      try{downloadFile('study-backup.json',JSON.stringify(S,null,2),'application/json;charset=utf-8');$('#bkSt').textContent='تم تنزيل النسخة الاحتياطية'}catch(e){$('#bkSt').textContent='مقدرتش أحفظ الملف'}};
-    $('#bkIn').onchange=async e=>{const f=e.target.files[0];if(!f)return;
-      try{const d=JSON.parse(await f.text());if(!d||typeof d!=='object'||Array.isArray(d))throw 0;const arrayKeys=['ev','notes','words','prac','mist'];if(arrayKeys.some(k=>k in d&&!Array.isArray(d[k])))throw 0;if('track' in d&&!['sci','math','lit'].includes(d.track))throw 0;const allowed=['ev','notes','words','track','prac','goal','mist','focus','courseDone','courseWords','courseWriting','courseExamChecks','smartReview','theme','app','me','color'];if(Object.keys(d).some(k=>!allowed.includes(k)))throw 0;Object.assign(S,d);S.smartReview=S.smartReview&&typeof S.smartReview==='object'&&!Array.isArray(S.smartReview)?S.smartReview:{};save();renderSched();renderNotes();renderWords();renderPrac();renderMist();pmShow();fillSubjects();if(refreshPreferences)refreshPreferences();$('#bkSt').textContent='اترجعت بياناتك'}
-      catch(x){$('#bkSt').textContent='الملف ده مش نسخة صالحة'}};
-    
+    const BACKUP_FORMAT='ahmed-study-platform-backup',BACKUP_VERSION=2;
+    const ARRAY_KEYS=['ev','notes','words','prac','mist','courseWords','courseWriting','examHistory'];
+    const OBJECT_KEYS=['focus','courseDone','courseExamChecks','subjectLessonDone','englishPathDone','smartReview','studyPlan'];
+    const WEEKLY_KEY='study-v1-weekly-backups',SAFETY_KEY='study-v1-before-restore';
+    let pendingRestore=null;
+    const clone=value=>JSON.parse(JSON.stringify(value));
+    const isRecord=value=>value!==null&&typeof value==='object'&&!Array.isArray(value);
+    const backupStatus=message=>{$('#bkSt').textContent=message};
+    function readWeekly(){try{const value=JSON.parse(localStorage.getItem(WEEKLY_KEY)||'[]');return Array.isArray(value)?value:[]}catch(error){return []}}
+    function createWeeklyBackup(){
+      try{const backups=readWeekly(),now=Date.now(),last=backups[0]&&Date.parse(backups[0].createdAt);if(last&&now-last<7*24*60*60*1000)return;
+        backups.unshift({createdAt:new Date(now).toISOString(),data:clone(S)});localStorage.setItem(WEEKLY_KEY,JSON.stringify(backups.slice(0,4)));
+      }catch(error){/* Browser storage may be full; downloadable backups remain available. */}
+    }
+    function showUndoAvailability(){$('#bkUndo').hidden=!localStorage.getItem(SAFETY_KEY)}
+    function backupSummary(data){return [['مواعيد',data.ev?.length],['ملخصات',data.notes?.length],['كلمات',data.words?.length],['تدريبات',data.prac?.length],['أخطاء',data.mist?.length],['اختبارات',data.examHistory?.length]].filter(x=>Number.isFinite(x[1])).map(x=>x[0]+': '+x[1]).join(' • ')}
+    function normalizeBackup(parsed){
+      let data;
+      if(isRecord(parsed)&&parsed.format==='ahmed-study-platform-backup'){if(parsed.version!==2||!isRecord(parsed.data))throw Error('unsupported');data=parsed.data}
+      else if(isRecord(parsed))data=parsed;else throw Error('invalid');
+      if(Object.keys(data).some(key=>['__proto__','prototype','constructor'].includes(key)))throw Error('unsafe');
+      for(const key of ARRAY_KEYS)if(key in data&&!Array.isArray(data[key]))throw Error('invalid');
+      for(const key of OBJECT_KEYS)if(key in data&&!isRecord(data[key]))throw Error('invalid');
+      if('track' in data&&!['sci','math','lit'].includes(data.track))throw Error('invalid');
+      if('goal' in data&&(!Number.isFinite(Number(data.goal))||Number(data.goal)<1))throw Error('invalid');
+      for(const key of ['theme','app','me','color'])if(key in data&&typeof data[key]!=='string')throw Error('invalid');
+      if('color' in data&&!/^#[0-9a-f]{6}$/i.test(data.color))throw Error('invalid');
+      const safe={};Object.keys(data).forEach(key=>{if(!['__proto__','prototype','constructor'].includes(key))safe[key]=data[key]});return safe;
+    }
+    function completeState(data){
+      return Object.assign({ev:[],notes:[],words:[],track:'sci',prac:[],goal:100,mist:[],focus:{},courseDone:{},courseWords:[],courseWriting:[],courseExamChecks:{},subjectLessonDone:{},englishPathDone:{},examHistory:[],smartReview:{}},clone(data));
+    }
+    function refreshAfterRestore(){
+      save();renderSched();renderNotes();renderWords();renderPrac();renderMist();pmShow();fillSubjects();
+      if(refreshPreferences)refreshPreferences();
+      if(typeof global.dashboardRender==='function')global.dashboardRender();
+      if(typeof global.smartReviewRender==='function')global.smartReviewRender();
+      if(typeof global.examCenterRender==='function')global.examCenterRender();
+    }
+    $('#bkGo').onclick=()=>{
+      try{const payload={format:BACKUP_FORMAT,version:BACKUP_VERSION,createdAt:new Date().toISOString(),app:'Ahmed Study Platform',data:clone(S)};
+        downloadFile('ahmed-study-backup.json',JSON.stringify(payload,null,2),'application/json;charset=utf-8');
+        backupStatus('تم تنزيل نسخة كاملة بإصدار 2 • '+backupSummary(payload.data));
+      }catch(error){backupStatus('تعذر تجهيز النسخة الاحتياطية')}
+    };
+    $('#bkIn').onchange=async event=>{
+      const file=event.target.files&&event.target.files[0];if(!file)return;
+      $('#bkPreview').hidden=true;$('#bkRestore').disabled=true;pendingRestore=null;
+      if(file.size>10*1024*1024){backupStatus('حجم الملف أكبر من الحد المسموح (10 ميجابايت)');event.target.value='';return}
+      try{const parsed=JSON.parse(await file.text()),data=normalizeBackup(parsed);pendingRestore=completeState(data);
+        $('#bkSummary').textContent=backupSummary(pendingRestore)||'الملف صالح، لكن لا يحتوي بيانات مسجلة بعد.';
+        $('#bkVersion').textContent=parsed.format==='ahmed-study-platform-backup'?'نسخة حديثة • الإصدار '+parsed.version:'نسخة قديمة • سيتم تحويلها تلقائيًا';
+        $('#bkPreview').hidden=false;$('#bkRestore').disabled=false;backupStatus('النسخة جاهزة للمعاينة. لم يتم تغيير أي بيانات بعد.');
+      }catch(error){backupStatus('الملف ده مش نسخة صالحة أو إصدار غير مدعوم');$('#bkPreview').hidden=true}
+      finally{event.target.value=''}
+    };
+    $('#bkRestore').onclick=()=>{
+      if(!pendingRestore)return;
+      try{const previous=clone(S);localStorage.setItem(SAFETY_KEY,JSON.stringify({createdAt:new Date().toISOString(),data:previous}));
+        Object.keys(S).forEach(key=>delete S[key]);Object.assign(S,clone(pendingRestore));
+        if(!save()){Object.keys(S).forEach(key=>delete S[key]);Object.assign(S,previous);throw Error('storage')}
+        refreshAfterRestore();pendingRestore=null;$('#bkPreview').hidden=true;showUndoAvailability();
+        backupStatus('اترجعت بياناتك بنجاح. تقدر تتراجع عن الاستعادة من زر التراجع.');
+      }catch(error){backupStatus('تعذرت الاستعادة؛ لم نكمل استبدال البيانات. تأكد من مساحة التخزين.')}
+    };
+    $('#bkUndo').onclick=()=>{
+      try{const safety=JSON.parse(localStorage.getItem(SAFETY_KEY)||'null');if(!isRecord(safety)||!isRecord(safety.data))throw Error('missing');
+        const previous=clone(S);Object.keys(S).forEach(key=>delete S[key]);Object.assign(S,completeState(safety.data));
+        if(!save()){Object.keys(S).forEach(key=>delete S[key]);Object.assign(S,previous);throw Error('storage')}
+        localStorage.removeItem(SAFETY_KEY);refreshAfterRestore();showUndoAvailability();backupStatus('تم التراجع عن آخر استعادة وإرجاع بياناتك السابقة.');
+      }catch(error){backupStatus('لم نتمكن من التراجع؛ نسخة الأمان غير متاحة أو مساحة التخزين ممتلئة.')}
+    };
+    createWeeklyBackup();showUndoAvailability();
+    $('#bkWeekly').textContent='النسخ الأسبوعية المحفوظة على هذا المتصفح: '+readWeekly().length+' من 4. يتم إنشاء نسخة جديدة تلقائيًا عند فتح المنصة بعد مرور 7 أيام.';
+
     
     return {pmShow};
   }

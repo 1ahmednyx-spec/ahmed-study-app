@@ -143,8 +143,7 @@ try {
   await page.locator('#examCenterRoot .exam-result-hero').waitFor({ state: 'visible' });
   assert.equal(await page.locator('#examCenterRoot .exam-review').count(), 5, 'Exam center must review every submitted answer');
   assert.equal(await page.evaluate(() => JSON.parse(localStorage.getItem('study-v1')).examHistory.length), 1, 'Exam result must persist in local study data');
-  await page.locator('#examShowHistory').click();
-  assert.equal(await page.locator('#examHistory .exam-history-item').count(), 1, 'Exam center must display the saved attempt in history');
+  assert.equal(await page.locator('#examCenterRoot #examHistory .exam-history-item').count(), 1, 'Exam center must display the saved attempt in history');
 
   // Ministry library must show the 2026/2027 track subjects and shared pass/fail subjects.
   await page.locator('[data-tab="library"]').click();

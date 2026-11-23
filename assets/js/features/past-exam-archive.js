@@ -133,73 +133,58 @@
     "pdfUrl": "https://ellibrary.moe.gov.eg/sec3guideforms/publish5/Applid_Math_EN_Model_5.pdf",
     "fileLabel": "فتح النموذج الاسترشادي"
   },
-[
-  {
-    "id": "2021-history-trial-answer",
-    "year": "2021",
-    "system": "modern",
-    "systemLabel": "نظام الثانوية العامة 2021",
-    "subject": "التاريخ",
-    "type": "model",
-    "typeLabel": "إجابة امتحان تجريبي رسمي",
-    "title": "إجابة امتحان التاريخ التجريبي — يونيو 2021",
-    "round": "اختبار تجريبي — وليس امتحان الدور النهائي",
-    "pdfUrl": "https://moe.gov.eg/media/qe4doi3f/history-answer.pdf",
-    "fileLabel": "فتح إجابة النموذج"
-  },
-  {
-    "id": "2023-science-answer-models",
-    "year": "2023",
-    "system": "modern",
-    "systemLabel": "نظام الثانوية العامة 2023",
-    "subject": "كل المواد",
-    "type": "official",
-    "typeLabel": "نماذج إجابة رسمية",
-    "title": "نماذج إجابة الشعبة العلمية — علوم",
-    "round": "الدور الأول",
-    "pdfUrl": "https://moe.gov.eg/media/evqfv1il/scinece-exammodels.pdf",
-    "fileLabel": "فتح نماذج الإجابة"
-  },
-  {
-    "id": "2023-ministry-exam-portal",
-    "year": "2023",
-    "system": "modern",
-    "systemLabel": "نظام الثانوية العامة 2023",
-    "subject": "كل المواد",
-    "type": "official",
-    "typeLabel": "بوابة امتحانات الوزارة",
-    "title": "بوابة امتحانات الثانوية العامة 2022/2023",
-    "round": "الدور الأول",
-    "pdfUrl": "https://moe.gov.eg/ar/exam-model2022-2023/",
-    "fileLabel": "فتح بوابة الوزارة"
-  },
-  {
-    "id": "2024-madrasetna-plus",
-    "year": "2024",
-    "system": "modern",
-    "systemLabel": "نظام الثانوية العامة 2024",
-    "subject": "كل المواد",
-    "type": "official",
-    "typeLabel": "مصدر رسمي — مدرستنا بلس",
-    "title": "أسئلة وإجابات امتحانات 2023/2024 والنماذج الأربعة",
-    "round": "الدور الأول",
-    "pdfUrl": "https://madrasetnaplus.eg/",
-    "fileLabel": "فتح المصدر الرسمي"
-  },
-  {
-    "id": "2025-ministry-models",
-    "year": "2025",
-    "system": "modern",
-    "systemLabel": "نظام الثانوية العامة 2025",
-    "subject": "كل المواد",
-    "type": "model",
-    "typeLabel": "بوابة النماذج الاسترشادية الرسمية",
-    "title": "نماذج الثانوية العامة 2025",
-    "round": "نماذج استرشادية",
-    "pdfUrl": "https://content.moe.gov.eg/qa",
-    "fileLabel": "فتح بوابة الوزارة"
-  }
-]
+{
+  "id": "2021-history-trial-answer",
+  "year": "2021",
+  "system": "modern",
+  "systemLabel": "نظام الثانوية العامة 2021",
+  "subject": "التاريخ",
+  "type": "model",
+  "typeLabel": "إجابة امتحان تجريبي رسمي",
+  "title": "إجابة امتحان التاريخ التجريبي — يونيو 2021",
+  "round": "اختبار تجريبي — وليس امتحان الدور النهائي",
+  "pdfUrl": "https://moe.gov.eg/media/qe4doi3f/history-answer.pdf",
+  "fileLabel": "فتح إجابة النموذج"
+},
+{
+  "id": "2023-ministry-exam-portal",
+  "year": "2023",
+  "system": "modern",
+  "systemLabel": "نظام الثانوية العامة 2023",
+  "subject": "كل المواد",
+  "type": "official",
+  "typeLabel": "بوابة امتحانات الوزارة",
+  "title": "بوابة امتحانات الثانوية العامة 2022/2023",
+  "round": "الدور الأول",
+  "pdfUrl": "https://moe.gov.eg/ar/exam-model2022-2023/",
+  "fileLabel": "فتح بوابة الوزارة"
+},
+{
+  "id": "2024-madrasetna-plus",
+  "year": "2024",
+  "system": "modern",
+  "systemLabel": "نظام الثانوية العامة 2024",
+  "subject": "كل المواد",
+  "type": "official",
+  "typeLabel": "مصدر رسمي — مدرستنا بلس",
+  "title": "أسئلة وإجابات امتحانات 2023/2024 والنماذج الأربعة",
+  "round": "الدور الأول",
+  "pdfUrl": "https://madrasetnaplus.eg/",
+  "fileLabel": "فتح المصدر الرسمي"
+},
+{
+  "id": "2025-ministry-models",
+  "year": "2025",
+  "system": "modern",
+  "systemLabel": "نظام الثانوية العامة 2025",
+  "subject": "كل المواد",
+  "type": "model",
+  "typeLabel": "بوابة النماذج الاسترشادية الرسمية",
+  "title": "نماذج الثانوية العامة 2025",
+  "round": "نماذج استرشادية",
+  "pdfUrl": "https://content.moe.gov.eg/qa",
+  "fileLabel": "فتح بوابة الوزارة"
+}
 ];
 
   const escapeHTML = value => String(value).replace(/[&<>"']/g, char => ({

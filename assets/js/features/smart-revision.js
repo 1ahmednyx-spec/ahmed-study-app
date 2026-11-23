@@ -108,7 +108,7 @@
       let interval = Number(previous.interval) || 0;
       let lapses = Number(previous.lapses) || 0;
       if (value === 'again') { reps = 0; interval = 1; lapses += 1; }
-      else if (value === 'hard') { interval = Math.max(1, Math.ceil((interval || 1) * 1.2)); }
+      else if (value === 'hard') { interval = Math.max(1, Math.ceil((interval || 1) * 1.2)); reps = Math.max(1, reps + 1); }
       else if (value === 'good') { interval = reps === 0 ? 1 : reps === 1 ? 3 : Math.max(7, Math.round((interval || 3) * 2)); reps += 1; }
       else if (value === 'easy') { interval = Math.max(4, Math.round((interval || 2) * 2.5)); reps += 1; }
       state.smartReview[item.id] = {

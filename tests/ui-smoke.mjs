@@ -531,6 +531,7 @@ try {
   assert.equal(await page.locator('#brandName').textContent(), 'Backup Restored');
   await page.locator('[data-tab="sched"]').click();
   await page.locator('#upList').getByText('موعد مستعاد من النسخة').waitFor({ state: 'visible' });
+  await page.locator('[data-tab="pastExamArchive"]').click();
   // 2023 English first and second foreign languages, all four models.
   await page.locator('#pastExamEnglishStart').click();
   assert.equal(await page.locator('#pastExamEnglishQuiz .past-exam-answer-cell').count(), 34, 'First English language must display 34 objective-key rows');

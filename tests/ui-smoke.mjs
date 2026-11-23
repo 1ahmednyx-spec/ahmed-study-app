@@ -22,6 +22,7 @@ try {
   const englishLearningPathResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/english-learning-path.js');
   const subjectCoursesResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/subject-courses.js');
   const examCenterResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/exam-center.js');
+  const pastExamArchiveResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/past-exam-archive.js');
   const dashboardResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/dashboard.js');
   const smartRevisionResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/smart-revision.js');
   const ministryLibraryResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/ministry-library.js');
@@ -31,7 +32,7 @@ try {
   assert.equal(serviceWorkerResponse.status(), 200, 'Service worker must be served');
   const serviceWorkerSource = await serviceWorkerResponse.text();
   assert.match(serviceWorkerSource, /ahmed-study-platform-v\d+/, 'Service worker cache must be versioned');
-  for (const modulePath of ['./assets/js/features/preferences.js', './assets/js/features/english-course.js', './assets/js/features/english-learning-path.js', './assets/js/features/subject-courses.js', './assets/js/features/exam-center.js', './assets/js/features/dashboard.js', './assets/js/features/smart-revision.js', './assets/js/features/ministry-library.js', './assets/js/features/english-coach.js']) {
+  for (const modulePath of ['./assets/js/features/preferences.js', './assets/js/features/english-course.js', './assets/js/features/english-learning-path.js', './assets/js/features/subject-courses.js', './assets/js/features/exam-center.js', './assets/js/features/past-exam-archive.js', './assets/js/features/dashboard.js', './assets/js/features/smart-revision.js', './assets/js/features/ministry-library.js', './assets/js/features/english-coach.js']) {
     assert.ok(serviceWorkerSource.includes(modulePath), `Service worker must precache ${modulePath}`);
   }
 
@@ -52,6 +53,7 @@ try {
   assert.equal(englishLearningPathResponse.status(), 200, 'Separate English learning path module must be served');
   assert.equal(subjectCoursesResponse.status(), 200, '2027 subject courses module must be served');
   assert.equal(examCenterResponse.status(), 200, 'Exam center module must be served');
+  assert.equal(pastExamArchiveResponse.status(), 200, 'Past exam archive module must be served');
   assert.equal(dashboardResponse.status(), 200, 'Smart dashboard module must be served');
   assert.equal(smartRevisionResponse.status(), 200, 'Smart revision module must be served');
   assert.equal(ministryLibraryResponse.status(), 200, 'Ministry library module must be served');
@@ -87,6 +89,7 @@ try {
   assert.equal(await page.evaluate(() => typeof window.StudyEnglishPath?.init), 'function', 'Separate English learning path must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.StudySubjectCourses?.init), 'function', 'Subject courses module must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.StudyExamCenter?.init), 'function', 'Exam center module must expose its initializer');
+  assert.equal(await page.evaluate(() => typeof window.StudyPastExamArchive?.init), 'function', 'Past exam archive module must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.StudyMinistryLibrary?.init), 'function', 'Ministry library module must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.ecRender), 'function', 'English course renderer must be available to tab navigation');
   assert.equal(await page.evaluate(() => typeof window.StudyEnglishCoach?.init), 'function', 'English coach module must expose its initializer');
@@ -95,7 +98,7 @@ try {
   assert.equal(await page.evaluate(() => typeof window.activateTab), 'function', 'Navigation module must expose tab activation');
   assert.match(await page.title(), /Ahmed Study Platform/);
   await page.locator('#home').waitFor({ state: 'visible' });
-  assert.equal(await page.locator('.tabs [role="tab"]').count(), 17, 'Smart revision, exam center, English learning path, and five subject tabs must preserve all existing tabs');
+  assert.equal(await page.locator('.tabs [role="tab"]').count(), 18, 'Smart revision, exam center, English learning path, and five subject tabs must preserve all existing tabs');
   assert.equal(await page.evaluate(() => typeof window.StudySmartRevision?.init), 'function', 'Smart revision module must expose its initializer');
   assert.equal(await page.locator('#reviewCenter #smartReviewRoot').count(), 1, 'Smart revision must have its own content section');
   assert.equal(await page.locator('#smartDashboard .smart-metric').count(), 4, 'Homepage dashboard must show four live learning metrics');
@@ -109,7 +112,7 @@ try {
     assert.equal(await page.locator(`#${subject}`).count(), 1, `${subject} must have one content section`);
   }
 
-  // Every navigation tab must activate its matching content section.
+  // Past exam archive renders its independent filters and honest empty state until verified files are added.\n  await page.locator('[data-tab="pastExamArchive"]').click();\n  assert.equal(await page.locator('#pastExamArchiveRoot #pastExamSystem option').count(), 4);\n  assert.equal(await page.locator('#pastExamArchiveRoot #pastExamYear option').count(), 9);\n  assert.match(await page.locator('#pastExamResults').textContent(), /لم نضف ملفات بعد/);\n  assert.equal(await page.locator('#pastExamArchiveRoot a[href="https://moe.gov.eg/"]').count(), 1);\n\n  // Every navigation tab must activate its matching content section.
   for (const tab of await page.locator('.tabs [role="tab"]').all()) {
     const target = await tab.getAttribute('data-tab');
     await tab.click();

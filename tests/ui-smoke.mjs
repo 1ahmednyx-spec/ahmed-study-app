@@ -116,15 +116,22 @@ try {
   await page.locator('[data-tab="pastExamArchive"]').click();
   assert.equal(await page.locator('#pastExamArchiveRoot #pastExamSystem option').count(), 4);
   assert.equal(await page.locator('#pastExamArchiveRoot #pastExamYear option').count(), 9);
-  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 12, 'Archive must render twelve verified resources');
+  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 17, 'Archive must render seventeen verified resources');
   await page.locator('#pastExamYear').selectOption('2020');
   assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 3, 'Year filter must isolate the three verified 2020 resources');
   await page.locator('#pastExamYear').selectOption('2023');
-  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 4, 'Year filter must isolate the four verified 2023 resources');
+  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 9, 'Year filter must isolate the nine catalogued 2023 resources');
   await page.locator('#pastExamYear').selectOption('all');
   await page.locator('#pastExamSubject').selectOption('علم النفس والاجتماع');
   assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 1, 'Subject filter must return the single correctly classified psychology and sociology resource');
   await page.locator('#pastExamSubject').selectOption('all');
+  for (const subject of ['اللغة العربية', 'اللغة الأجنبية الأولى', 'اللغة الأجنبية الثانية', 'الكيمياء', 'الفيزياء', 'الأحياء', 'الرياضيات']) {
+    await page.locator('#pastExamYear').selectOption('2023');
+    await page.locator('#pastExamSubject').selectOption(subject);
+    assert.ok(await page.locator('#pastExamResults .past-exam-card').count() >= 1, '2023 core subject must have a catalogued Ministry resource: ' + subject);
+  }
+  await page.locator('#pastExamSubject').selectOption('all');
+  await page.locator('#pastExamYear').selectOption('all');
   assert.equal(await page.locator('#pastExamArchiveRoot a[href="https://moe.gov.eg/"]').count(), 1);
 
   // Every navigation tab must activate its matching content section.

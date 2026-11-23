@@ -94,7 +94,7 @@ try {
     assert.match(pastExamArchiveSource, new RegExp('BIOLOGY_2023_MODEL_' + model + '_KEY'), 'Archive must include the 2023 Biology model ' + model + ' answer key');
   }
   assert.match(pastExamArchiveSource, /pastExamBiologyModel/, 'Biology quiz must allow selecting all four official models');
-  assert.match(pastExamArchiveSource, /scinece-exammodels\\.pdf#page=98/, 'Biology quiz must link to the official Ministry answer-key page');
+  assert.ok(pastExamArchiveSource.includes('scinece-exammodels.pdf#page=98'), 'Biology quiz must link to the official Ministry answer-key page');
   assert.ok(pastExamArchiveSource.includes('ta3lemkonline.com/2023/08/2023_33.html'), 'Biology quiz must link to a separate exam-paper archive page');
   assert.match(pastExamArchiveSource, /44 سؤالًا موضوعيًا/, 'Physics quiz must grade 44 objective questions');
   assert.match(pastExamArchiveSource, /PHYSICS_2023_WEIGHTS/, 'Physics quiz must apply the Ministry mark distribution');

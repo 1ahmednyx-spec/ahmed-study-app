@@ -5,7 +5,7 @@
   const SUBJECTS = [
     'اللغة العربية', 'اللغة الأجنبية الأولى', 'اللغة الأجنبية الثانية',
     'الأحياء', 'الكيمياء', 'الفيزياء', 'الرياضيات',
-    'التاريخ', 'الجغرافيا', 'الإحصاء', 'الفلسفة والمنطق'
+    'التاريخ', 'الجغرافيا', 'الإحصاء', 'الفلسفة والمنطق', 'علم النفس والاجتماع', 'الاقتصاد', 'التربية الوطنية'
   ];
   const SYSTEMS = [
     { value: 'all', label: 'كل الأنظمة' },
@@ -19,8 +19,87 @@
     { value: 'model', label: 'نموذج استرشادي' }
   ];
 
-  // Intentionally empty until each PDF and its provenance are verified.
-  const EXAMS = [];
+  // Verified resources hosted on official Ministry domains; this is a partial catalogue.
+  const EXAMS = [
+  {
+    "id": "2020-chemistry-first",
+    "year": "2020",
+    "system": "legacy",
+    "systemLabel": "النظام السابق",
+    "subject": "الكيمياء",
+    "type": "official",
+    "typeLabel": "امتحان وزارة رسمي",
+    "title": "امتحان الكيمياء — الدور الأول",
+    "round": "الدور الأول",
+    "pdfUrl": "https://moe.gov.eg/media/ivpmsmdj/الكيمياء-دمج_مكفوفين_1.pdf",
+    "fileLabel": "فتح ورقة الامتحان"
+  },
+  {
+    "id": "2020-psychology-second",
+    "year": "2020",
+    "system": "legacy",
+    "systemLabel": "النظام السابق",
+    "subject": "علم النفس والاجتماع",
+    "type": "official",
+    "typeLabel": "امتحان وزارة رسمي",
+    "title": "امتحان علم النفس والاجتماع — الدور الثاني",
+    "round": "الدور الثاني",
+    "pdfUrl": "https://moe.gov.eg/media/sh5lfevy/علم_نفس_دور_ثانى-شلل.pdf",
+    "fileLabel": "فتح ورقة الامتحان"
+  },
+  {
+    "id": "2020-national-education-first",
+    "year": "2020",
+    "system": "legacy",
+    "systemLabel": "النظام السابق",
+    "subject": "التربية الوطنية",
+    "type": "official",
+    "typeLabel": "امتحان وزارة رسمي",
+    "title": "امتحان التربية الوطنية — الدور الأول",
+    "round": "الدور الأول",
+    "pdfUrl": "https://moe.gov.eg/media/yijn2dhn/التربيه_الوطنيه-إعاقة_سمعية.pdf",
+    "fileLabel": "فتح ورقة الامتحان"
+  },
+  {
+    "id": "2020-economics-answer",
+    "year": "2020",
+    "system": "legacy",
+    "systemLabel": "النظام السابق",
+    "subject": "الاقتصاد",
+    "type": "official",
+    "typeLabel": "نموذج إجابة رسمي",
+    "title": "نموذج إجابة الاقتصاد — الدور الأول",
+    "round": "الدور الأول",
+    "pdfUrl": "https://moe.gov.eg/media/rnkh43k0/نموذج_اجابه_الاقتصاد-ضعاف_سمع.pdf",
+    "fileLabel": "فتح نموذج الإجابة"
+  },
+  {
+    "id": "2023-arabic-answer",
+    "year": "2023",
+    "system": "modern",
+    "systemLabel": "النظام الحديث",
+    "subject": "اللغة العربية",
+    "type": "official",
+    "typeLabel": "نماذج إجابة رسمية",
+    "title": "نماذج إجابة اللغة العربية — الشعبة الأدبية",
+    "round": "الدور الأول",
+    "pdfUrl": "https://moe.gov.eg/media/xmhd3sow/arts-answermodels.pdf",
+    "fileLabel": "فتح نماذج الإجابة"
+  },
+  {
+    "id": "2026-applied-math-model-5",
+    "year": "2026",
+    "system": "modern",
+    "systemLabel": "النظام الحديث",
+    "subject": "الرياضيات",
+    "type": "model",
+    "typeLabel": "نموذج استرشادي رسمي",
+    "title": "النموذج الاسترشادي الخامس — الرياضيات التطبيقية",
+    "round": "العام الدراسي 2025/2026",
+    "pdfUrl": "https://ellibrary.moe.gov.eg/sec3guideforms/publish5/Applid_Math_EN_Model_5.pdf",
+    "fileLabel": "فتح النموذج الاسترشادي"
+  }
+];
 
   const escapeHTML = value => String(value).replace(/[&<>"']/g, char => ({
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
@@ -79,14 +158,14 @@
         (type === 'all' || exam.type === type) &&
         (!search || [exam.year, exam.subject, exam.round, exam.title, exam.systemLabel, exam.typeLabel].join(' ').toLowerCase().includes(search))
       );
-      document.getElementById('pastExamCount').textContent = `${filtered.length} ملف موثق`;
+      document.getElementById('pastExamCount').textContent = `${filtered.length} ملف موثق من أصل ${EXAMS.length}`;
       const results = document.getElementById('pastExamResults');
       if (!filtered.length) {
         results.innerHTML = `
           <div class="past-exam-empty">
             <span aria-hidden="true">📚</span>
             <h3>الأرشيف قيد التجهيز</h3>
-            <p>${EXAMS.length ? 'لا توجد ملفات تطابق خيارات البحث الحالية.' : 'لم نضف ملفات بعد. سنضيف كل امتحان بعد التحقق من الملف ومصدره الرسمي، ولن نعرض روابط تجريبية أو ملفات غير مؤكدة.'}</p>
+            <p>${EXAMS.length ? 'لا توجد ملفات تطابق خيارات البحث الحالية. ما زالت بقية السنوات والمواد قيد الجمع والتحقق.' : 'لم نضف ملفات بعد. سنضيف كل امتحان بعد التحقق من الملف ومصدره الرسمي، ولن نعرض روابط تجريبية أو ملفات غير مؤكدة.'}</p>
             <small>الفلاتر جاهزة — محتوى الامتحانات سيُضاف على مراحل.</small>
           </div>`;
         return;
@@ -96,7 +175,7 @@
           <div class="past-exam-card-top"><span>${escapeHTML(exam.typeLabel)}</span><b>${escapeHTML(exam.year)}</b></div>
           <h3>${escapeHTML(exam.subject)}</h3>
           <p>${escapeHTML(exam.title)} · ${escapeHTML(exam.round)}</p>
-          <div class="past-exam-card-meta"><span>${escapeHTML(exam.systemLabel)}</span><a href="${escapeHTML(exam.pdfUrl)}" target="_blank" rel="noopener noreferrer">فتح ملف الامتحان ↗</a></div>
+          <div class="past-exam-card-meta"><span>${escapeHTML(exam.systemLabel)}</span><a href="${escapeHTML(exam.pdfUrl)}" target="_blank" rel="noopener noreferrer">${escapeHTML(exam.fileLabel || "فتح الملف")} ↗</a></div>
           ${exam.answerUrl ? `<a class="past-exam-answer" href="${escapeHTML(exam.answerUrl)}" target="_blank" rel="noopener noreferrer">نموذج الإجابة ↗</a>` : ''}
         </article>`).join('');
     }

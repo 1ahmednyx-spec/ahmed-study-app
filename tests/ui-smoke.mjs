@@ -149,7 +149,7 @@ try {
   assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 31, 'Year filter must isolate the thirty-one catalogued 2023 resources');
   await page.locator('#pastExamYear').selectOption('all');
   await page.locator('#pastExamSubject').selectOption('علم النفس والاجتماع');
-  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 1, 'Subject filter must return the single correctly classified psychology and sociology resource');
+  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 2, 'Subject filter must return the two correctly classified psychology and sociology resources');
   await page.locator('#pastExamSubject').selectOption('all');
   for (const subject of ['اللغة العربية', 'اللغة الأجنبية الأولى', 'اللغة الأجنبية الثانية', 'الكيمياء', 'الفيزياء', 'الأحياء', 'الرياضيات']) {
     await page.locator('#pastExamYear').selectOption('2023');

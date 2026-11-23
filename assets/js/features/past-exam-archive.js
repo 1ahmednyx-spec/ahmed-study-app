@@ -727,6 +727,47 @@
   const BIOLOGY_2023_QUESTION_URL = 'https://www.ta3lemkonline.com/2023/08/2023_33.html';
   const BIOLOGY_2023_ANSWER_URL = 'https://moe.gov.eg/media/evqfv1il/scinece-exammodels.pdf#page=98';
   const BIOLOGY_2023_WEIGHTS = Array.from({ length: 44 }, (_, index) => index < 32 ? 1 : 2);
+  // 2023 scientific-mathematics Arabic keys transcribed from the official Ministry answer-key PDF.
+  const MATH_2023_KEYS = {
+    statics: {
+      label: 'الاستاتيكا', questionPage: 82, answerPage: 83,
+      models: {
+        أ: ['ب','ج','د','ج','ب','د','ج','أ','أ','ب','أ','د','ب','ج','د','د','أ','ج'],
+        ب: ['ب','ج','د','ج','ب','ب','أ','أ','ج','د','د','أ','د','د','ج','ب','ج','أ'],
+        ج: ['د','ب','ج','ب','ج','أ','د','أ','ب','ج','أ','د','د','ب','د','ج','أ','ج'],
+        د: ['ج','د','ب','ب','ج','ج','أ','ب','د','أ','د','أ','ج','د','ب','د','ج','أ']
+      }
+    },
+    dynamics: {
+      label: 'الديناميكا', questionPage: 97, answerPage: 98,
+      models: {
+        أ: ['ج','ب','د','ج','أ','ب','د','ج','أ','ج','د','ب','د','ج','أ','د','ب','ج'],
+        ب: ['أ','ج','د','ب','ج','ج','أ','ج','د','ب','ب','د','د','أ','ج','د','ج','ب'],
+        ج: ['د','ج','ج','أ','ب','ج','ب','أ','ج','د','د','ب','أ','د','د','ج','ب','ج'],
+        د: ['ب','د','أ','ج','ج','د','ج','ج','ب','أ','ب','د','ج','د','د','أ','ج','ب']
+      }
+    },
+    calculus: {
+      label: 'التفاضل والتكامل', questionPage: 112, answerPage: 113,
+      models: {
+        أ: ['ب','ب','أ','د','ج','أ','ب','أ','د','ج','ب','د','أ','ج','ب','د','أ','ج'],
+        ب: ['ج','د','أ','ب','ب','ج','د','أ','ب','أ','د','ب','د','ب','ج','أ','ج','أ'],
+        ج: ['أ','ب','د','ج','ب','أ','أ','د','ج','ب','ب','د','ب','أ','د','ج','أ','ج'],
+        د: ['ب','أ','ج','ب','د','ب','أ','ج','أ','د','د','ب','ج','د','أ','ب','ج','أ']
+      }
+    },
+    algebra: {
+      label: 'الجبر والهندسة الفراغية', questionPage: 127, answerPage: 128,
+      models: {
+        أ: ['ب','ج','أ','ج','د','ب','أ','ب','أ','ج','د','ب','أ','ج','ب','ج','أ','د'],
+        ب: ['د','ج','أ','ج','ب','ج','أ','ب','أ','ب','ب','د','ج','ب','ج','أ','د','أ'],
+        ج: ['أ','ب','ج','د','ج','ب','ب','أ','ج','أ','د','ب','ب','أ','ج','ج','أ','د'],
+        د: ['ج','أ','د','ب','ج','أ','ب','ج','ب','أ','ب','د','ج','ج','أ','ب','د','أ']
+      }
+    }
+  };
+  const MATH_2023_ANSWER_URL = 'https://moe.gov.eg/media/tzfj0lya/mathematica-exammodels.pdf';
+  const MATH_2023_WEIGHTS = Array.from({ length: 18 }, (_, index) => index < 10 ? 1 : 2);
   const ARABIC_2023_PAPER_URL = 'https://drive.google.com/file/d/1Xdhd5Y8WgYdk9LoSfLjN0ktpgahl5tZr/view?usp=drivesdk';
   const ARABIC_2023_ANSWER_URL = 'https://moe.gov.eg/media/xmhd3sow/arts-answermodels.pdf#page=4';
 
@@ -837,6 +878,7 @@
     renderChemistryInteractiveExam();
     renderPhysicsInteractiveExam();
     renderBiologyInteractiveExam();
+    renderMath2023InteractiveExam();
 
     function renderBookSources() {
       const container = document.getElementById('pastExamBookSources');
@@ -996,6 +1038,44 @@
             answerKey.map((answer, index) => '<span class="' + (answers[index] === answer ? 'is-correct' : 'is-wrong') + '">س' + (index + 1) + ': ' + answer + ' (' + BIOLOGY_2023_WEIGHTS[index] + ' د)' + (answers[index] ? (answers[index] === answer ? ' ✓' : ' · إجابتك ' + answers[index]) : ' · لم تجب') + '</span>').join('') +
             '</div></details>';
           host.querySelector('#pastExamBiologyRetry').addEventListener('click', renderBiologyInteractiveExam);
+        });
+      });
+    }
+
+    function renderMath2023InteractiveExam() {
+      const host = document.getElementById('pastExamMathQuiz');
+      if (!host) return;
+      const branches = Object.entries(MATH_2023_KEYS);
+      const branchOptions = branches.map(([id, branch]) => '<option value="' + id + '">' + branch.label + '</option>').join('');
+      host.innerHTML = '<div class="past-exam-model-picker"><label>فرع الرياضيات: <select id="pastExamMathBranch">' + branchOptions + '</select></label> <label>نموذج الامتحان: <select id="pastExamMathModel"><option value="أ">النموذج أ</option><option value="ب">النموذج ب</option><option value="ج">النموذج ج</option><option value="د">النموذج د</option></select></label></div><button class="p past-exam-quiz-start" type="button" id="pastExamMathStart">ابدأ تسجيل الإجابات</button><p class="hint">18 سؤالًا موضوعيًا · الدرجة القصوى 26 · سؤالان مقاليان خارج التصحيح الآلي</p>';
+      host.querySelector('#pastExamMathStart').addEventListener('click', () => {
+        const branchId = host.querySelector('#pastExamMathBranch').value;
+        const branch = MATH_2023_KEYS[branchId];
+        const model = host.querySelector('#pastExamMathModel').value;
+        const answerKey = branch.models[model];
+        host.innerHTML = '<div class="past-exam-quiz-toolbar"><b>' + branch.label + ' — النموذج ' + model + '</b><span id="pastExamMathProgress">تمت الإجابة عن 0 من 18</span></div>' +
+          '<div class="past-exam-answer-grid">' + answerKey.map((_, index) =>
+            '<label class="past-exam-answer-cell"><span>سؤال ' + (index + 1) + (MATH_2023_WEIGHTS[index] === 2 ? ' · درجتان' : ' · درجة') + '</span><select aria-label="إجابة السؤال ' + (index + 1) + '" data-math-answer="' + index + '"><option value="">—</option>' +
+            ['أ','ب','ج','د'].map(choice => '<option value="' + choice + '">' + choice + '</option>').join('') + '</select></label>'
+          ).join('') + '</div><button class="p past-exam-quiz-submit" type="button" id="pastExamMathSubmit">تصحيح الإجابات</button>';
+        const selects = Array.from(host.querySelectorAll('[data-math-answer]'));
+        const updateProgress = () => {
+          const count = selects.filter(select => select.value).length;
+          host.querySelector('#pastExamMathProgress').textContent = 'تمت الإجابة عن ' + count + ' من 18';
+        };
+        selects.forEach(select => select.addEventListener('change', updateProgress));
+        host.querySelector('#pastExamMathSubmit').addEventListener('click', () => {
+          const answers = selects.map(select => select.value);
+          const answered = answers.filter(Boolean).length;
+          const correct = answers.reduce((sum, answer, index) => sum + (answer === answerKey[index] ? 1 : 0), 0);
+          const score = answers.reduce((sum, answer, index) => sum + (answer === answerKey[index] ? MATH_2023_WEIGHTS[index] : 0), 0);
+          const maxScore = MATH_2023_WEIGHTS.reduce((sum, weight) => sum + weight, 0);
+          const percent = Math.round(score / maxScore * 100);
+          host.innerHTML = '<div class="past-exam-quiz-result"><strong>' + percent + '%</strong><h4>درجتك: ' + score + ' من ' + maxScore + '</h4><p>إجابات صحيحة: ' + correct + ' · خاطئة: ' + (answered - correct) + ' · بدون إجابة: ' + (18 - answered) + '</p><p class="hint">النتيجة للأسئلة الموضوعية فقط من 26 درجة. لا تشمل السؤالين المقاليين (19 و20)، والدرجة الكلية الرسمية لهذا الفرع 30 درجة.</p><button class="p" type="button" id="pastExamMathRetry">إعادة المحاولة</button></div>' +
+            '<details class="past-exam-key-review"><summary>مراجعة مفتاح الإجابة الرسمي — ' + branch.label + '، النموذج ' + model + '</summary><div class="past-exam-key-grid">' +
+            answerKey.map((answer, index) => '<span class="' + (answers[index] === answer ? 'is-correct' : 'is-wrong') + '">س' + (index + 1) + ': ' + answer + ' (' + MATH_2023_WEIGHTS[index] + ' د)' + (answers[index] ? (answers[index] === answer ? ' ✓' : ' · إجابتك ' + answers[index]) : ' · لم تجب') + '</span>').join('') +
+            '</div></details>';
+          host.querySelector('#pastExamMathRetry').addEventListener('click', renderMath2023InteractiveExam);
         });
       });
     }

@@ -56,6 +56,8 @@ window.StudySubjectCourses.init({state:S,save,escapeHtml:esc,showAlert});
 const examCenter=window.StudyExamCenter.init({state:S,save,escapeHtml:esc});
 const dashboard=window.StudyDashboard.init({state:S,escapeHtml:esc});
 window.dashboardRender=dashboard.render;
+const smartRevision=window.StudySmartRevision.init({state:S,save,escapeHtml:esc});
+window.smartReviewRender=smartRevision.render;
 window.examCenterRender=examCenter.render;
 window.StudyMinistryLibrary.init();
 

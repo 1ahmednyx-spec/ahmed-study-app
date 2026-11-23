@@ -83,7 +83,7 @@ try {
   assert.match(pastExamArchiveSource, /pastExamChemistryModel/, 'Chemistry quiz must allow selecting all four official models');
   assert.match(pastExamArchiveSource, /44 سؤالًا موضوعيًا/, 'Chemistry quiz must grade 44 objective questions');
   assert.match(pastExamArchiveSource, /CHEMISTRY_2023_WEIGHTS/, 'Chemistry quiz must apply the Ministry mark distribution');
-  assert.match(pastExamArchiveSource, /scinece-exammodels\\.pdf#page=54/, 'Chemistry quiz must link to the official Ministry answer-key PDF');
+  assert.match(pastExamArchiveSource, /scinece-exammodels\\.pdf#page=53/, 'Chemistry quiz must link to the official Ministry answer-key PDF');
   assert.match(pastExamArchiveSource, /mediafire\\.com\\/file\\//, 'Chemistry quiz must provide the external question-paper archive link');
   assert.match(pastExamArchiveSource, /51 سؤالًا موضوعيًا/, 'Arabic answer sheet must clearly limit automatic grading to 51 objective questions');
   assert.match(pastExamArchiveSource, /arts-answermodels\.pdf#page=4/, 'Arabic quiz must link to the Ministry answer-key PDF');

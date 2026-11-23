@@ -19,9 +19,10 @@
     courseWriting: [],
     courseExamChecks: {},
     subjectLessonDone: {},
-    englishPathDone: {}
+    englishPathDone: {},
+    examHistory: []
   };
-  const ARRAY_FIELDS = ['ev', 'notes', 'words', 'prac', 'mist', 'courseWords', 'courseWriting'];
+  const ARRAY_FIELDS = ['ev', 'notes', 'words', 'prac', 'mist', 'courseWords', 'courseWriting', 'examHistory'];
   const OBJECT_FIELDS = ['focus', 'courseDone', 'courseExamChecks', 'subjectLessonDone', 'englishPathDone'];
 
   function isRecord(value) {

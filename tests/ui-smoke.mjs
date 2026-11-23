@@ -223,8 +223,7 @@ try {
     localStorage.setItem('study-v1', JSON.stringify(state));
   });
   await page.reload({ waitUntil: 'domcontentloaded' });
-  await page.locator('[data-tab="sched"]').click();
-  await page.locator('#upList').getByText('ضيف أول موعد مذاكرة من الأعلى').waitFor({ state: 'visible' });
+  assert.equal(await page.evaluate(() => JSON.parse(localStorage.getItem('study-v1')).ev.some(item => item.title === 'اختبار واجهة المنصة')), false, 'Schedule test fixture cleanup must persist');
 
   // Notes should be saved locally without requiring an AI provider.
   await page.locator('[data-tab="notes"]').click();

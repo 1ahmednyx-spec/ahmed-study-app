@@ -34,6 +34,12 @@ function rateLimited(request) {
     return false;
   }
   current.count += 1;
+  if (buckets.size > 5000) {
+    for (const [key, bucket] of buckets) {
+      if (now - bucket.startedAt >= WINDOW_MS) buckets.delete(key);
+      if (buckets.size <= 4000) break;
+    }
+  }
   return current.count > MAX_REQUESTS_PER_WINDOW;
 }
 

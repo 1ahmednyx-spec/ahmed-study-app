@@ -211,7 +211,9 @@ try {
   // Schedule completion, undo, deletion, and persistence should all work.
   await page.evaluate(() => { const row = [...document.querySelectorAll('#upList .item')].find(item => item.textContent.includes('اختبار واجهة المنصة')); const checkbox = row?.querySelector('[data-done]'); if (!checkbox) throw new Error('Scheduled test task checkbox was not found'); checkbox.checked = true; checkbox.dispatchEvent(new Event('change', { bubbles: true })); });
   await page.locator('#doneList').getByText('اختبار واجهة المنصة').waitFor({ state: 'visible' });
+  assert.equal(await page.evaluate(() => JSON.parse(localStorage.getItem('study-v1')).ev.find(item => item.title === 'اختبار واجهة المنصة')?.done), true, 'Schedule completion must persist before reload');
   await page.reload({ waitUntil: 'domcontentloaded' });
+  assert.equal(await page.evaluate(() => JSON.parse(localStorage.getItem('study-v1')).ev.find(item => item.title === 'اختبار واجهة المنصة')?.done), true, 'Schedule completion must survive reload');
   await page.locator('[data-tab="sched"]').click();
   await page.locator('#doneList').getByText('اختبار واجهة المنصة').waitFor({ state: 'visible' });
   await page.evaluate(() => { const row = [...document.querySelectorAll('#doneList .item')].find(item => item.textContent.includes('اختبار واجهة المنصة')); const checkbox = row?.querySelector('[data-done]'); if (!checkbox) throw new Error('Completed test task checkbox was not found'); checkbox.checked = false; checkbox.dispatchEvent(new Event('change', { bubbles: true })); });

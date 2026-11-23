@@ -543,9 +543,9 @@ try {
   await page.locator('[data-tab="pastExamArchive"]').click();
 
   // 2023 Literary History and Geography: four models each, 44 objective questions, weighted to 56 marks.
+  assert.equal(await page.locator('#pastExamArtsModel option').count(), 4, 'History and Geography quiz must offer all four official models');
   await page.locator('#pastExamArtsStart').click();
   assert.equal(await page.locator('#pastExamArtsQuiz [data-arts-answer]').count(), 44, 'History answer sheet must render 44 objective questions');
-  assert.equal(await page.locator('#pastExamArtsModel option').count(), 4, 'History and Geography quiz must offer all four official models');
   await page.locator('#pastExamArtsQuiz [data-arts-answer="0"]').selectOption('أ');
   await page.locator('#pastExamArtsQuiz [data-arts-answer="32"]').selectOption('ج');
   await page.locator('#pastExamArtsSubmit').click();

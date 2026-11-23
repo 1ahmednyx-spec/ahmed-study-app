@@ -934,7 +934,7 @@
           const answered = answers.filter(Boolean).length;
           const score = answers.reduce((sum, answer, index) => sum + (answer === answerKey[index] || answerKey[index].split('|').includes(answer) ? PHYSICS_2023_WEIGHTS[index] : 0), 0);
           const maxScore = PHYSICS_2023_WEIGHTS.reduce((sum, weight) => sum + weight, 0);
-          const correct = answers.reduce((sum, answer, index) => sum + (answer === answerKey[index] ? 1 : 0), 0);
+          const correct = answers.reduce((sum, answer, index) => sum + (answer === answerKey[index] || answerKey[index].split('|').includes(answer) ? 1 : 0), 0);
           const wrong = answered - correct;
           const percent = Math.round(score / maxScore * 100);
           host.innerHTML = '<div class="past-exam-quiz-result"><strong>' + percent + '%</strong><h4>درجتك: ' + score + ' من ' + maxScore + '</h4><p>إجابات صحيحة: ' + correct + ' · خاطئة: ' + wrong + ' · بدون إجابة: ' + (44 - answered) + '</p><p class="hint">هذه نتيجة الأسئلة الموضوعية فقط من 56 درجة. لا تشمل السؤالين المقاليين (45 و46)، والدرجة الكلية الرسمية للمادة 60 درجة.</p><button class="p" type="button" id="pastExamPhysicsRetry">إعادة المحاولة</button></div>' +

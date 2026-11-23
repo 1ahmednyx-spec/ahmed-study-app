@@ -898,7 +898,7 @@
           const answered = answers.filter(Boolean).length;
           const score = answers.reduce((sum, answer, index) => sum + (answer === answerKey[index] ? CHEMISTRY_2023_WEIGHTS[index] : 0), 0);
           const maxScore = CHEMISTRY_2023_WEIGHTS.reduce((sum, weight) => sum + weight, 0);
-          const correct = answers.reduce((sum, answer, index) => sum + (answer === answerKey[index] ? 1 : 0), 0);
+          const correct = answers.reduce((sum, answer, index) => sum + (answer === answerKey[index] || answerKey[index].split('|').includes(answer) ? 1 : 0), 0);
           const wrong = answered - correct;
           const percent = Math.round(score / maxScore * 100);
           host.innerHTML = '<div class="past-exam-quiz-result"><strong>' + percent + '%</strong><h4>درجتك: ' + score + ' من ' + maxScore + '</h4><p>إجابات صحيحة: ' + correct + ' · خاطئة: ' + wrong + ' · بدون إجابة: ' + (44 - answered) + '</p><p class="hint">هذه نتيجة الأسئلة الموضوعية فقط من 56 درجة. لا تشمل السؤالين المقاليين (45 و46)، والدرجة الكلية الرسمية للمادة 60 درجة.</p><button class="p" type="button" id="pastExamChemistryRetry">إعادة المحاولة</button></div>' +
@@ -939,7 +939,7 @@
           const percent = Math.round(score / maxScore * 100);
           host.innerHTML = '<div class="past-exam-quiz-result"><strong>' + percent + '%</strong><h4>درجتك: ' + score + ' من ' + maxScore + '</h4><p>إجابات صحيحة: ' + correct + ' · خاطئة: ' + wrong + ' · بدون إجابة: ' + (44 - answered) + '</p><p class="hint">هذه نتيجة الأسئلة الموضوعية فقط من 56 درجة. لا تشمل السؤالين المقاليين (45 و46)، والدرجة الكلية الرسمية للمادة 60 درجة.</p><button class="p" type="button" id="pastExamPhysicsRetry">إعادة المحاولة</button></div>' +
             '<details class="past-exam-key-review"><summary>مراجعة مفتاح الإجابة الرسمي للنموذج ' + model + '</summary><div class="past-exam-key-grid">' +
-            answerKey.map((answer, index) => '<span class="' + (answers[index] === answer ? 'is-correct' : 'is-wrong') + '">س' + (index + 1) + ': ' + answer + ' (' + PHYSICS_2023_WEIGHTS[index] + ' د)' + (answers[index] ? (answers[index] === answer ? ' ✓' : ' · إجابتك ' + answers[index]) : ' · لم تجب') + '</span>').join('') +
+            answerKey.map((answer, index) => '<span class="' + (answers[index] === answer ? 'is-correct' : 'is-wrong') + '">س' + (index + 1) + ': ' + answer.replace('|', ' أو ') + ' (' + PHYSICS_2023_WEIGHTS[index] + ' د)' + (answers[index] ? (answers[index] === answer ? ' ✓' : ' · إجابتك ' + answers[index]) : ' · لم تجب') + '</span>').join('') +
             '</div></details>';
           host.querySelector('#pastExamPhysicsRetry').addEventListener('click', renderPhysicsInteractiveExam);
         });

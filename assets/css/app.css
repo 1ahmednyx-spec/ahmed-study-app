@@ -190,3 +190,27 @@ body{background:var(--bg);color:var(--ink);font-family:Tajawal,"Segoe UI",Tahoma
 .backup-preview[hidden]{display:none}.backup-summary{font-size:13px;line-height:1.8;overflow-wrap:anywhere}
 .backup-panel #bkWeekly{margin-top:12px}.backup-panel #bkSt{margin-top:8px}
 @media(max-width:520px){.backup-actions>*{width:100%;text-align:center}.backup-file-label{margin-top:0}}
+
+
+/* Past examination archive */
+.past-exam-hero{padding:24px;border-radius:18px;background:linear-gradient(120deg,#071326,#12345D 65%,#1764B5);color:#fff;margin-bottom:14px}
+.past-exam-hero h2{font-size:25px;margin:7px 0}.past-exam-hero p{color:#D5E6FA;margin:0;max-width:760px;line-height:1.8}
+.past-exam-stats{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.past-exam-stats div{min-width:112px;padding:10px 13px;border:1px solid rgba(255,255,255,.2);border-radius:12px;background:rgba(255,255,255,.08)}
+.past-exam-stats strong,.past-exam-stats span{display:block}.past-exam-stats strong{font-size:22px}.past-exam-stats span{font-size:11px;color:#D5E6FA}
+.past-exam-filters{margin-bottom:16px}.past-exam-filter-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.past-exam-results-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:18px 2px 10px}
+.past-exam-results-head h3{font-size:19px;margin:0}.past-exam-integrity{font-size:11px;color:var(--ok);background:rgba(22,160,105,.1);padding:6px 10px;border-radius:30px}
+.past-exam-results{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.past-exam-empty{grid-column:1/-1;padding:34px 18px;text-align:center;border:1px dashed var(--line);border-radius:16px;background:var(--surface)}
+.past-exam-empty>span{font-size:35px}.past-exam-empty h3{font-size:19px;margin:9px 0}.past-exam-empty p{max-width:650px;margin:0 auto;color:var(--muted);font-size:13px;line-height:1.9}.past-exam-empty small{display:block;margin-top:12px;color:var(--brand)}
+.past-exam-card{padding:16px;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+.past-exam-card-top,.past-exam-card-meta{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.past-exam-card-top span{font-size:11px;color:var(--brand)}.past-exam-card-top b{font-size:13px;padding:4px 9px;border-radius:8px;background:var(--bg)}
+.past-exam-card h3{font-size:17px;margin:12px 0 3px}.past-exam-card p{font-size:12px;color:var(--muted)}
+.past-exam-card-meta{padding-top:10px;border-top:1px solid var(--line);font-size:12px}.past-exam-card-meta a,.past-exam-answer{color:var(--brand);font-weight:700;text-decoration:none}
+.past-exam-answer{display:inline-block;margin-top:10px;font-size:12px}
+.past-exam-note{margin-top:16px}.past-exam-note h3{margin-top:0}.past-exam-note ul{padding-inline-start:22px;color:var(--muted);font-size:13px;line-height:1.9}
+.past-exam-note>a{color:var(--brand);font-weight:700}
+@media(max-width:760px){.past-exam-filter-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.past-exam-results{grid-template-columns:1fr}}
+@media(max-width:420px){.past-exam-filter-grid{grid-template-columns:1fr}.past-exam-hero{padding:18px}.past-exam-results-head{align-items:flex-start;flex-direction:column}}

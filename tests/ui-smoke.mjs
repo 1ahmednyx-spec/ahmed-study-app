@@ -112,6 +112,23 @@ try {
   assert.ok(pastExamArchiveSource.includes('${MATH_2023_ANSWER_URL}#page=97'), 'Math archive must link to the official Dynamics paper');
   assert.ok(pastExamArchiveSource.includes('${MATH_2023_ANSWER_URL}#page=112'), 'Math archive must link to the official Calculus paper');
   assert.ok(pastExamArchiveSource.includes('${MATH_2023_ANSWER_URL}#page=127'), 'Math archive must link to the official Algebra and Geometry paper');
+  for (const subject of ['first', 'second']) {
+    const subjectStart = pastExamArchiveSource.indexOf(subject + ': {', pastExamArchiveSource.indexOf('const ENGLISH_2023_KEYS'));
+    assert.ok(subjectStart >= 0, 'English archive must include ' + subject + ' language');
+    const subjectSource = pastExamArchiveSource.slice(subjectStart, subjectStart + 3000);
+    for (const model of ['A', 'B', 'C', 'D']) {
+      const modelStart = subjectSource.indexOf(model + ': [');
+      const modelEnd = subjectSource.indexOf(']', modelStart);
+      assert.ok(modelStart >= 0 && modelEnd > modelStart, 'English archive must include ' + subject + ' model ' + model);
+      const keySource = subjectSource.slice(modelStart, modelEnd + 1);
+      const expectedCount = subject === 'first' ? 34 : 29;
+      assert.equal((keySource.match(/'[^']+'/g) || []).length, expectedCount, subject + ' model ' + model + ' must have ' + expectedCount + ' objective answers');
+    }
+  }
+  assert.ok(pastExamArchiveSource.includes('bablsheet.blob.core.windows.net/examq2023/09.pdf'), 'Second English paper must have a question-paper PDF link');
+  assert.ok(pastExamArchiveSource.includes('English-exam-3secondary.html'), 'First English paper must have an external archive reference');
+  assert.ok(pastExamArchiveSource.includes('scinece-exammodels.pdf#page=8'), 'First English answer key must link to the Ministry PDF');
+  assert.ok(pastExamArchiveSource.includes('scinece-exammodels.pdf#page=28'), 'Second English answer key must link to the Ministry PDF');
   assert.match(pastExamArchiveSource, /44 سؤالًا موضوعيًا/, 'Physics quiz must grade 44 objective questions');
   assert.match(pastExamArchiveSource, /PHYSICS_2023_WEIGHTS/, 'Physics quiz must apply the Ministry mark distribution');
   assert.match(pastExamArchiveSource, /scinece-exammodels\.pdf#page=68/, 'Physics quiz must link to the official Ministry answer-key PDF');
@@ -514,6 +531,26 @@ try {
   assert.equal(await page.locator('#brandName').textContent(), 'Backup Restored');
   await page.locator('[data-tab="sched"]').click();
   await page.locator('#upList').getByText('موعد مستعاد من النسخة').waitFor({ state: 'visible' });
+  // 2023 English first and second foreign languages, all four models.
+  await page.locator('#pastExamEnglishStart').click();
+  assert.equal(await page.locator('#pastExamEnglishQuiz .past-exam-answer-cell').count(), 34, 'First English language must display 34 objective-key rows');
+  assert.equal(await page.locator('#pastExamEnglishQuiz [data-english-answer]').count(), 33, 'First English multi-answer item must be excluded from automatic grading');
+  await page.locator('#pastExamEnglishQuiz [data-english-answer="0"]').selectOption('B');
+  await page.locator('#pastExamEnglishQuiz [data-english-answer="26"]').selectOption('A');
+  await page.locator('#pastExamEnglishSubmit').click();
+  assert.ok((await page.locator('#pastExamEnglishQuiz .past-exam-quiz-result').innerText()).includes('درجتك: 3 من 40'), 'First English language must use weighted objective scoring and exclude the multi-answer item');
+  assert.ok((await page.locator('#pastExamEnglishQuiz .past-exam-quiz-result').innerText()).includes('الأسئلة المقالية من 35 إلى 37'), 'First English result must identify its essay range');
+  assert.equal(await page.locator('#pastExamEnglishQuiz .past-exam-key-review .is-correct').count(), 2, 'First English review must mark correct answers');
+  await page.locator('#pastExamEnglishRetry').click();
+  await page.locator('#pastExamEnglishSubject').selectOption('second');
+  await page.locator('#pastExamEnglishModel').selectOption('D');
+  await page.locator('#pastExamEnglishStart').click();
+  assert.equal(await page.locator('#pastExamEnglishQuiz [data-english-answer]').count(), 29, 'Second English language must render 29 objective questions');
+  await page.locator('#pastExamEnglishQuiz [data-english-answer="0"]').selectOption('C');
+  await page.locator('#pastExamEnglishQuiz [data-english-answer="24"]').selectOption('C');
+  await page.locator('#pastExamEnglishSubmit').click();
+  assert.ok((await page.locator('#pastExamEnglishQuiz .past-exam-quiz-result').innerText()).includes('درجتك: 3 من 34'), 'Second English language must apply 24 one-point and five two-point objective scoring');
+  assert.ok((await page.locator('#pastExamEnglishQuiz .past-exam-quiz-result').innerText()).includes('الأسئلة المقالية من 30 إلى 31'), 'Second English result must identify its essay range');
   await page.locator('[data-tab="notes"]').click();
   await page.locator('#noteList').getByText('ملاحظة مستعادة').waitFor({ state: 'visible' });
 

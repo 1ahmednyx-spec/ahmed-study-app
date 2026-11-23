@@ -316,6 +316,8 @@ try {
   await page.locator('#pastExamPhysicsQuiz [data-physics-answer="23"]').selectOption('ج');
   await page.locator('#pastExamPhysicsSubmit').click();
   assert.ok((await page.locator('#pastExamPhysicsQuiz .past-exam-quiz-result').innerText()).includes('إجابات صحيحة: 3'), 'Physics grading must accept either letter in a combined Ministry answer');
+  assert.ok((await page.locator('#pastExamPhysicsQuiz .past-exam-key-review').innerText()).includes('س24: ب أو ج'), 'Physics review must show combined Ministry answers and accept the selected alternative');
+  assert.equal(await page.locator('#pastExamPhysicsQuiz .past-exam-key-review .is-correct').count(), 3, 'Accepted alternative answers must also be marked correct in the answer review');
   assert.ok((await page.locator('#pastExamPhysicsQuiz .past-exam-quiz-result').innerText()).includes('من 56'), 'Physics result must use the official 56-point objective subtotal');
   assert.ok((await page.locator('#pastExamPhysicsQuiz .past-exam-quiz-result').innerText()).includes('60 درجة'), 'Physics result must disclose that two essay questions are excluded from the automated score');
   await page.locator('[data-tab="notes"]').click();

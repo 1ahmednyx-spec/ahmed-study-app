@@ -1,5 +1,6 @@
 (function(global){
   'use strict';
+  let lessonBank=[];
   function init({state,save,escapeHtml:esc,showAlert}){
     const S=state;
     S.englishPathDone=S.englishPathDone||{};
@@ -23,6 +24,7 @@
       {unit:'07 · Step into intermediate',level:'B1',title:'Present Perfect vs Past Simple',kind:'Grammar',time:'20 min',goal:'التمييز بين تجربة مرتبطة بالحاضر وحدث انتهى في وقت محدد.',explain:'نستخدم Present Perfect عندما نهتم بالتجربة أو النتيجة الحالية أو فترة لم تنتهِ، ولا نذكر عادةً وقتًا ماضيًا محددًا. نستخدم Past Simple مع وقت ماضٍ منتهٍ مثل yesterday أو in 2020.',points:['I have visited Alexandria. (تجربة)','I visited Alexandria last summer. (وقت محدد منتهٍ)','Have you ever tried sushi?','I haven’t finished my homework yet.'],examples:[['She has just arrived.','لقد وصلت للتو.'],['We met in 2022.','تقابلنا في 2022.'],['Have you ever used Linux?','هل سبق أن استخدمت لينكس؟']],mistake:'لا تجمع Present Perfect مع وقت ماضٍ منتهٍ: I have seen him yesterday خطأ.',words:[['ever','في أي وقت من قبل'],['yet','حتى الآن'],['already','بالفعل']],quiz:{q:'I ___ this film yesterday.',options:['have watched','watched','has watched'],answer:1,why:'yesterday وقت ماضٍ منتهٍ، لذا نستخدم Past Simple.'},task:'اكتب جملتين عن تجاربك باستخدام have/has وجملتين عن أحداث في وقت محدد بالماضي.',model:'I have learned several new words. I have used a computer for studying. I watched a lesson yesterday. I practiced speaking last night.'},
       {unit:'07 · Step into intermediate',level:'B1',title:'Conditionals: real situations and possibilities',kind:'Grammar',time:'20 min',goal:'التعبير عن الحقائق والاحتمالات والنتائج المتوقعة.',explain:'Zero Conditional للحقائق العامة: If + present, present. First Conditional لاحتمال مستقبلي حقيقي: If + present, will + infinitive. Second Conditional لخيال أو احتمال ضعيف: If + past, would + infinitive.',points:['If you heat ice, it melts. (حقيقة)','If I study, I will improve. (احتمال حقيقي)','If I had more time, I would read more. (افتراض)'],examples:[['If it rains, we will stay home.','إذا أمطرت، سنبقى في المنزل.'],['If I were you, I would ask the teacher.','لو كنت مكانك، لسألت المعلم.']],mistake:'في First Conditional لا نضع will عادةً بعد if: If I study, I will pass.',words:[['condition','شرط'],['likely','محتمل'],['unless','ما لم']],quiz:{q:'If she studies hard, she ___ the exam.',options:['passes','will pass','would passed'],answer:1,why:'هذه First Conditional: If + present, will + infinitive.'},task:'اكتب مثالًا صحيحًا لكل نوع من الأنواع الثلاثة.',model:'If you mix blue and yellow, you get green. If I practice, I will speak better. If I had a free month, I would travel.'}
     ];
+    lessonBank=lessons;
     let filter='';
     function render(){
       const host=$('#englishPathLessons');if(!host)return;
@@ -55,7 +57,7 @@
     global.englishPathRender=render;
   }
   function getExamQuestions() {
-    return lessons.map((lesson, index) => ({
+    return lessonBank.map((lesson, index) => ({
       id: 'english-path-' + index,
       subjectId: 'englishPath',
       subject: 'الإنجليزية — المسار التعليمي',

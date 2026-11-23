@@ -323,6 +323,20 @@
     "fileLabel": "فتح النموذج الاسترشادي"
   },
 {
+  "id": "2021-june-trial-portal",
+  "year": "2021",
+  "system": "modern",
+  "systemLabel": "نظام الثانوية العامة 2021",
+  "subject": "كل المواد",
+  "type": "model",
+  "typeLabel": "بوابة امتحانات تجريبية رسمية",
+  "fileKind": "portal",
+  "title": "بوابة امتحانات الثانوية العامة التجريبية — يونيو 2021",
+  "round": "تدريب واستعداد — ليست امتحانات الدور النهائي",
+  "pdfUrl": "https://moe.gov.eg/ar/june_test2021_3sec/",
+  "fileLabel": "فتح بوابة الامتحانات التجريبية"
+},
+{
   "id": "2021-history-trial-answer",
   "year": "2021",
   "system": "modern",

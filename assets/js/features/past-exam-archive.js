@@ -915,7 +915,7 @@
         <label for="pastExamSearch">بحث داخل الأرشيف</label>
         <input id="pastExamSearch" type="search" placeholder="ابحث باسم المادة أو السنة أو الدور...">
       </div>
-      <p class="past-exam-note">ملاحظة توثيقية: أوراق الامتحانات الرسمية المباشرة للأعوام 2019 و2021 و2022 لم تُوثق بعد في هذا الأرشيف. ملفات 2020 المتاحة حاليًا نسخ دمج لبعض المواد، وملفات الإجابة والنماذج والبوابات مفصولة عن أوراق الأسئلة.</p>
+      <p class="past-exam-note">ملاحظة توثيقية: المتاح من أوراق الأسئلة الرسمية المباشرة لعام 2019 حاليًا التاريخ والكيمياء فقط، ولم تُستكمل بقية المواد. لم تُوثق بعد أوراق الأسئلة الرسمية المباشرة لعامي 2021 و2022. ملفات 2020 المتاحة حاليًا نسخ دمج لبعض المواد، وملفات الإجابة والنماذج والبوابات مفصولة عن أوراق الأسئلة.</p>
       <div class="past-exam-results-head"><div><h3>الامتحانات والملفات</h3><span id="pastExamCount" class="hint"></span></div><span class="past-exam-integrity">المصدر يُراجع قبل الإضافة</span></div>
       <div id="pastExamResults" class="past-exam-results" aria-live="polite"></div>
       <section class="panel past-exam-interactive" id="pastExamInteractive">

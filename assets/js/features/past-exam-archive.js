@@ -909,6 +909,21 @@
     "pdfUrl": "https://bablsheet.blob.core.windows.net/examq2023/19.pdf",
     "fileLabel": "فتح ورقة الأسئلة",
     "sourceNote": "نسخة مراجعة تحمل بيانات وزارة التربية والتعليم، لكنها مستضافة على خادم خارجي وليس على موقع الوزارة."
+  },
+  {
+    "id": "2023-math-calculus-first-paper-mirror",
+    "year": "2023",
+    "system": "modern",
+    "systemLabel": "النظام الحديث — 2022/2023",
+    "subject": "الرياضيات",
+    "type": "official",
+    "typeLabel": "ورقة امتحان وزارة رسمية — نسخة مراجعة من مصدر خارجي",
+    "fileKind": "paper",
+    "title": "امتحان التفاضل والتكامل — علمي رياضة — الدور الأول 2023 (نسخة مراجعة)",
+    "round": "الدور الأول — 9 يوليو 2023",
+    "pdfUrl": "https://bablsheet.blob.core.windows.net/examq2023/32.pdf",
+    "fileLabel": "فتح ورقة الأسئلة",
+    "sourceNote": "نسخة مراجعة تحمل بيانات وزارة التربية والتعليم، مستضافة على خادم خارجي وليس على موقع الوزارة."
   }
   ];
   const ARABIC_2023_MODEL_B_KEY = [

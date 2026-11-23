@@ -54,5 +54,18 @@
     render();
     global.englishPathRender=render;
   }
-  global.StudyEnglishPath=Object.freeze({init});
+  function getExamQuestions() {
+    return lessons.map((lesson, index) => ({
+      id: 'english-path-' + index,
+      subjectId: 'englishPath',
+      subject: 'الإنجليزية — المسار التعليمي',
+      unit: lesson.unit,
+      lesson: lesson.title,
+      question: lesson.quiz.q,
+      options: lesson.quiz.options.slice(),
+      answer: Number(lesson.quiz.answer),
+      explanation: lesson.quiz.why
+    }));
+  }
+  global.StudyEnglishPath=Object.freeze({init, getExamQuestions});
 })(window);

@@ -10,10 +10,29 @@ $('#closeAlert').onclick=()=>$('#alert').style.display='none';
 
 const {render:renderSched,checkReminders}=window.StudySchedule.init({state:S,save,uid,escapeHtml:esc,showAlert});
 
-/* AI */
-let AI=null;
-(async()=>{try{AI=await claude.use('sample')}catch(e){}})();
-const errMsg=c=>({not_granted:'لازم توافق على استخدام Claude',rate_limited:'الاستخدام كتير، جرّب بعد شوية',sampling_disabled:'الذكاء الاصطناعي غير متاح لحسابك'}[c]||'حصلت مشكلة، جرّب تاني');
+/* AI gateway — the API key stays on the Cloudflare Worker. */
+const AI_ENDPOINT='https://sparkling-disk-d582ahmed-study-ai.1ahmednyx.workers.dev';
+const AI=async(input)=>{
+  const prompt=Array.isArray(input)
+    ? input.map(item=>`${item.role==='assistant'?'المدرّس':'الطالب'}: ${item.content}`).join('\\n\\n')
+    : String(input??'');
+  const response=await fetch(AI_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt})});
+  const data=await response.json().catch(()=>({}));
+  if(!response.ok){const code=data.error|| (response.status===429?'rate_limited':'request_failed');throw {code};}
+  if(typeof data.text!=='string'||!data.text.trim())throw {code:'empty_response'};
+  return {text:data.text.trim(),json:()=>{try{return JSON.parse(data.text)}catch(error){throw {code:'invalid_json'}}}};
+};
+AI.json=async prompt=>{const result=await AI(prompt);return result.json()};
+const errMsg=c=>({
+  rate_limited:'وصلنا للحد المؤقت للاستخدام. انتظر دقيقة ثم جرّب مرة أخرى.',
+  provider_rate_limited:'وصلنا إلى حد Gemini المجاني حاليًا. جرّب لاحقًا.',
+  provider_auth_error:'مفتاح Gemini غير صحيح أو لا يملك صلاحية الاستخدام. راجع السر في Cloudflare.',
+  provider_unavailable:'خدمة الذكاء الاصطناعي غير متاحة مؤقتًا. حاول لاحقًا.',
+  server_not_configured:'لم يتم إعداد مفتاح Gemini داخل Cloudflare بعد.',
+  input_too_large:'الرسالة طويلة جدًا. اختصرها ثم أعد المحاولة.',
+  origin_not_allowed:'هذا الموقع غير مسموح له باستخدام المدرّس.',
+  empty_response:'لم يصل رد من المدرّس. حاول مرة أخرى.'
+}[c]||'تعذر الاتصال بالمدرّس الذكي. تأكد من نشر Worker ثم حاول مرة أخرى.');
 const {render:renderWords}=window.StudyWords.init({
   state:S,save,uid,escapeHtml:esc,
   getAI:()=>AI,

@@ -308,6 +308,20 @@
 }
 ];
 
+  // External-book references only; no copyrighted book files are hosted here.
+  const BOOK_SOURCES = [
+    { id:'arabic-emtehan-2026', subject:'اللغة العربية', book:'كتاب الامتحان — ملحق امتحانات الأعوام السابقة 2026', publisher:'الامتحان', coverage:'امتحانات 2021 و2022 و2023 للشعبتين العلمية والأدبية، الدوران الأول والثاني بحسب وصف الملحق', classification:'امتحانات سابقة بحسب وصف الملحق', sourceUrl:'https://shbabbek.com/show/266322', sourceLabel:'عرض تفاصيل الملحق' },
+    { id:'english-first-gem-2026', subject:'اللغة الأجنبية الأولى', book:'GEM English 2026 — ملحق نماذج الامتحانات', publisher:'GEM', coverage:'16 نموذج امتحان للتدريب؛ لم يثبت أنها امتحانات سنوات سابقة أصلية', classification:'نماذج تدريبية — ليست امتحانات سابقة مؤكدة', sourceUrl:'https://www.myschool77.com/2026/02/gem-english-3rd-secondary-term-2-2026.html', sourceLabel:'عرض تفاصيل الملحق' },
+    { id:'math-moasser-2026', subject:'الرياضيات', book:'المعاصر رياضيات بحتة وتطبيقية 2026', publisher:'المعاصر', coverage:'أسئلة امتحانات مصر والأزهر 2019–2025، الدوران الأول والثاني؛ يلزم فصل أسئلة الأزهر عند الإدخال', classification:'أسئلة سابقة — مصر والأزهر مختلطة', sourceUrl:'https://imthan.com/external-books/المعاصر-رياضيات-بحتة-3-ثانوي-2026-بنك-الأسئلة/', sourceLabel:'عرض تفاصيل الكتاب' },
+    { id:'chemistry-emtehan-2026', subject:'الكيمياء', book:'كتاب الامتحان كيمياء 2026 — الأسئلة والمسائل', publisher:'الامتحان', coverage:'أسئلة امتحانات الأعوام السابقة حتى امتحان الدور الأول 2025، موزعة على الدروس', classification:'أسئلة سابقة مدمجة داخل الدروس', sourceUrl:'https://highacademystore.com/ar/product/detail/358', sourceLabel:'عرض بيانات الكتاب' },
+    { id:'chemistry-mendeleev-2026', subject:'الكيمياء', book:'مندليف كيمياء 2026 — الجزء الثاني', publisher:'مندليف', coverage:'وصف الجزء الثاني يذكر امتحانات الأعوام السابقة والنماذج التجريبية والاسترشادية', classification:'امتحانات سابقة + نماذج تجريبية', sourceUrl:'https://www.sherine-edu.com/mendeleev-chemistry-review-exams/', sourceLabel:'عرض وصف المحتوى' },
+    { id:'physics-tafawok-2026', subject:'الفيزياء', book:'التفوق فيزياء 2026 — بوكليت الامتحانات', publisher:'التفوق', coverage:'امتحانات ثانوية عامة سابقة للدورين الأول والثاني، إضافة إلى التجريبي والاسترشادي', classification:'امتحانات سابقة + نماذج تجريبية', sourceUrl:'https://shbabbek.com/show/269237', sourceLabel:'عرض تفاصيل الكتاب' },
+    { id:'biology-tafawok-2026', subject:'الأحياء', book:'التفوق أحياء 2026 — جزء الامتحانات والنماذج الاسترشادية', publisher:'التفوق', coverage:'25 امتحانًا بحسب وصف قناة التفوق؛ تشمل امتحانات الثانوية العامة والنماذج التجريبية والاسترشادية', classification:'امتحانات سابقة + نماذج رسمية', sourceUrl:'https://www.youtube.com/watch?v=hZ1WAls7mqY', sourceLabel:'عرض شرح محتويات الكتاب' }
+  ];
+  const BOOK_SOURCE_PENDING = [
+    { subject:'اللغة الأجنبية الثانية', note:'لم نعثر بعد على مصدر موثق يحدد امتحانات سنوات سابقة داخل كتاب خارجي بعينه.' }
+  ];
+
   const escapeHTML = value => String(value).replace(/[&<>"']/g, char => ({
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
   })[char]);
@@ -340,6 +354,8 @@
       </div>
       <div class="past-exam-results-head"><div><h3>الامتحانات والملفات</h3><span id="pastExamCount" class="hint"></span></div><span class="past-exam-integrity">المصدر يُراجع قبل الإضافة</span></div>
       <div id="pastExamResults" class="past-exam-results" aria-live="polite"></div>
+      <div class="past-exam-results-head"><div><h3>مراجع الكتب الخارجية</h3><span class="hint">روابط تعريفية لمحتوى الكتب — لا نستضيف نسخًا محمية</span></div></div>
+      <div id="pastExamBookSources" class="past-exam-results"></div>
       <div class="panel past-exam-note">
         <h3>كيف نضمن دقة الأرشيف؟</h3>
         <ul>
@@ -355,6 +371,27 @@
       .map(id => document.getElementById(id));
     controls.forEach(control => control.addEventListener('input', render));
     render();
+    renderBookSources();
+
+    function renderBookSources() {
+      const container = document.getElementById('pastExamBookSources');
+      if (!container) return;
+      const cards = BOOK_SOURCES.map(source => `
+        <article class="past-exam-card">
+          <div class="past-exam-card-top"><span>${escapeHTML(source.publisher)} · ${escapeHTML(source.classification)}</span></div>
+          <h3>${escapeHTML(source.subject)}</h3>
+          <p><strong>${escapeHTML(source.book)}</strong></p>
+          <p>${escapeHTML(source.coverage)}</p>
+          <div class="past-exam-card-meta"><span>مرجع خارجي — طبعة 2026</span><a href="${escapeHTML(source.sourceUrl)}" target="_blank" rel="noopener noreferrer">${escapeHTML(source.sourceLabel)} ↗</a></div>
+        </article>`).join('');
+      const pending = BOOK_SOURCE_PENDING.map(item => `
+        <article class="past-exam-card">
+          <div class="past-exam-card-top"><span>قيد التحقق</span></div>
+          <h3>${escapeHTML(item.subject)}</h3>
+          <p>${escapeHTML(item.note)}</p>
+        </article>`).join('');
+      container.innerHTML = cards + pending;
+    }
 
     function render() {
       const [system, year, subject, type, search] = controls.map(control => control.value.trim().toLowerCase());

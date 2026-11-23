@@ -438,7 +438,9 @@ try {
   assert.equal(Object.keys(savedReview).length, 1, 'A revision rating must be saved in study-v1');
   assert.equal(Object.values(savedReview)[0].lastRating, 'good', 'The selected review rating must persist');
   assert.ok(Object.values(savedReview)[0].due > new Date().toLocaleDateString('en-CA'), 'A successful recall must schedule the next review in the future');
-  await page.locator('#smartReviewRoot [data-review-exit]').click().catch(()=>{});
+  await page.locator('#smartReviewRoot [data-review-exit]').click();
+  await page.locator('[data-tab="home"]').click();
+  await page.locator('#home').waitFor({state:'visible'});
 
   // Mobile layout must fit the viewport without page-level horizontal overflow.
   await page.setViewportSize({ width: 390, height: 844 });

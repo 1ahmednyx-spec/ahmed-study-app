@@ -879,7 +879,37 @@
   const ARABIC_2023_MODEL_A_KEY = [
     'أ','ج','ب','ب','أ','د','ج','ب','أ','د','ج','ب','د','أ','ج','د','ب','أ','ج','ب',
     'ج','ب','ب','أ','د','ج','ب','أ','د','ج','ب','أ','أ','ب','د','ج','أ','ب','ج','ج',
-    'د','ب','ج','أ','د','ب','ج','أ','ج','ب','د'
+    'د','ب','ج','أ','د','ب','ج','أ','ج','ب','د',
+  {
+    "id": "2023-science-chemistry-first-paper-mirror",
+    "year": "2023",
+    "system": "modern",
+    "systemLabel": "النظام الحديث — 2022/2023",
+    "subject": "الكيمياء",
+    "type": "official",
+    "typeLabel": "ورقة امتحان وزارة رسمية — نسخة مراجعة من مصدر خارجي",
+    "fileKind": "paper",
+    "title": "امتحان الكيمياء — الشعبة العلمية — الدور الأول 2023 (نسخة مراجعة)",
+    "round": "الدور الأول — 25 يونيو 2023",
+    "pdfUrl": "https://bablsheet.blob.core.windows.net/examq2023/15.pdf",
+    "fileLabel": "فتح ورقة الأسئلة",
+    "sourceNote": "نسخة مراجعة تحمل بيانات وشعار وزارة التربية والتعليم، لكنها مستضافة على خادم خارجي وليس على موقع الوزارة."
+  },
+  {
+    "id": "2023-science-physics-first-paper-mirror",
+    "year": "2023",
+    "system": "modern",
+    "systemLabel": "النظام الحديث — 2022/2023",
+    "subject": "الفيزياء",
+    "type": "official",
+    "typeLabel": "ورقة امتحان وزارة رسمية — نسخة مراجعة من مصدر خارجي",
+    "fileKind": "paper",
+    "title": "امتحان الفيزياء — الشعبة العلمية — الدور الأول 2023 (نسخة مراجعة)",
+    "round": "الدور الأول — 2 يوليو 2023",
+    "pdfUrl": "https://bablsheet.blob.core.windows.net/examq2023/19.pdf",
+    "fileLabel": "فتح ورقة الأسئلة",
+    "sourceNote": "نسخة مراجعة تحمل بيانات وزارة التربية والتعليم، لكنها مستضافة على خادم خارجي وليس على موقع الوزارة."
+  }
   ];
   const ARABIC_2023_MODEL_B_KEY = [
     'د','ج','ب','أ','ج','ب','د','ج','أ','د','أ','ج','د','أ','ب','ج','أ','د','ب','ج',
@@ -1493,6 +1523,7 @@
           <h3>${escapeHTML(exam.subject)}</h3>
           <p>${escapeHTML(exam.title)} · ${escapeHTML(exam.round)}</p>
           <div class="past-exam-card-meta"><span>${escapeHTML(exam.systemLabel)}</span><a href="${escapeHTML(exam.pdfUrl + (exam.pdfPage ? "#page=" + exam.pdfPage : ""))}" target="_blank" rel="noopener noreferrer">${escapeHTML(exam.fileLabel || "فتح الملف")} ↗</a></div>
+          ${exam.fileKind === 'portal' ? '<small class="past-exam-source-note">هذه صفحة مصدر وليست ملف ورقة أسئلة PDF مباشرًا.</small>' : (exam.sourceNote ? '<small class="past-exam-source-note">' + escapeHTML(exam.sourceNote) + '</small>' : '')}
           ${exam.answerUrl ? `<a class="past-exam-answer" href="${escapeHTML(exam.answerUrl)}" target="_blank" rel="noopener noreferrer">نموذج الإجابة ↗</a>` : ''}
         </article>`).join('');
     }

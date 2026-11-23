@@ -14,7 +14,7 @@ const {render:renderSched,checkReminders}=window.StudySchedule.init({state:S,sav
 const AI_ENDPOINT='https://sparkling-disk-d582ahmed-study-ai.1ahmednyx.workers.dev';
 const AI=async(input)=>{
   const prompt=Array.isArray(input)
-    ? input.map(item=>`${item.role==='assistant'?'المدرّس':item.role==='system'?'تعليمات المدرّس':'الطالب'}: ${item.content}`).join('\\n\\n')
+    ? input.map(item=>`${item.role==='assistant'?'المدرّس':item.role==='system'?'تعليمات المدرّس':'الطالب'}: ${item.content}`).join('\n\n')
     : String(input??'');
   const response=await fetch(AI_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt})});
   const data=await response.json().catch(()=>({}));

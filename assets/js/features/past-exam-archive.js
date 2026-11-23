@@ -856,6 +856,21 @@
         </div>
         <div id="pastExamBiologyQuiz"></div>
       </section>
+      <section class="panel past-exam-interactive" id="pastExamMathInteractive">
+        <div class="past-exam-results-head"><div><h3>امتحانات الرياضيات التفاعلية — الدور الأول 2023</h3><span class="hint">الشعبة العلمية رياضيات · الاستاتيكا · الديناميكا · التفاضل والتكامل · الجبر والهندسة الفراغية</span></div><span class="past-exam-integrity">مفاتيح إجابة رسمية</span></div>
+        <p class="past-exam-interactive-note">اختر فرع المادة والنموذج (أ، ب، ج، د). لكل فرع 18 سؤالًا موضوعيًا: أول 10 أسئلة بدرجة واحدة، وآخر 8 أسئلة بدرجتين. السؤالان المقاليان (19 و20) مستبعدان من التصحيح الآلي. الدرجة الكلية لكل فرع 30 درجة، منها 26 درجة للأسئلة الموضوعية.</p>
+        <div class="past-exam-source-links">
+          <a href="${MATH_2023_ANSWER_URL}#page=82" target="_blank" rel="noopener noreferrer">ورقة الاستاتيكا — صفحة 82 ↗</a>
+          <a href="${MATH_2023_ANSWER_URL}#page=97" target="_blank" rel="noopener noreferrer">ورقة الديناميكا — صفحة 97 ↗</a>
+          <a href="${MATH_2023_ANSWER_URL}#page=112" target="_blank" rel="noopener noreferrer">ورقة التفاضل والتكامل — صفحة 112 ↗</a>
+          <a href="${MATH_2023_ANSWER_URL}#page=127" target="_blank" rel="noopener noreferrer">ورقة الجبر والهندسة الفراغية — صفحة 127 ↗</a>
+          <a href="${MATH_2023_ANSWER_URL}#page=83" target="_blank" rel="noopener noreferrer">مفاتيح إجابة الوزارة — الاستاتيكا ↗</a>
+          <a href="${MATH_2023_ANSWER_URL}#page=98" target="_blank" rel="noopener noreferrer">مفاتيح إجابة الوزارة — الديناميكا ↗</a>
+          <a href="${MATH_2023_ANSWER_URL}#page=113" target="_blank" rel="noopener noreferrer">مفاتيح إجابة الوزارة — التفاضل والتكامل ↗</a>
+          <a href="${MATH_2023_ANSWER_URL}#page=128" target="_blank" rel="noopener noreferrer">مفاتيح إجابة الوزارة — الجبر والهندسة الفراغية ↗</a>
+        </div>
+        <div id="pastExamMathQuiz"></div>
+      </section>
       <div class="past-exam-results-head"><div><h3>مراجع الكتب الخارجية</h3><span class="hint">روابط تعريفية لمحتوى الكتب — لا نستضيف نسخًا محمية</span></div></div>
       <div id="pastExamBookSources" class="past-exam-results"></div>
       <div class="panel past-exam-note">

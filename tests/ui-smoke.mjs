@@ -207,14 +207,18 @@ try {
   await page.locator('[data-tab="pastExamArchive"]').click();
   assert.equal(await page.locator('#pastExamArchiveRoot #pastExamSystem option').count(), 4);
   assert.equal(await page.locator('#pastExamArchiveRoot #pastExamYear option').count(), 9);
-  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 46, 'Archive must render forty-six catalogued resources');
+  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 41, 'Archive must render forty-one in-scope catalogued resources');
   await page.locator('#pastExamYear').selectOption('2020');
-  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 5, 'Year filter must isolate the five catalogued 2020 resources');
+  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 3, 'Year filter must isolate the three in-scope 2020 resources');
   await page.locator('#pastExamYear').selectOption('2023');
-  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 33, 'Year filter must isolate the thirty-three catalogued 2023 resources');
+  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 30, 'Year filter must isolate the thirty in-scope 2023 resources');
   await page.locator('#pastExamYear').selectOption('all');
-  await page.locator('#pastExamSubject').selectOption('علم النفس والاجتماع');
-  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 2, 'Subject filter must return the two correctly classified psychology and sociology resources');
+  const archiveSubjects = await page.locator('#pastExamSubject option').allTextContents();
+  assert.ok(!archiveSubjects.some(subject => /علم النفس|الفلسفة|الاقتصاد|الإحصاء|التربية الوطنية/.test(subject)), 'Subject filter must be limited to the requested core subjects');
+  for (const subject of ['التاريخ', 'الجغرافيا']) {
+    await page.locator('#pastExamSubject').selectOption(subject);
+    assert.ok(await page.locator('#pastExamResults .past-exam-card').count() >= 1, 'Literary core subject must have a verified resource: ' + subject);
+  }
   await page.locator('#pastExamSubject').selectOption('all');
   for (const subject of ['اللغة العربية', 'اللغة الأجنبية الأولى', 'اللغة الأجنبية الثانية', 'الكيمياء', 'الفيزياء', 'الأحياء', 'الرياضيات']) {
     await page.locator('#pastExamYear').selectOption('2023');

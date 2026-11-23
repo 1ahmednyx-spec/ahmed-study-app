@@ -5,12 +5,12 @@
     const P=(t,k)=>{const m=t.match(new RegExp(k+':\\s*([\\s\\S]*?)(?=\\n(?:EN|FIX|WORD):|$)'));return m?m[1].trim():''};
     const rules=()=>`أنت خبير تعليم إنجليزي على أعلى مستوى، بتدرّس لطالب مصري في ثالثة ثانوي. مستواه: ${$('#cLvl').value}. الوضع: ${$('#cMode').selectedOptions[0].text}. الموقف: ${$('#cScn').value}.\nتكلم إنجليزي طبيعي بيستخدمه الناس فعلًا في الحياة اليومية بمستوى يناسبه. رد بالشكل ده بالظبط في 3 أسطر:\nEN: ردك بالإنجليزي في جملتين أو 3 على الأكتر، وفي وضع المحادثة اختم بسؤال يكمل الحوار\nFIX: تصحيح أخطاء آخر رسالة له بالعربي المبسط مع الجملة الصحيحة، أو اكتب ممتاز لو مفيش أخطاء\nWORD: كلمة أو تعبير مفيد من الموقف بالشكل english = المعنى بالعربي\nفي وضع صحّح جملتي: ضع الجملة الصحيحة في EN واشرح السبب في FIX. في وضع اشرح لي قاعدة: اشرح القاعدة بمثال إنجليزي بسيط في EN وبالتفصيل بالعربي في FIX. لو كتب بالعربي سؤالًا عن اللغة جاوبه بنفس الشكل.`;
     function renderChat(){
-      const bot=t=>{const en=P(t,'EN'),fx=P(t,'FIX'),w=P(t,'WORD');return `<div class="b a"><div dir="ltr">${esc(en||t)}</div><div><button class="s" data-say="${esc(en||t)}">🔊 اسمع</button> <button class="s" data-tr="${esc(en||t)}">ترجم</button></div><div class="tr" style="font-size:14px;color:var(--brand)"></div>${fx?`<div class="fx">${esc(fx)}</div>`:''}${w.includes('=')?`<button class="s" data-addw="${esc(w)}">+ ${esc(w)}</button>`:''}</div>`};
+      const bot=t=>{const en=P(t,'EN'),fx=P(t,'FIX'),w=P(t,'WORD');return `<div class="b a"><div dir="auto">${esc(en||t)}</div><div><button class="s" data-say="${esc(en||t)}">🔊 اسمع</button> <button class="s" data-tr="${esc(en||t)}">ترجم</button></div><div class="tr" style="font-size:14px;color:var(--brand)"></div>${fx?`<div class="fx">${esc(fx)}</div>`:''}${w.includes('=')?`<button class="s" data-addw="${esc(w)}">+ ${esc(w)}</button>`:''}</div>`};
       $('#cLog').innerHTML=turns.map(t=>t.role==='user'?`<div class="b u" dir="auto">${esc(t.content)}</div>`:bot(t.content)).join('')||'<div class="empty">اختار الموقف وابعت أول رسالة، حتى لو كلمة Hello</div>';
       $('#cLog').scrollTop=1e9}
     $('#cSend').onclick=async()=>{
       const m=$('#cIn').value.trim();if(!m)return;
-      if(!getAI()){$('#cSt').textContent='ميزة الذكاء الاصطناعي مش متاحة هنا';return}
+      if(!getAI()){$('#cSt').textContent='المدرّس الذكي غير مفعّل';return}
       turns.push({role:'user',content:m});$('#cIn').value='';renderChat();$('#cSt').textContent='الخبير بيكتب…';$('#cSend').disabled=true;
       try{const {text}=await getAI()([{role:'user',content:rules()},...turns],{cache:false});turns.push({role:'assistant',content:text});$('#cSt').textContent='';say(P(text,'EN')||text)}
       catch(e){turns.pop();$('#cIn').value=m;$('#cSt').textContent=errMsg(e.code)}

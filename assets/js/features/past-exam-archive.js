@@ -806,6 +806,15 @@
         </div>
         <div id="pastExamPhysicsQuiz"></div>
       </section>
+      <section class="panel past-exam-interactive" id="pastExamBiologyInteractive">
+        <div class="past-exam-results-head"><div><h3>امتحان الأحياء التفاعلي — الدور الأول 2023</h3><span class="hint">الشعبة العلمية · الأحياء باللغة العربية · النماذج أ، ب، ج، د</span></div><span class="past-exam-integrity">مفتاح إجابة رسمي</span></div>
+        <p class="past-exam-interactive-note">افتح ورقة الأسئلة من صفحة الأرشيف الخارجي، ثم سجّل إجاباتك هنا. التصحيح الآلي يشمل 44 سؤالًا موضوعيًا وفق توزيع الوزارة: 32 سؤالًا بدرجة و12 سؤالًا بدرجتين. السؤالان المقاليان (45 و46) لا يدخلان في التصحيح الآلي.</p>
+        <div class="past-exam-source-links">
+          <a href="${BIOLOGY_2023_QUESTION_URL}" target="_blank" rel="noopener noreferrer">فتح ورقة الامتحان — أرشيف خارجي ↗</a>
+          <a href="${BIOLOGY_2023_ANSWER_URL}" target="_blank" rel="noopener noreferrer">مفتاح الإجابة الرسمي من الوزارة ↗</a>
+        </div>
+        <div id="pastExamBiologyQuiz"></div>
+      </section>
       <div class="past-exam-results-head"><div><h3>مراجع الكتب الخارجية</h3><span class="hint">روابط تعريفية لمحتوى الكتب — لا نستضيف نسخًا محمية</span></div></div>
       <div id="pastExamBookSources" class="past-exam-results"></div>
       <div class="panel past-exam-note">

@@ -217,9 +217,9 @@ try {
   await page.locator('[data-tab="pastExamArchive"]').click();
   assert.equal(await page.locator('#pastExamArchiveRoot #pastExamSystem option').count(), 4);
   assert.equal(await page.locator('#pastExamArchiveRoot #pastExamYear option').count(), 9);
-  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 41, 'Archive must render forty-one in-scope catalogued resources');
+  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 45, 'Archive must render forty-five in-scope catalogued resources');
   await page.locator('#pastExamYear').selectOption('2020');
-  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 3, 'Year filter must isolate the three in-scope 2020 resources');
+  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 7, 'Year filter must isolate the seven in-scope 2020 resources');
   await page.locator('#pastExamYear').selectOption('2023');
   assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 30, 'Year filter must isolate the thirty in-scope 2023 resources');
   await page.locator('#pastExamYear').selectOption('all');

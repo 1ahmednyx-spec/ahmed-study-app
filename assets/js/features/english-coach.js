@@ -3,16 +3,18 @@
     const $=s=>document.querySelector(s);
     let turns=[];
     const P=(t,k)=>{const m=t.match(new RegExp(k+':\\s*([\\s\\S]*?)(?=\\n(?:EN|FIX|WORD):|$)'));return m?m[1].trim():''};
-    const rules=()=>`أنت خبير تعليم إنجليزي على أعلى مستوى، بتدرّس لطالب مصري في ثالثة ثانوي. مستواه: ${$('#cLvl').value}. الوضع: ${$('#cMode').selectedOptions[0].text}. الموقف: ${$('#cScn').value}.\nتكلم إنجليزي طبيعي بيستخدمه الناس فعلًا في الحياة اليومية بمستوى يناسبه. رد بالشكل ده بالظبط في 3 أسطر:\nEN: ردك بالإنجليزي في جملتين أو 3 على الأكتر، وفي وضع المحادثة اختم بسؤال يكمل الحوار\nFIX: تصحيح أخطاء آخر رسالة له بالعربي المبسط مع الجملة الصحيحة، أو اكتب ممتاز لو مفيش أخطاء\nWORD: كلمة أو تعبير مفيد من الموقف بالشكل english = المعنى بالعربي\nفي وضع صحّح جملتي: ضع الجملة الصحيحة في EN واشرح السبب في FIX. في وضع اشرح لي قاعدة: اشرح القاعدة بمثال إنجليزي بسيط في EN وبالتفصيل بالعربي في FIX. لو كتب بالعربي سؤالًا عن اللغة جاوبه بنفس الشكل.`;
+    const rules=()=>{const subject=$('#cSubject').value,mode=$('#cMode').value,english=subject==='اللغة الإنجليزية'||(subject==='عام'&&(mode==='talk'||mode==='fix'));return `أنت المدرّس الذكي الشامل في Ahmed Study Platform. مهمتك تعليم الطالب وفهمه لا مجرد إعطائه الإجابة. المادة الحالية: ${subject}. المستوى: ${$('#cLvl').value}. المطلوب: ${$('#cMode').selectedOptions[0].text}. السياق: ${$('#cScn').value}.
+استخدم العربية المصرية المبسطة في الشرح، واحتفظ بالمصطلحات العلمية والإنجليزية كما هي عند الحاجة. اشرح خطوة بخطوة، واذكر القانون أو القاعدة قبل التطبيق، ثم مثالًا واضحًا. في المسائل الحسابية اعرض التعويض والوحدات والتحقق من الناتج. لا تخترع معلومة أو تنسب شيئًا للمنهج دون دليل؛ إذا كانت بيانات السؤال ناقصة فاطلبها، وإذا لم تكن متأكدًا فصرّح بذلك. لا تعطِ حلًا مختصرًا بلا تفسير. في وضع الاختبار اطرح سؤالًا واحدًا في كل مرة وانتظر إجابة الطالب.
+${english?'عند تدريس الإنجليزية، استخدم الإنجليزية الطبيعية المناسبة للمستوى، وصحح الأخطاء بلطف. اجعل الرد بهذا التنسيق: EN: الجواب أو المثال بالإنجليزية. FIX: التصحيح أو الشرح بالعربية. WORD: تعبير مفيد = معناه بالعربية.':'في المواد الأخرى، أجب مباشرة بتنسيق واضح وعناوين وخطوات عند الحاجة، ولا تستخدم قالب EN/FIX/WORD.'}`};
     function renderChat(){
-      const bot=t=>{const en=P(t,'EN'),fx=P(t,'FIX'),w=P(t,'WORD');return `<div class="b a"><div dir="ltr">${esc(en||t)}</div><div><button class="s" data-say="${esc(en||t)}">🔊 اسمع</button> <button class="s" data-tr="${esc(en||t)}">ترجم</button></div><div class="tr" style="font-size:14px;color:var(--brand)"></div>${fx?`<div class="fx">${esc(fx)}</div>`:''}${w.includes('=')?`<button class="s" data-addw="${esc(w)}">+ ${esc(w)}</button>`:''}</div>`};
+      const bot=t=>{const en=P(t,'EN'),fx=P(t,'FIX'),w=P(t,'WORD');return `<div class="b a"><div dir="auto">${esc(en||t)}</div><div><button class="s" data-say="${esc(en||t)}">🔊 اسمع</button> <button class="s" data-tr="${esc(en||t)}">ترجم</button></div><div class="tr" style="font-size:14px;color:var(--brand)"></div>${fx?`<div class="fx">${esc(fx)}</div>`:''}${w.includes('=')?`<button class="s" data-addw="${esc(w)}">+ ${esc(w)}</button>`:''}</div>`};
       $('#cLog').innerHTML=turns.map(t=>t.role==='user'?`<div class="b u" dir="auto">${esc(t.content)}</div>`:bot(t.content)).join('')||'<div class="empty">اختار الموقف وابعت أول رسالة، حتى لو كلمة Hello</div>';
       $('#cLog').scrollTop=1e9}
     $('#cSend').onclick=async()=>{
       const m=$('#cIn').value.trim();if(!m)return;
-      if(!getAI()){$('#cSt').textContent='ميزة الذكاء الاصطناعي مش متاحة هنا';return}
-      turns.push({role:'user',content:m});$('#cIn').value='';renderChat();$('#cSt').textContent='الخبير بيكتب…';$('#cSend').disabled=true;
-      try{const {text}=await getAI()([{role:'user',content:rules()},...turns],{cache:false});turns.push({role:'assistant',content:text});$('#cSt').textContent='';say(P(text,'EN')||text)}
+      if(!getAI()){$('#cSt').textContent='المدرّس الذكي غير مفعّل';return}
+      turns.push({role:'user',content:m});$('#cIn').value='';renderChat();$('#cSt').textContent='المدرّس بيجهّز الإجابة…';$('#cSend').disabled=true;
+      try{const {text}=await getAI()([{role:'system',content:rules()},...turns],{cache:false});turns.push({role:'assistant',content:text});$('#cSt').textContent='';say(P(text,'EN')||text)}
       catch(e){turns.pop();$('#cIn').value=m;$('#cSt').textContent=errMsg(e.code)}
       $('#cSend').disabled=false;while(turns.length>12)turns.splice(0,2);renderChat()};
     $('#cClr').onclick=()=>{turns=[];renderChat()};
@@ -25,12 +27,6 @@
         if(!getAI()){box.textContent='ميزة الذكاء الاصطناعي مش متاحة';return}
         box.textContent='جاري الترجمة…';
         try{box.textContent=(await getAI()('ترجم النص ده للعربية المصرية المبسطة، وارجع الترجمة بس:\n'+t)).text}catch(x){box.textContent=errMsg(x.code)}}});
-    (async()=>{try{const d=await claude.use('dictation');if(!d)return;DICT=d;dictInit();return;let base='',on=false;const b=null;
-      d.onPartial(({text})=>{$('#cIn').value=(base+' '+text).trim()});
-      d.onFinal(({text})=>{base=($('#cIn').value=(base+' '+text).trim())});
-      d.onState(({state})=>{on=state==='listening';b.textContent=on?'⏹ وقّف':'🎤 اتكلم'});
-      b.onclick=()=>{if(on){d.stop();return}base=$('#cIn').value.trim();d.start().catch(()=>showAlert('لازم تسمح باستخدام الميكروفون'))}}catch(e){}})();
-    
     /* Voice conversation */
     let DICT=null,listening=false,rec=null;
     const micBtn=$('#cMic');micBtn.hidden=false;

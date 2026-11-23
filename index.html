@@ -39,7 +39,7 @@
       <button type="button" role="tab" aria-selected="false" data-tab="physics2027"><span>ف</span> فيزياء 2027</button>
       <button type="button" role="tab" aria-selected="false" data-tab="chemistry2027"><span>ك</span> كيمياء 2027</button>
       <button type="button" role="tab" aria-selected="false" data-tab="arabic2027"><span>ع</span> عربي 2027</button>
-      <button type="button" role="tab" aria-selected="false" data-tab="chat"><span>✦</span> خبير الإنجليزي</button>
+      <button type="button" role="tab" aria-selected="false" data-tab="chat"><span>✦</span> المدرّس الذكي</button>
       <button type="button" role="tab" aria-selected="false" data-tab="examCenter"><span>✎</span> مركز الاختبارات</button>
       <button type="button" role="tab" aria-selected="false" data-tab="reviewCenter"><span>↻</span> المراجعة الذكية</button>
       <button type="button" role="tab" aria-selected="false" data-tab="prac"><span>✓</span> التدريب والخطة</button>
@@ -71,7 +71,7 @@
           <button type="button" data-go-tab="chemistry2027"><span>ك</span><b>كيمياء 2027</b><small>افتح مساحة الكيمياء للكتاب والوحدات والتدريبات</small></button>
           <button type="button" data-go-tab="arabic2027"><span>ع</span><b>عربي 2027</b><small>افتح مساحة اللغة العربية للكتاب والوحدات والتدريبات</small></button>
           <button type="button" data-go-tab="eng"><span>文</span><b>قاموس الكلمات</b><small>راجع مفرداتك ببطاقات تفاعلية</small></button>
-          <button type="button" data-go-tab="chat"><span>✦</span><b>خبير الإنجليزي</b><small>تدرّب على المحادثة والتصحيح</small></button>
+          <button type="button" data-go-tab="chat"><span>✦</span><b>المدرّس الذكي</b><small>شرح وحل وتدريب في جميع المواد</small></button>
           <button type="button" data-go-tab="tools"><span>⚙</span><b>أدوات المذاكرة</b><small>كراسة الأخطاء والتركيز والنسخ الاحتياطي</small></button>
         </div></div>
       </div>
@@ -117,8 +117,9 @@
 <section id="chat" hidden>
   <div class="panel">
     <div class="row">
-      <div><label for="cMode">الوضع</label><select id="cMode"><option value="talk">محادثة يومية</option><option value="fix">صحّح جملتي</option><option value="rule">اشرح لي قاعدة</option></select></div>
-      <div><label for="cScn">الموقف</label><select id="cScn"><option>مع صديق جديد</option><option>في المطعم</option><option>في المطار</option><option>عند الطبيب</option><option>في المتجر</option><option>في الفندق</option><option>مقابلة شخصية</option><option>طلب مساعدة في الشارع</option><option>الدراسة والجامعة</option></select></div>
+      <div><label for="cSubject">المادة</label><select id="cSubject"><option>عام</option><option>اللغة العربية</option><option>اللغة الإنجليزية</option><option>الرياضيات</option><option>الفيزياء</option><option>الكيمياء</option><option>الأحياء</option></select></div>
+      <div><label for="cMode">الوضع</label><select id="cMode"><option value="explain">اشرح درسًا</option><option value="solve">حل سؤال خطوة بخطوة</option><option value="quiz">اختبرني</option><option value="talk">محادثة إنجليزية</option><option value="fix">صحّح إجابتي</option></select></div>
+      <div><label for="cScn">السياق أو الموقف</label><select id="cScn"><option>مع صديق جديد</option><option>في المطعم</option><option>في المطار</option><option>عند الطبيب</option><option>في المتجر</option><option>في الفندق</option><option>مقابلة شخصية</option><option>طلب مساعدة في الشارع</option><option>الدراسة والجامعة</option></select></div>
       <div><label for="cLvl">مستواك</label><select id="cLvl"><option>مبتدئ</option><option selected>متوسط</option><option>متقدم</option></select></div>
     </div>
     <div class="row" style="align-items:center"><label style="display:flex;gap:6px;align-items:center;margin:0"><input type="checkbox" id="cAuto" checked style="width:auto">رد صوتي وإرسال تلقائي</label><select id="cLang"><option value="en-US">أتكلم إنجليزي</option><option value="ar-EG">أتكلم عربي</option></select></div>

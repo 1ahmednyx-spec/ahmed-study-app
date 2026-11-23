@@ -88,7 +88,8 @@ try {
   assert.equal(await page.evaluate(() => typeof window.StudySubjectCourses?.init), 'function', 'Subject courses module must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.StudyExamCenter?.init), 'function', 'Exam center module must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.StudyMinistryLibrary?.init), 'function', 'Ministry library module must expose its initializer');
-  assert.equal(await page.evaluate(() => typeof window.ecRender), 'function', 'English course renderer must be available to tab navigation');
+  assert.equal(await page.evaluate(() => typeof window.ecRender), 'function', `English course renderer must be available to tab navigation; browser errors: ${pageErrors.join('; ')}`);
+  assert.equal(await page.locator('#cSubject option').count(), 7, 'Universal tutor must offer all supported subjects');
   assert.equal(await page.evaluate(() => typeof window.StudyEnglishCoach?.init), 'function', 'English coach module must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.StudyPreferences?.init), 'function', 'Preferences module must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.StudySchedule?.init), 'function', 'Schedule module must expose its initializer');
@@ -271,11 +272,16 @@ try {
   await page.locator('#ecQuizStart').click();
   assert.equal(await page.locator('#ecQuizBox .course-question').count(), 5, 'English course quiz should generate five questions');
 
-  // English conversation helper should show a clear static-host AI fallback.
+  // Universal tutor should report a clear gateway error when the Worker is not deployed.
+  await page.route('https://sparkling-disk-disk-d582ahmed-study-ai.1ahmednyx.workers.dev/**', route =>
+    route.fulfill({ status: 503, contentType: 'application/json', body: JSON.stringify({ error: 'server_not_configured' }) })
+  );
   await page.locator('[data-tab="chat"]').click();
-  await page.locator('#cIn').fill('Hello, how are you?');
+  await page.locator('#cSubject').selectOption('الفيزياء');
+  await page.locator('#cMode').selectOption('explain');
+  await page.locator('#cIn').fill('اشرح قانون نيوتن الثاني');
   await page.locator('#cSend').click();
-  await page.locator('#cSt').getByText('مش متاحة هنا').waitFor({ state: 'visible' });
+  await page.locator('#cSt').getByText('لم يتم إعداد مفتاح Gemini').waitFor({ state: 'visible' });
 
   // Practice tracking should validate answers, persist a valid session, and update the weekly goal.
   await page.locator('[data-tab="prac"]').click();
@@ -292,9 +298,9 @@ try {
   await page.locator('#goalSt').getByText('من 30 سؤال').waitFor({ state: 'visible' });
   await page.locator('#qT').fill('درس تجريبي');
   await page.locator('#qBtn').click();
-  await page.locator('#qSt').getByText('مش متاحة هنا').waitFor({ state: 'visible' });
+  await page.locator('#qSt').getByText('لم يتم إعداد مفتاح Gemini').waitFor({ state: 'visible' });
   await page.locator('#plBtn').click();
-  await page.locator('#plSt').getByText('مش متاحة هنا').waitFor({ state: 'visible' });
+  await page.locator('#plSt').getByText('لم يتم إعداد مفتاح Gemini').waitFor({ state: 'visible' });
 
   // A newly recorded mistake must remain visible even when its spaced-review date is in the future.
   await page.locator('[data-tab="tools"]').click();
@@ -315,7 +321,7 @@ try {
   await page.locator('#aT').fill('A short lesson about photosynthesis.');
   await page.locator('#aQ').fill('Explain photosynthesis.');
   await page.locator('#aGo').click();
-  await page.locator('#aSt').getByText('غير مفعّل').waitFor({ state: 'visible' });
+  await page.locator('#aSt').getByText('لم يتم إعداد مفتاح Gemini').waitFor({ state: 'visible' });
 
   // Invalid backup files must be rejected without replacing the current study data.
   await page.locator('#bkIn').setInputFiles({

@@ -708,6 +708,16 @@
   const CHEMISTRY_2023_QUESTION_URL = 'https://www.mediafire.com/file/8pkihbdzjfy1y1r/%25D8%25A7%25D9%2585%25D8%25AA%25D8%25AD%25D8%25A7%25D9%2586_%25D8%25A7%25D9%2584%25D9%2583%25D9%258A%25D9%2585%25D9%258A%25D8%25A7%25D8%25A1_%25D8%25A8%25D8%25A7%25D9%2584%25D8%25A7%25D8%25AC%25D8%25A7%25D8%25A8%25D8%25A7%25D8%25AA_%25D9%2584%25D9%2584%25D8%25AB%25D8%25A7%25D9%2586%25D9%2588%25D9%258A%25D8%25A9_%25D8%25A7%25D9%2584%25D8%25B9%25D8%25A7%25D9%2585%25D8%25A9_%25D8%25A7%25D9%2584%25D8%25AF%25D9%2588%25D8%25B1_%25D8%25A7%25D9%2584%25D8%25A3%25D9%2588%25D9%2584_2023_%25D9%2585.pdf/file';
   const CHEMISTRY_2023_ANSWER_URL = 'https://moe.gov.eg/media/evqfv1il/scinece-exammodels.pdf#page=53';
   const CHEMISTRY_2023_WEIGHTS = Array.from({ length: 44 }, (_, index) => index < 32 ? 1 : 2);
+
+  // Physics 2023 Arabic answer keys transcribed from the Ministry's official grading PDF (pages 68–71).
+  const PHYSICS_2023_MODEL_A_KEY = ['د','أ','ج','د','ب','أ','د','ب','ج','أ','د','أ','ج','ب','أ','أ','د','ب','ب','ج','ب','أ','جميع الإجابات صحيحة','ب، ج','ج','ب','ج','ج','ب','أ','د','ب','ج','أ','د','أ','ب','د','ج','أ','ج','ب','أ','د'];
+  const PHYSICS_2023_MODEL_B_KEY = ['ب','أ','د','ب','ج','أ','ب','ج','ج','ب','ب','ج','ب','أ','د','ب','ب، ج','ج','د','أ','ج','ب','أ','أ','د','د','أ','ج','د','ب','أ','جميع الإجابات صحيحة','أ','ب','د','ج','أ','د','ب','أ','د','ج','أ','ج'];
+  const PHYSICS_2023_MODEL_C_KEY = ['د','أ','ج','ب','أ','أ','د','ب','أ','جميع الإجابات صحيحة','د','أ','ج','د','ب','أ','د','ب','ج','أ','ب','أ','د','ب','ب','ج','ج','ب','ب','ج','ب، ج','ج','ج','أ','ج','ب','أ','د','أ','ب','د','ج','أ','د'];
+  const PHYSICS_2023_MODEL_D_KEY = ['ب','ب','ج','ب، ج','ج','د','أ','ج','ب','أ','أ','د','ب','أ','جميع الإجابات صحيحة','ب','ج','ج','ب','أ','د','ب','ج','أ','ب','أ','د','ب','د','أ','ج','د','ب','أ','د','ج','أ','د','ج','أ','ج','أ','ب','د'];
+  const PHYSICS_2023_MODEL_KEYS = { أ: PHYSICS_2023_MODEL_A_KEY, ب: PHYSICS_2023_MODEL_B_KEY, ج: PHYSICS_2023_MODEL_C_KEY, د: PHYSICS_2023_MODEL_D_KEY };
+  const PHYSICS_2023_QUESTION_URL = 'https://www.ta3lemkonline.com/2023/08/2023_32.html';
+  const PHYSICS_2023_ANSWER_URL = 'https://moe.gov.eg/media/evqfv1il/scinece-exammodels.pdf#page=68';
+  const PHYSICS_2023_WEIGHTS = Array.from({ length: 44 }, (_, index) => index < 32 ? 1 : 2);
   const ARABIC_2023_PAPER_URL = 'https://drive.google.com/file/d/1Xdhd5Y8WgYdk9LoSfLjN0ktpgahl5tZr/view?usp=drivesdk';
   const ARABIC_2023_ANSWER_URL = 'https://moe.gov.eg/media/xmhd3sow/arts-answermodels.pdf#page=4';
 
@@ -778,6 +788,15 @@
         </div>
         <div id="pastExamChemistryQuiz"></div>
       </section>
+      <section class="panel past-exam-interactive" id="pastExamPhysicsInteractive">
+        <div class="past-exam-results-head"><div><h3>امتحان الفيزياء التفاعلي — الدور الأول 2023</h3><span class="hint">الشعبة العلمية · الفيزياء باللغة العربية · النماذج أ، ب، ج، د</span></div><span class="past-exam-integrity">مفتاح إجابة رسمي</span></div>
+        <p class="past-exam-interactive-note">افتح صفحة الامتحان لتحميل ورقة الأسئلة، ثم سجّل إجاباتك هنا. التصحيح الآلي يشمل 44 سؤالًا موضوعيًا وفق توزيع الوزارة: 32 سؤالًا بدرجة و12 سؤالًا بدرجتين. السؤالان المقاليان (45 و46) لا يدخلان في التصحيح الآلي. بعض مفاتيح الوزارة تتضمن إجابة مركبة أو «جميع الإجابات صحيحة»، وقد أُدرجت كما وردت في المفتاح.</p>
+        <div class="past-exam-source-links">
+          <a href="${PHYSICS_2023_QUESTION_URL}" target="_blank" rel="noopener noreferrer">صفحة الامتحان وتحميل ورقة الأسئلة ↗</a>
+          <a href="${PHYSICS_2023_ANSWER_URL}" target="_blank" rel="noopener noreferrer">مفتاح الإجابة الرسمي من الوزارة ↗</a>
+        </div>
+        <div id="pastExamPhysicsQuiz"></div>
+      </section>
       <div class="past-exam-results-head"><div><h3>مراجع الكتب الخارجية</h3><span class="hint">روابط تعريفية لمحتوى الكتب — لا نستضيف نسخًا محمية</span></div></div>
       <div id="pastExamBookSources" class="past-exam-results"></div>
       <div class="panel past-exam-note">
@@ -798,6 +817,7 @@
     renderBookSources();
     renderArabicInteractiveExam();
     renderChemistryInteractiveExam();
+    renderPhysicsInteractiveExam();
 
     function renderBookSources() {
       const container = document.getElementById('pastExamBookSources');
@@ -886,6 +906,42 @@
             answerKey.map((answer, index) => '<span class="' + (answers[index] === answer ? 'is-correct' : 'is-wrong') + '">س' + (index + 1) + ': ' + answer + ' (' + CHEMISTRY_2023_WEIGHTS[index] + ' د)' + (answers[index] ? (answers[index] === answer ? ' ✓' : ' · إجابتك ' + answers[index]) : ' · لم تجب') + '</span>').join('') +
             '</div></details>';
           host.querySelector('#pastExamChemistryRetry').addEventListener('click', renderChemistryInteractiveExam);
+        });
+      });
+    }
+
+    function renderPhysicsInteractiveExam() {
+      const host = document.getElementById('pastExamPhysicsQuiz');
+      if (!host) return;
+      host.innerHTML = '<label class="past-exam-model-picker">اختر نموذج الامتحان: <select id="pastExamPhysicsModel"><option value="أ">النموذج أ</option><option value="ب">النموذج ب</option><option value="ج">النموذج ج</option><option value="د">النموذج د</option></select></label><button class="p past-exam-quiz-start" type="button" id="pastExamPhysicsStart">ابدأ تسجيل الإجابات</button><p class="hint">44 سؤالًا موضوعيًا · الدرجة القصوى للأسئلة الموضوعية 56 · مفاتيح النماذج الأربعة من الوزارة</p>';
+      host.querySelector('#pastExamPhysicsStart').addEventListener('click', () => {
+        const model = host.querySelector('#pastExamPhysicsModel').value;
+        const answerKey = PHYSICS_2023_MODEL_KEYS[model];
+        const choices = ['أ','ب','ج','د','ب، ج','جميع الإجابات صحيحة'];
+        host.innerHTML = '<div class="past-exam-quiz-toolbar"><b>ورقة إجابة الفيزياء — النموذج ' + model + '</b><span id="pastExamPhysicsProgress">تمت الإجابة عن 0 من 44</span></div>' +
+          '<div class="past-exam-answer-grid">' + answerKey.map((_, index) =>
+            '<label class="past-exam-answer-cell"><span>سؤال ' + (index + 1) + (PHYSICS_2023_WEIGHTS[index] === 2 ? ' · درجتان' : ' · درجة') + '</span><select aria-label="إجابة السؤال ' + (index + 1) + '" data-physics-answer="' + index + '"><option value="">—</option>' +
+            choices.map(choice => '<option value="' + choice + '">' + choice + '</option>').join('') + '</select></label>'
+          ).join('') + '</div><button class="p past-exam-quiz-submit" type="button" id="pastExamPhysicsSubmit">تصحيح الإجابات</button>';
+        const selects = Array.from(host.querySelectorAll('[data-physics-answer]'));
+        const updateProgress = () => {
+          const count = selects.filter(select => select.value).length;
+          host.querySelector('#pastExamPhysicsProgress').textContent = 'تمت الإجابة عن ' + count + ' من 44';
+        };
+        selects.forEach(select => select.addEventListener('change', updateProgress));
+        host.querySelector('#pastExamPhysicsSubmit').addEventListener('click', () => {
+          const answers = selects.map(select => select.value);
+          const answered = answers.filter(Boolean).length;
+          const score = answers.reduce((sum, answer, index) => sum + (answer === answerKey[index] ? PHYSICS_2023_WEIGHTS[index] : 0), 0);
+          const maxScore = PHYSICS_2023_WEIGHTS.reduce((sum, weight) => sum + weight, 0);
+          const correct = answers.reduce((sum, answer, index) => sum + (answer === answerKey[index] ? 1 : 0), 0);
+          const wrong = answered - correct;
+          const percent = Math.round(score / maxScore * 100);
+          host.innerHTML = '<div class="past-exam-quiz-result"><strong>' + percent + '%</strong><h4>درجتك: ' + score + ' من ' + maxScore + '</h4><p>إجابات صحيحة: ' + correct + ' · خاطئة: ' + wrong + ' · بدون إجابة: ' + (44 - answered) + '</p><p class="hint">هذه نتيجة الأسئلة الموضوعية فقط من 56 درجة. لا تشمل السؤالين المقاليين (45 و46)، والدرجة الكلية الرسمية للمادة 60 درجة.</p><button class="p" type="button" id="pastExamPhysicsRetry">إعادة المحاولة</button></div>' +
+            '<details class="past-exam-key-review"><summary>مراجعة مفتاح الإجابة الرسمي للنموذج ' + model + '</summary><div class="past-exam-key-grid">' +
+            answerKey.map((answer, index) => '<span class="' + (answers[index] === answer ? 'is-correct' : 'is-wrong') + '">س' + (index + 1) + ': ' + answer + ' (' + PHYSICS_2023_WEIGHTS[index] + ' د)' + (answers[index] ? (answers[index] === answer ? ' ✓' : ' · إجابتك ' + answers[index]) : ' · لم تجب') + '</span>').join('') +
+            '</div></details>';
+          host.querySelector('#pastExamPhysicsRetry').addEventListener('click', renderPhysicsInteractiveExam);
         });
       });
     }

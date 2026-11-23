@@ -27,24 +27,24 @@
   <aside class="sidebar" aria-label="التنقل الرئيسي">
     <div class="sidebar-label">مساحة الطالب</div>
     <nav class="tabs" role="tablist" aria-label="أقسام المنصة">
-      <button type="button" role="tab" aria-selected="true" data-tab="home"><span>⌂</span> الرئيسية</button>
-      <button type="button" role="tab" aria-selected="false" data-tab="sched"><span>▦</span> جدول المذاكرة</button>
-      <button type="button" role="tab" aria-selected="false" data-tab="notes"><span>▤</span> الملخصات</button>
-      <button type="button" role="tab" aria-selected="false" data-tab="eng"><span>文</span> قاموس الكلمات</button>
-      <button type="button" role="tab" aria-selected="false" data-tab="library"><span>📚</span> مكتبة الوزارة</button>
-      <button type="button" role="tab" aria-selected="false" data-tab="english2027"><span>EN</span> إنجليزي 2027</button>
-      <button type="button" role="tab" aria-selected="false" data-tab="englishPath"><span>✦</span> تعلم الإنجليزية</button>
-      <button type="button" role="tab" aria-selected="false" data-tab="biology2027"><span>أ</span> أحياء 2027</button>
-      <button type="button" role="tab" aria-selected="false" data-tab="math2027"><span>ر</span> رياضيات 2027</button>
-      <button type="button" role="tab" aria-selected="false" data-tab="physics2027"><span>ف</span> فيزياء 2027</button>
-      <button type="button" role="tab" aria-selected="false" data-tab="chemistry2027"><span>ك</span> كيمياء 2027</button>
-      <button type="button" role="tab" aria-selected="false" data-tab="arabic2027"><span>ع</span> عربي 2027</button>
-      <button type="button" role="tab" aria-selected="false" data-tab="chat"><span>✦</span> خبير الإنجليزي</button>
-      <button type="button" role="tab" aria-selected="false" data-tab="examCenter"><span>✎</span> مركز الاختبارات</button>
-      <button type="button" role="tab" aria-selected="false" data-tab="pastExamArchive"><span>📚</span> أرشيف الامتحانات السابقة</button>
-      <button type="button" role="tab" aria-selected="false" data-tab="reviewCenter"><span>↻</span> المراجعة الذكية</button>
-      <button type="button" role="tab" aria-selected="false" data-tab="prac"><span>✓</span> التدريب والخطة</button>
-      <button type="button" role="tab" aria-selected="false" data-tab="tools"><span>⚙</span> أدوات المذاكرة</button>
+      <button type="button" role="tab" aria-selected="true" data-tab="home"><span aria-hidden="true">🏠</span> الرئيسية</button>
+      <button type="button" role="tab" aria-selected="false" data-tab="sched"><span aria-hidden="true">🗓️</span> جدول المذاكرة</button>
+      <button type="button" role="tab" aria-selected="false" data-tab="notes"><span aria-hidden="true">📝</span> الملخصات</button>
+      <button type="button" role="tab" aria-selected="false" data-tab="eng"><span aria-hidden="true">🔤</span> قاموس الكلمات</button>
+      <button type="button" role="tab" aria-selected="false" data-tab="library"><span aria-hidden="true">📚</span> مكتبة الوزارة</button>
+      <button type="button" role="tab" aria-selected="false" data-tab="english2027"><span aria-hidden="true">🇬🇧</span> إنجليزي 2027</button>
+      <button type="button" role="tab" aria-selected="false" data-tab="englishPath"><span aria-hidden="true">🌍</span> تعلم الإنجليزية</button>
+      <button type="button" role="tab" aria-selected="false" data-tab="biology2027"><span aria-hidden="true">🧬</span> أحياء 2027</button>
+      <button type="button" role="tab" aria-selected="false" data-tab="math2027"><span aria-hidden="true">📐</span> رياضيات 2027</button>
+      <button type="button" role="tab" aria-selected="false" data-tab="physics2027"><span aria-hidden="true">⚛️</span> فيزياء 2027</button>
+      <button type="button" role="tab" aria-selected="false" data-tab="chemistry2027"><span aria-hidden="true">🧪</span> كيمياء 2027</button>
+      <button type="button" role="tab" aria-selected="false" data-tab="arabic2027"><span aria-hidden="true">📖</span> عربي 2027</button>
+      <button type="button" role="tab" aria-selected="false" data-tab="chat"><span aria-hidden="true">💬</span> خبير الإنجليزي</button>
+      <button type="button" role="tab" aria-selected="false" data-tab="examCenter"><span aria-hidden="true">✍️</span> مركز الاختبارات</button>
+      <button type="button" role="tab" aria-selected="false" data-tab="pastExamArchive"><span aria-hidden="true">🗂️</span> أرشيف الامتحانات السابقة</button>
+      <button type="button" role="tab" aria-selected="false" data-tab="reviewCenter"><span aria-hidden="true">🔄</span> المراجعة الذكية</button>
+      <button type="button" role="tab" aria-selected="false" data-tab="prac"><span aria-hidden="true">🎯</span> التدريب والخطة</button>
+      <button type="button" role="tab" aria-selected="false" data-tab="tools"><span aria-hidden="true">🛠️</span> أدوات المذاكرة</button>
     </nav>
     <div class="sidebar-footer"><span>Learn.</span> Practice. Achieve.</div>
   </aside>
@@ -60,20 +60,20 @@
       <div class="dashboard-grid">
         <div class="hero" aria-live="polite"><small>الموعد القادم</small><div class="t" id="nextT">لا توجد مواعيد قادمة</div><div class="c" id="nextC"></div><button type="button" class="hero-action" data-go-tab="sched">إدارة جدول المذاكرة <span>←</span></button></div>
         <div class="dashboard-panel"><div class="section-heading"><div><span class="eyebrow">QUICK ACCESS</span><h2>وصول سريع</h2></div></div><div class="quick-links">
-          <button type="button" data-go-tab="notes"><span>▤</span><b>ملخصاتي</b><small>احفظ وراجع ملخصات الدروس</small></button>
-          <button type="button" data-go-tab="prac"><span>✓</span><b>التدريب والخطة</b><small>سجّل حل الأسئلة ونظّم أسبوعك</small></button>
-          <button type="button" data-go-tab="reviewCenter"><span>↻</span><b>المراجعة الذكية</b><small>راجع كلماتك وأخطاءك والدروس المكتملة</small></button>
-          <button type="button" data-go-tab="library"><span>📚</span><b>مكتبة الوزارة</b><small>كتب الصف الثالث الثانوي حسب المادة</small></button>
-          <button type="button" data-go-tab="english2027"><span>EN</span><b>إنجليزي 2027</b><small>تابع وحدات ومراجعة الإنجليزية</small></button>
-          <button type="button" data-go-tab="englishPath"><span>✦</span><b>تعلم الإنجليزية</b><small>مسار مستقل من الأساسيات إلى المتوسط</small></button>
-          <button type="button" data-go-tab="biology2027"><span>أ</span><b>أحياء 2027</b><small>افتح مساحة الأحياء للكتاب والوحدات والتدريبات</small></button>
-          <button type="button" data-go-tab="math2027"><span>ر</span><b>رياضيات 2027</b><small>افتح مساحة الرياضيات للكتاب والوحدات والتدريبات</small></button>
-          <button type="button" data-go-tab="physics2027"><span>ف</span><b>فيزياء 2027</b><small>افتح مساحة الفيزياء للكتاب والوحدات والتدريبات</small></button>
-          <button type="button" data-go-tab="chemistry2027"><span>ك</span><b>كيمياء 2027</b><small>افتح مساحة الكيمياء للكتاب والوحدات والتدريبات</small></button>
-          <button type="button" data-go-tab="arabic2027"><span>ع</span><b>عربي 2027</b><small>افتح مساحة اللغة العربية للكتاب والوحدات والتدريبات</small></button>
-          <button type="button" data-go-tab="eng"><span>文</span><b>قاموس الكلمات</b><small>راجع مفرداتك ببطاقات تفاعلية</small></button>
-          <button type="button" data-go-tab="chat"><span>✦</span><b>خبير الإنجليزي</b><small>تدرّب على المحادثة والتصحيح</small></button>
-          <button type="button" data-go-tab="tools"><span>⚙</span><b>أدوات المذاكرة</b><small>كراسة الأخطاء والتركيز والنسخ الاحتياطي</small></button>
+          <button type="button" data-go-tab="notes"><span aria-hidden="true">📝</span><b>ملخصاتي</b><small>احفظ وراجع ملخصات الدروس</small></button>
+          <button type="button" data-go-tab="prac"><span aria-hidden="true">🎯</span><b>التدريب والخطة</b><small>سجّل حل الأسئلة ونظّم أسبوعك</small></button>
+          <button type="button" data-go-tab="reviewCenter"><span aria-hidden="true">🔄</span><b>المراجعة الذكية</b><small>راجع كلماتك وأخطاءك والدروس المكتملة</small></button>
+          <button type="button" data-go-tab="library"><span aria-hidden="true">📚</span><b>مكتبة الوزارة</b><small>كتب الصف الثالث الثانوي حسب المادة</small></button>
+          <button type="button" data-go-tab="english2027"><span aria-hidden="true">🇬🇧</span><b>إنجليزي 2027</b><small>تابع وحدات ومراجعة الإنجليزية</small></button>
+          <button type="button" data-go-tab="englishPath"><span aria-hidden="true">🌍</span><b>تعلم الإنجليزية</b><small>مسار مستقل من الأساسيات إلى المتوسط</small></button>
+          <button type="button" data-go-tab="biology2027"><span aria-hidden="true">🧬</span><b>أحياء 2027</b><small>افتح مساحة الأحياء للكتاب والوحدات والتدريبات</small></button>
+          <button type="button" data-go-tab="math2027"><span aria-hidden="true">📐</span><b>رياضيات 2027</b><small>افتح مساحة الرياضيات للكتاب والوحدات والتدريبات</small></button>
+          <button type="button" data-go-tab="physics2027"><span aria-hidden="true">⚛️</span><b>فيزياء 2027</b><small>افتح مساحة الفيزياء للكتاب والوحدات والتدريبات</small></button>
+          <button type="button" data-go-tab="chemistry2027"><span aria-hidden="true">🧪</span><b>كيمياء 2027</b><small>افتح مساحة الكيمياء للكتاب والوحدات والتدريبات</small></button>
+          <button type="button" data-go-tab="arabic2027"><span aria-hidden="true">📖</span><b>عربي 2027</b><small>افتح مساحة اللغة العربية للكتاب والوحدات والتدريبات</small></button>
+          <button type="button" data-go-tab="eng"><span aria-hidden="true">🔤</span><b>قاموس الكلمات</b><small>راجع مفرداتك ببطاقات تفاعلية</small></button>
+          <button type="button" data-go-tab="chat"><span aria-hidden="true">💬</span><b>خبير الإنجليزي</b><small>تدرّب على المحادثة والتصحيح</small></button>
+          <button type="button" data-go-tab="tools"><span aria-hidden="true">🛠️</span><b>أدوات المذاكرة</b><small>كراسة الأخطاء والتركيز والنسخ الاحتياطي</small></button>
         </div></div>
       </div>
       <section id="smartDashboard" class="smart-dashboard" aria-label="لوحة متابعة تقدمك"></section>

@@ -2,9 +2,10 @@
    Only verified exam files should be added to EXAMS with an official source URL. */
 (function () {
   const YEARS = Array.from({ length: 8 }, (_, index) => String(2019 + index));
+  // Prioritize the core subjects requested for the first archive-completion pass.
   const SUBJECTS = [
     'اللغة العربية', 'اللغة الأجنبية الأولى', 'اللغة الأجنبية الثانية',
-    'الأحياء', 'الكيمياء', 'الفيزياء', 'الرياضيات',
+    'الرياضيات', 'الكيمياء', 'الفيزياء', 'الأحياء',
     'التاريخ', 'الجغرافيا', 'الإحصاء', 'الفلسفة والمنطق', 'علم النفس والاجتماع', 'الاقتصاد', 'التربية الوطنية', 'كل المواد'
   ];
   const SYSTEMS = [

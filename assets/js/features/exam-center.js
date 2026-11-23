@@ -119,12 +119,12 @@
       state.examHistory=state.examHistory.slice(0,50);
       save();
       root.innerHTML='<div class="exam-result-hero"><span class="welcome-kicker">YOUR RESULT</span><h2>'+(percent>=85?'ممتاز! أداء قوي 👏':percent>=70?'أحسنت، استمر في التقدم':'انتهى الامتحان — راجع أخطاءك')+'</h2><div class="exam-score">'+percent+'<small>%</small></div><p>أجبت إجابة صحيحة عن '+correct+' من '+a.questions.length+' سؤالًا.</p>'+(byTime?'<p class="exam-time-note">انتهى الوقت وتم تسليم إجاباتك تلقائيًا.</p>':'')+'</div>'+
-        '<div class="exam-result-actions"><button class="p" type="button" id="examAgain">امتحان جديد</button><button class="s" type="button" id="examShowHistory">عرض سجل المحاولات</button></div>'+
+        '<div class="exam-result-actions"><button class="p" type="button" id="examAgain">امتحان جديد</button></div>'+
         '<h3>مراجعة الإجابات</h3><div class="exam-review-list">'+reviewed.map((q,i)=>
           '<article class="exam-review '+(q.correct?'is-correct':'is-wrong')+'"><b>السؤال '+(i+1)+': '+esc(q.question)+'</b><p>إجابتك: '+(q.selected===undefined?'<span>لم تجب</span>':esc(q.options[q.selected]))+'</p><p>الإجابة الصحيحة: <strong>'+esc(q.options[q.answer])+'</strong></p><p class="hint">'+esc(q.explanation)+'</p><small>'+esc(q.subject)+' · '+esc(q.lesson)+'</small></article>'
-        ).join('')+'</div>';
+        ).join('')+'</div><section class="exam-history"><h3>سجل محاولاتك</h3><div id="examHistory"></div></section>';
+      renderHistory();
       $('#examAgain').addEventListener('click',renderSetup);
-      $('#examShowHistory').addEventListener('click',renderSetup);
     }
     renderSetup();
     return {render:renderSetup};

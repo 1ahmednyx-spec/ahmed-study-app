@@ -221,5 +221,20 @@
     });
     global.subjectCourseRender = render;
   }
-  global.StudySubjectCourses = {init};
+  function getExamQuestions(subjectId) {
+    const course = COURSES[subjectId];
+    if (!course) return [];
+    return course.units.flatMap(unit => unit.lessons.map((lesson, index) => ({
+      id: subjectId + '-' + unit.name + '-' + index,
+      subjectId,
+      subject: course.title,
+      unit: unit.name,
+      lesson: lesson[0],
+      question: lesson[3],
+      options: lesson.slice(4, 8),
+      answer: Number(lesson[8]),
+      explanation: lesson[9] || lesson[2] || ''
+    })));
+  }
+  global.StudySubjectCourses = {init, getExamQuestions};
 })(window);

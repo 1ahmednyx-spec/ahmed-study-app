@@ -40,6 +40,7 @@
       <button type="button" role="tab" aria-selected="false" data-tab="chemistry2027"><span>ك</span> كيمياء 2027</button>
       <button type="button" role="tab" aria-selected="false" data-tab="arabic2027"><span>ع</span> عربي 2027</button>
       <button type="button" role="tab" aria-selected="false" data-tab="chat"><span>✦</span> خبير الإنجليزي</button>
+      <button type="button" role="tab" aria-selected="false" data-tab="examCenter"><span>✎</span> مركز الاختبارات</button>
       <button type="button" role="tab" aria-selected="false" data-tab="prac"><span>✓</span> التدريب والخطة</button>
       <button type="button" role="tab" aria-selected="false" data-tab="tools"><span>⚙</span> أدوات المذاكرة</button>
     </nav>
@@ -143,6 +144,11 @@
   <h2>خطة مذاكرة</h2>
   <div class="panel"><label for="hrs">ساعات المذاكرة في اليوم</label><input id="hrs" type="number" min="1" max="14" value="5">
     <button class="p" id="plBtn">اقترح خطة أسبوعية</button> <button class="s" id="plAdd" hidden>ضيف الخطة للجدول</button> <span class="hint" id="plSt"></span><div id="plOut"></div></div>
+</section>
+
+<section id="examCenter" hidden>
+  <div class="exam-intro"><h2>مركز الاختبارات</h2><p>امتحانات تفاعلية من أسئلة الدروس الموجودة في المنصة، مع توقيت وتصحيح ومراجعة للنتائج.</p></div>
+  <div id="examCenterRoot"></div>
 </section>
 
 <section id="tools" hidden>
@@ -307,6 +313,7 @@
 <script src="./assets/js/features/english-course.js"></script>
 <script src="./assets/js/features/english-learning-path.js"></script>
 <script src="./assets/js/features/subject-courses.js"></script>
+<script src="./assets/js/features/exam-center.js"></script>
 <script src="./assets/js/features/ministry-library.js"></script>
 <script src="./assets/js/features/english-coach.js"></script>
 <script src="./assets/js/features/preferences.js"></script>

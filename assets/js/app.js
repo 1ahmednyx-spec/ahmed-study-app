@@ -1,7 +1,7 @@
 const $=s=>document.querySelector(s);
 const {load:loadStudyState,save:saveStudyState}=window.StudyStorage;
 let S=loadStudyState();
-S.courseDone=S.courseDone||{};S.courseWords=S.courseWords||[];S.courseWriting=S.courseWriting||[];S.courseExamChecks=S.courseExamChecks||{};S.subjectLessonDone=S.subjectLessonDone||{};S.englishPathDone=S.englishPathDone||{};
+S.courseDone=S.courseDone||{};S.courseWords=S.courseWords||[];S.courseWriting=S.courseWriting||[];S.courseExamChecks=S.courseExamChecks||{};S.subjectLessonDone=S.subjectLessonDone||{};S.englishPathDone=S.englishPathDone||{};S.examHistory=Array.isArray(S.examHistory)?S.examHistory:[];
 const save=()=>saveStudyState(S);
 const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
@@ -53,6 +53,8 @@ window.StudyEnglishCoach.init({getAI:()=>AI,errMsg,escapeHtml:esc,showAlert});
 window.StudyEnglishCourse.init({state:S,save,escapeHtml:esc,showAlert});
 window.StudyEnglishPath.init({state:S,save,escapeHtml:esc,showAlert});
 window.StudySubjectCourses.init({state:S,save,escapeHtml:esc,showAlert});
+const examCenter=window.StudyExamCenter.init({state:S,save,escapeHtml:esc});
+window.examCenterRender=examCenter.render;
 window.StudyMinistryLibrary.init();
 
 const {render:renderMist}=window.StudyMistakes.init({state:S,save,uid,today,addDays,escapeHtml:esc});

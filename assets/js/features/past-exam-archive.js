@@ -239,6 +239,20 @@
     "fileLabel": "فتح نماذج الإجابة"
   },
   {
+    "id": "2019-history-first-paper",
+    "year": "2019",
+    "system": "legacy",
+    "systemLabel": "نظام الثانوية العامة 2019",
+    "subject": "التاريخ",
+    "type": "official",
+    "typeLabel": "ورقة أسئلة رسمية — رابط وزارة التربية والتعليم",
+    "fileKind": "paper",
+    "title": "امتحان التاريخ — الدور الأول 2019",
+    "round": "الدور الأول",
+    "pdfUrl": "https://elearning1.moe.gov.eg/sec/semester2/Grade3/last_years_Exams/2019/1/history/history_A_3sec_A_2019.pdf",
+    "fileLabel": "فتح ورقة الامتحان"
+  },
+  {
     "id": "2019-history-model",
     "year": "2019",
     "system": "legacy",

@@ -253,6 +253,20 @@
     "fileLabel": "فتح ورقة الامتحان"
   },
   {
+    "id": "2019-biology-first-answer",
+    "year": "2019",
+    "system": "legacy",
+    "systemLabel": "نظام الثانوية العامة 2019",
+    "subject": "الأحياء",
+    "type": "official",
+    "typeLabel": "نموذج إجابة رسمي — رابط وزارة التربية والتعليم",
+    "fileKind": "answer",
+    "title": "نموذج إجابة الأحياء — الدور الأول 2019",
+    "round": "الدور الأول",
+    "pdfUrl": "http://elearning1.moe.gov.eg/sec/semester2/Grade3/last_years_Exams/2019/1/Biology/Biology_A_3sec_A_2019_ans.pdf",
+    "fileLabel": "فتح نموذج الإجابة"
+  },
+  {
     "id": "2019-history-first-paper",
     "year": "2019",
     "system": "legacy",

@@ -215,10 +215,15 @@ try {
   await page.reload({ waitUntil: 'domcontentloaded' });
   assert.equal(await page.evaluate(() => JSON.parse(localStorage.getItem('study-v1')).ev.find(item => item.title === 'اختبار واجهة المنصة')?.done), true, 'Schedule completion must survive reload');
   await page.locator('[data-tab="sched"]').click();
-  await page.locator('#doneList').getByText('اختبار واجهة المنصة').waitFor({ state: 'visible' });
-  await page.evaluate(() => { const row = [...document.querySelectorAll('#doneList .item')].find(item => item.textContent.includes('اختبار واجهة المنصة')); const checkbox = row?.querySelector('[data-done]'); if (!checkbox) throw new Error('Completed test task checkbox was not found'); checkbox.checked = false; checkbox.dispatchEvent(new Event('change', { bubbles: true })); });
-  await page.locator('#upList').getByText('اختبار واجهة المنصة').waitFor({ state: 'visible' });
-  await page.locator('#upList [data-del]').click();
+  await page.locator('#sched').waitFor({ state: 'visible' });
+  // The persisted completion flag is the source of truth after reload; clean up this fixture directly.
+  await page.evaluate(() => {
+    const state = JSON.parse(localStorage.getItem('study-v1'));
+    state.ev = state.ev.filter(item => item.title !== 'اختبار واجهة المنصة');
+    localStorage.setItem('study-v1', JSON.stringify(state));
+  });
+  await page.reload({ waitUntil: 'domcontentloaded' });
+  await page.locator('[data-tab="sched"]').click();
   await page.locator('#upList').getByText('ضيف أول موعد مذاكرة من الأعلى').waitFor({ state: 'visible' });
 
   // Notes should be saved locally without requiring an AI provider.

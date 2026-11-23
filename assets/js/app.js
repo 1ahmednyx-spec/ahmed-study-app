@@ -58,6 +58,8 @@ const dashboard=window.StudyDashboard.init({state:S,escapeHtml:esc});
 window.dashboardRender=dashboard.render;
 const smartRevision=window.StudySmartRevision.init({state:S,save,escapeHtml:esc});
 window.smartReviewRender=smartRevision.render;
+const smartPlanner=window.StudySmartPlanner.init({state:S,save,escapeHtml:esc});
+window.smartPlannerRender=smartPlanner.render;
 window.examCenterRender=examCenter.render;
 window.StudyMinistryLibrary.init();
 

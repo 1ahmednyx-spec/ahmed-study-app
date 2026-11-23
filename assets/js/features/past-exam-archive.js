@@ -663,6 +663,35 @@
     "pdfUrl": "https://ellibrary.moe.gov.eg/sec3guideforms/",
     "fileLabel": "فتح المكتبة الإلكترونية الرسمية"
   }
+
+  {
+    "id": "2023-arts-history-paper-portal",
+    "year": "2023",
+    "system": "modern",
+    "systemLabel": "النظام الحديث — 2022/2023",
+    "subject": "التاريخ",
+    "type": "official",
+    "typeLabel": "كراسة أسئلة رسمية — بوابة وزارة التربية والتعليم",
+    "fileKind": "paper",
+    "title": "امتحان التاريخ — الشعبة الأدبية",
+    "round": "الدور الأول",
+    "pdfUrl": "https://moe.gov.eg/ar/exam-model2022-2023/",
+    "fileLabel": "فتح كراسات الأسئلة من بوابة الوزارة"
+  },
+  {
+    "id": "2023-arts-geography-paper-portal",
+    "year": "2023",
+    "system": "modern",
+    "systemLabel": "النظام الحديث — 2022/2023",
+    "subject": "الجغرافيا",
+    "type": "official",
+    "typeLabel": "كراسة أسئلة رسمية — بوابة وزارة التربية والتعليم",
+    "fileKind": "paper",
+    "title": "امتحان الجغرافيا — الشعبة الأدبية",
+    "round": "الدور الأول",
+    "pdfUrl": "https://moe.gov.eg/ar/exam-model2022-2023/",
+    "fileLabel": "فتح كراسات الأسئلة من بوابة الوزارة"
+  },
 ];
 
   // Official Ministry answer key, Arabic 2023 first round, model A (51 objective questions).

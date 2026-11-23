@@ -22,6 +22,7 @@ try {
   const englishLearningPathResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/english-learning-path.js');
   const subjectCoursesResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/subject-courses.js');
   const examCenterResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/exam-center.js');
+  const pastExamArchiveResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/past-exam-archive.js');
   const dashboardResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/dashboard.js');
   const smartRevisionResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/smart-revision.js');
   const ministryLibraryResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/ministry-library.js');
@@ -31,7 +32,7 @@ try {
   assert.equal(serviceWorkerResponse.status(), 200, 'Service worker must be served');
   const serviceWorkerSource = await serviceWorkerResponse.text();
   assert.match(serviceWorkerSource, /ahmed-study-platform-v\d+/, 'Service worker cache must be versioned');
-  for (const modulePath of ['./assets/js/features/preferences.js', './assets/js/features/english-course.js', './assets/js/features/english-learning-path.js', './assets/js/features/subject-courses.js', './assets/js/features/exam-center.js', './assets/js/features/dashboard.js', './assets/js/features/smart-revision.js', './assets/js/features/ministry-library.js', './assets/js/features/english-coach.js']) {
+  for (const modulePath of ['./assets/js/features/preferences.js', './assets/js/features/english-course.js', './assets/js/features/english-learning-path.js', './assets/js/features/subject-courses.js', './assets/js/features/exam-center.js', './assets/js/features/past-exam-archive.js', './assets/js/features/dashboard.js', './assets/js/features/smart-revision.js', './assets/js/features/ministry-library.js', './assets/js/features/english-coach.js']) {
     assert.ok(serviceWorkerSource.includes(modulePath), `Service worker must precache ${modulePath}`);
   }
 
@@ -52,6 +53,138 @@ try {
   assert.equal(englishLearningPathResponse.status(), 200, 'Separate English learning path module must be served');
   assert.equal(subjectCoursesResponse.status(), 200, '2027 subject courses module must be served');
   assert.equal(examCenterResponse.status(), 200, 'Exam center module must be served');
+  assert.equal(pastExamArchiveResponse.status(), 200, 'Past exam archive module must be served');
+  const pastExamArchiveSource = await pastExamArchiveResponse.text();
+  assert.match(pastExamArchiveSource, /مراجع الكتب الخارجية/, 'Past exam archive must include the external-book references section');
+  assert.match(pastExamArchiveSource, /arabic-emtehan-2026/, 'Archive must include the Arabic previous-exam book reference');
+  assert.match(pastExamArchiveSource, /biology-emtehan-2026/, 'Archive must include the Biology previous-exam book reference');
+  assert.match(pastExamArchiveSource, /french-bravo-2026/, 'Archive must include the French second-language book reference');
+  assert.match(pastExamArchiveSource, /نماذج تدريبية — ليست امتحانات سابقة مؤكدة/, 'Practice models must not be mislabeled as previous official exams');
+  assert.match(pastExamArchiveSource, /النماذج 1–11 تبدأ من صفحة 102/, 'Chemistry previous-year model page range must be visible');
+  assert.match(pastExamArchiveSource, /2021–2024/, 'Biology previous-year coverage must be visible');
+  assert.match(pastExamArchiveSource, /الصفحات 129–209/, 'French booklet index page range must be visible');
+  assert.match(pastExamArchiveSource, /تفاصيل الفهرس/, 'External-book records must expose index details');
+  assert.match(pastExamArchiveSource, /2023-science-french-second-answer/, 'Archive must include official 2023 second-language French answer key');
+  assert.match(pastExamArchiveSource, /2023-science-biology-fr-answer/, 'Archive must include official 2023 Biology French answer key');
+  assert.match(pastExamArchiveSource, /2023-math-algebra-answer/, 'Archive must include official 2023 mathematics answer key');
+  assert.match(pastExamArchiveSource, /2023-arts-history-answer/, 'Archive must include official 2023 literary-division history answer key');
+  assert.match(pastExamArchiveSource, /2023-arts-history-paper-portal/, 'Archive must include official 2023 literary-division History question-paper portal');
+  assert.match(pastExamArchiveSource, /2023-arts-geography-paper-portal/, 'Archive must include official 2023 literary-division Geography question-paper portal');
+  assert.match(pastExamArchiveSource, /2021-june-trial-portal/, 'Archive must include the official 2021 trial-exam portal as a portal, not a final paper');
+  assert.match(pastExamArchiveSource, /2019-biology-first-answer/, 'Archive must include the verified 2019 Biology Ministry answer key as an answer, not a question paper');
+  assert.match(pastExamArchiveSource, /2021-math-arabic-trial-paper/, 'Archive must include the verified 2021 trial resource 2021-math-arabic-trial-paper');
+  assert.match(pastExamArchiveSource, /2021-biology-arabic-trial-paper/, 'Archive must include the verified 2021 trial resource 2021-biology-arabic-trial-paper');
+  assert.match(pastExamArchiveSource, /2021-physics-arabic-trial-paper/, 'Archive must include the verified 2021 trial resource 2021-physics-arabic-trial-paper');
+  assert.match(pastExamArchiveSource, /2021-chemistry-arabic-trial-paper/, 'Archive must include the verified 2021 trial resource 2021-chemistry-arabic-trial-paper');
+  assert.match(pastExamArchiveSource, /2021-history-trial-paper/, 'Archive must include the verified 2021 trial resource 2021-history-trial-paper');
+  assert.match(pastExamArchiveSource, /2021-geography-trial-paper/, 'Archive must include the verified 2021 trial resource 2021-geography-trial-paper');
+  assert.match(pastExamArchiveSource, /2021-math-arabic-trial-answer/, 'Archive must include the verified 2021 trial resource 2021-math-arabic-trial-answer');
+  assert.match(pastExamArchiveSource, /2021-geography-trial-answer/, 'Archive must include the verified 2021 trial resource 2021-geography-trial-answer');
+  assert.match(pastExamArchiveSource, /2023-arts-geography-answer/, 'Archive must include official 2023 literary-division Geography answer key');
+  assert.match(pastExamArchiveSource, /const ARTS_2023_KEYS/, 'Archive must include interactive 2023 History and Geography answer keys');
+  assert.match(pastExamArchiveSource, /function renderArts2023InteractiveExam/, 'History and Geography must expose interactive grading');
+  assert.match(pastExamArchiveSource, /pastExamArtsQuiz/, 'History and Geography interactive answer sheet must render');
+  assert.match(pastExamArchiveSource, /32 سؤالًا بدرجة واحدة و12 سؤالًا بدرجتين/, 'Arts quiz must disclose official weighted question distribution');
+
+
+  for (const examId of [
+    '2020-chemistry-hearing-paper',
+    '2020-physics-blind-paper',
+    '2020-biology-mobility-paper',
+    '2020-pure-math-mobility-paper'
+  ]) {
+    assert.match(pastExamArchiveSource, new RegExp('"id": "' + examId + '"'), 'Archive must include the verified 2020 Ministry paper ' + examId);
+  }
+  assert.match(pastExamArchiveSource, /ورقة امتحان وزارة رسمية — نسخة دمج/, 'Inclusive exam papers must be clearly labeled as special-accommodation versions');
+
+  assert.match(pastExamArchiveSource, /2023-official-question-paper-portal/, 'Archive must link to the official Ministry question-paper portal');
+  assert.match(pastExamArchiveSource, /2024-official-question-and-answer-portal/, 'Archive must link to the official 2024 questions and answer resource');
+  assert.match(pastExamArchiveSource, /2026-official-models-portal/, 'Archive must link to the official 2026 model-exam portal');
+  const examCatalogStart = pastExamArchiveSource.indexOf('const EXAMS = [');
+  const examCatalogEnd = pastExamArchiveSource.indexOf('];', examCatalogStart);
+  const examCatalogSource = pastExamArchiveSource.slice(examCatalogStart, examCatalogEnd);
+  const examRecordCount = (examCatalogSource.match(/"id":/g) || []).length;
+  const classifiedRecordCount = (examCatalogSource.match(/"fileKind":/g) || []).length;
+  assert.equal(classifiedRecordCount, examRecordCount, 'Every archive resource must declare whether it is a paper, answer key, model, or portal');
+  for (const portalId of [
+    '2023-ministry-exam-portal',
+    '2023-official-question-paper-portal',
+    '2023-arts-history-paper-portal',
+    '2023-arts-geography-paper-portal',
+    '2024-madrasetna-plus',
+    '2024-official-question-and-answer-portal',
+    '2025-ministry-models',
+    '2026-official-models-portal'
+  ]) {
+    const portalRecord = examCatalogSource.slice(examCatalogSource.indexOf('"id": "' + portalId + '"'));
+    assert.match(portalRecord, /"fileKind": "portal"/, 'Portal links must not be presented as direct exam-paper files: ' + portalId);
+  }
+
+  assert.match(pastExamArchiveSource, /ARABIC_2023_MODEL_A_KEY/, 'Archive must include the 2023 Arabic model A answer key');
+  for (const model of ['A', 'B', 'C', 'D']) {
+    assert.match(pastExamArchiveSource, new RegExp('ARABIC_2023_MODEL_' + model + '_KEY'), 'Archive must include the 2023 Arabic model ' + model + ' answer key');
+  }
+  assert.match(pastExamArchiveSource, /pastExamArabicModel/, 'Arabic interactive exam must allow selecting all four official models');
+  assert.match(pastExamArchiveSource, /pastExamArabicQuiz/, 'Archive must render an interactive answer sheet');
+  for (const model of ['A', 'B', 'C', 'D']) {
+    assert.match(pastExamArchiveSource, new RegExp('CHEMISTRY_2023_MODEL_' + model + '_KEY'), 'Archive must include the 2023 Chemistry model ' + model + ' answer key');
+  }
+  assert.match(pastExamArchiveSource, /pastExamChemistryModel/, 'Chemistry quiz must allow selecting all four official models');
+  assert.match(pastExamArchiveSource, /44 سؤالًا موضوعيًا/, 'Chemistry quiz must grade 44 objective questions');
+  assert.match(pastExamArchiveSource, /CHEMISTRY_2023_WEIGHTS/, 'Chemistry quiz must apply the Ministry mark distribution');
+  assert.match(pastExamArchiveSource, /scinece-exammodels\.pdf#page=53/, 'Chemistry quiz must link to the official Ministry answer-key PDF');
+  assert.match(pastExamArchiveSource, /mediafire\.com\/file\//, 'Chemistry quiz must provide the external question-paper archive link');
+  assert.match(pastExamArchiveSource, /PHYSICS_2023_MODEL_[ABCD]_KEY/, 'Archive must include official Arabic Physics 2023 answer keys');
+  for (const model of ['A', 'B', 'C', 'D']) {
+    assert.match(pastExamArchiveSource, new RegExp('PHYSICS_2023_MODEL_' + model + '_KEY'), 'Archive must include the 2023 Physics model ' + model + ' answer key');
+  }
+  assert.match(pastExamArchiveSource, /pastExamPhysicsModel/, 'Physics quiz must allow selecting all four official models');
+  for (const model of ['A', 'B', 'C', 'D']) {
+    assert.match(pastExamArchiveSource, new RegExp('BIOLOGY_2023_MODEL_' + model + '_KEY'), 'Archive must include the 2023 Biology model ' + model + ' answer key');
+  }
+  assert.match(pastExamArchiveSource, /pastExamBiologyModel/, 'Biology quiz must allow selecting all four official models');
+  assert.ok(pastExamArchiveSource.includes('scinece-exammodels.pdf#page=98'), 'Biology quiz must link to the official Ministry answer-key page');
+  assert.ok(pastExamArchiveSource.includes('ta3lemkonline.com/2023/08/2023_33.html'), 'Biology quiz must link to a separate exam-paper archive page');
+  for (const branch of ['statics', 'dynamics', 'calculus', 'algebra']) {
+    assert.match(pastExamArchiveSource, new RegExp(branch + ': \\{'), 'Math archive must include the ' + branch + ' branch');
+    for (const model of ['أ', 'ب', 'ج', 'د']) {
+      const branchStart = pastExamArchiveSource.indexOf(branch + ': {', pastExamArchiveSource.indexOf('const MATH_2023_KEYS'));
+      const branchSource = pastExamArchiveSource.slice(branchStart, branchStart + 1800);
+      const keyStart = branchSource.indexOf(model + ': [');
+      const keyEnd = branchSource.indexOf(']', keyStart);
+      const keyLine = keyStart >= 0 && keyEnd >= 0 ? branchSource.slice(keyStart, keyEnd + 1) : '';
+      assert.ok(keyLine, 'Math archive must include ' + branch + ' model ' + model);
+      assert.equal((keyLine.match(/'[^']+'/g) || []).length, 18, branch + ' model ' + model + ' must contain 18 objective answers');
+    }
+  }
+  assert.ok(pastExamArchiveSource.includes('${MATH_2023_ANSWER_URL}#page=82'), 'Math archive must link to the official Statics paper');
+  assert.ok(pastExamArchiveSource.includes('${MATH_2023_ANSWER_URL}#page=97'), 'Math archive must link to the official Dynamics paper');
+  assert.ok(pastExamArchiveSource.includes('${MATH_2023_ANSWER_URL}#page=112'), 'Math archive must link to the official Calculus paper');
+  assert.ok(pastExamArchiveSource.includes('${MATH_2023_ANSWER_URL}#page=127'), 'Math archive must link to the official Algebra and Geometry paper');
+  for (const subject of ['first', 'second']) {
+    const subjectStart = pastExamArchiveSource.indexOf(subject + ': {', pastExamArchiveSource.indexOf('const ENGLISH_2023_KEYS'));
+    assert.ok(subjectStart >= 0, 'English archive must include ' + subject + ' language');
+    const subjectSource = pastExamArchiveSource.slice(subjectStart, subjectStart + 3000);
+    for (const model of ['A', 'B', 'C', 'D']) {
+      const modelStart = subjectSource.indexOf(model + ': [');
+      const modelEnd = subjectSource.indexOf(']', modelStart);
+      assert.ok(modelStart >= 0 && modelEnd > modelStart, 'English archive must include ' + subject + ' model ' + model);
+      const keySource = subjectSource.slice(modelStart, modelEnd + 1);
+      const expectedCount = subject === 'first' ? 34 : 29;
+      assert.equal((keySource.match(/'[^']+'/g) || []).length, expectedCount, subject + ' model ' + model + ' must have ' + expectedCount + ' objective answers');
+    }
+  }
+  assert.ok(pastExamArchiveSource.includes('bablsheet.blob.core.windows.net/examq2023/09.pdf'), 'Second English paper must have a question-paper PDF link');
+  assert.ok(pastExamArchiveSource.includes('English-exam-3secondary.html'), 'First English paper must have an external archive reference');
+  assert.ok(pastExamArchiveSource.includes('scinece-exammodels.pdf#page=8'), 'First English answer key must link to the Ministry PDF');
+  assert.ok(pastExamArchiveSource.includes('scinece-exammodels.pdf#page=28'), 'Second English answer key must link to the Ministry PDF');
+  assert.match(pastExamArchiveSource, /44 سؤالًا موضوعيًا/, 'Physics quiz must grade 44 objective questions');
+  assert.match(pastExamArchiveSource, /PHYSICS_2023_WEIGHTS/, 'Physics quiz must apply the Ministry mark distribution');
+  assert.match(pastExamArchiveSource, /scinece-exammodels\.pdf#page=68/, 'Physics quiz must link to the official Ministry answer-key PDF');
+  assert.match(pastExamArchiveSource, /ta3lemkonline\.com\/2023\/08\/2023_32\.html/, 'Physics quiz must link to a separate exam-paper download page');
+  assert.match(pastExamArchiveSource, /51 سؤالًا موضوعيًا/, 'Arabic answer sheet must clearly limit automatic grading to 51 objective questions');
+  assert.match(pastExamArchiveSource, /arts-answermodels\.pdf#page=4/, 'Arabic quiz must link to the Ministry answer-key PDF');
+  assert.match(pastExamArchiveSource, /drive\.google\.com\/file\/d\//, 'Arabic quiz must provide a separate question-paper link');
   assert.equal(dashboardResponse.status(), 200, 'Smart dashboard module must be served');
   assert.equal(smartRevisionResponse.status(), 200, 'Smart revision module must be served');
   assert.equal(ministryLibraryResponse.status(), 200, 'Ministry library module must be served');
@@ -87,6 +220,7 @@ try {
   assert.equal(await page.evaluate(() => typeof window.StudyEnglishPath?.init), 'function', 'Separate English learning path must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.StudySubjectCourses?.init), 'function', 'Subject courses module must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.StudyExamCenter?.init), 'function', 'Exam center module must expose its initializer');
+  assert.equal(await page.evaluate(() => typeof window.StudyPastExamArchive?.init), 'function', 'Past exam archive module must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.StudyMinistryLibrary?.init), 'function', 'Ministry library module must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.ecRender), 'function', 'English course renderer must be available to tab navigation');
   assert.equal(await page.evaluate(() => typeof window.StudyEnglishCoach?.init), 'function', 'English coach module must expose its initializer');
@@ -95,7 +229,7 @@ try {
   assert.equal(await page.evaluate(() => typeof window.activateTab), 'function', 'Navigation module must expose tab activation');
   assert.match(await page.title(), /Ahmed Study Platform/);
   await page.locator('#home').waitFor({ state: 'visible' });
-  assert.equal(await page.locator('.tabs [role="tab"]').count(), 17, 'Smart revision, exam center, English learning path, and five subject tabs must preserve all existing tabs');
+  assert.equal(await page.locator('.tabs [role="tab"]').count(), 18, 'Smart revision, exam center, English learning path, and five subject tabs must preserve all existing tabs');
   assert.equal(await page.evaluate(() => typeof window.StudySmartRevision?.init), 'function', 'Smart revision module must expose its initializer');
   assert.equal(await page.locator('#reviewCenter #smartReviewRoot').count(), 1, 'Smart revision must have its own content section');
   assert.equal(await page.locator('#smartDashboard .smart-metric').count(), 4, 'Homepage dashboard must show four live learning metrics');
@@ -108,6 +242,55 @@ try {
     assert.equal(await page.locator(`.tabs [role="tab"][data-tab="${subject}"]`).count(), 1, `${subject} must have one navigation tab`);
     assert.equal(await page.locator(`#${subject}`).count(), 1, `${subject} must have one content section`);
   }
+
+  // Past exam archive renders verified Ministry resources and filters them accurately.
+  await page.locator('[data-tab="pastExamArchive"]').click();
+  assert.equal(await page.locator('#pastExamArchiveRoot #pastExamSystem option').count(), 4);
+  assert.equal(await page.locator('#pastExamArchiveRoot #pastExamYear option').count(), 9);
+  assert.equal(await page.locator('#pastExamArchiveRoot #pastExamFileKind option').count(), 5, 'Archive must provide separate filters for papers, answer keys, models, and portals');
+  assert.ok((await page.locator('#pastExamArchiveRoot p.past-exam-note').innerText()).includes('2021 و2022'), 'Archive must disclose years whose official exam papers are not yet verified');
+  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 59, 'Archive must render fifty-nine catalogued resources');
+  await page.locator('#pastExamYear').selectOption('2019');
+  assert.ok((await page.locator('#pastExamResults').innerText()).includes('نموذج اختبار الفيزياء — فئة الدمج'), '2019 Physics mobility model must be listed and clearly identified as a special-category resource');
+  await page.locator('#pastExamYear').selectOption('2020');
+  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 7, 'Year filter must isolate the seven in-scope 2020 resources');
+  await page.locator('#pastExamYear').selectOption('2023');
+  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 30, 'Year filter must isolate the thirty in-scope 2023 resources');
+  await page.locator('#pastExamYear').selectOption('all');
+  await page.locator('#pastExamFileKind').selectOption('paper');
+  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 8, 'Direct exam papers must be separated from answers, models, and portals');
+  await page.locator('#pastExamFileKind').selectOption('answer');
+  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 31, 'Official answer keys must be independently filterable');
+  await page.locator('#pastExamFileKind').selectOption('model');
+  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 11, 'Official practice and indicative models must be independently filterable');
+  await page.locator('#pastExamFileKind').selectOption('portal');
+  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 9, 'Portal links must be independently filterable');
+  await page.locator('#pastExamFileKind').selectOption('all');
+  const archiveSubjects = await page.locator('#pastExamSubject option').allTextContents();
+  assert.ok(!archiveSubjects.some(subject => /علم النفس|الفلسفة|الاقتصاد|الإحصاء|التربية الوطنية/.test(subject)), 'Subject filter must be limited to the requested core subjects');
+  for (const subject of ['التاريخ', 'الجغرافيا']) {
+    await page.locator('#pastExamSubject').selectOption(subject);
+    assert.ok(await page.locator('#pastExamResults .past-exam-card').count() >= 1, 'Literary core subject must have a verified resource: ' + subject);
+  }
+  await page.locator('#pastExamSubject').selectOption('all');
+  for (const subject of ['اللغة العربية', 'اللغة الأجنبية الأولى', 'اللغة الأجنبية الثانية', 'الكيمياء', 'الفيزياء', 'الأحياء', 'الرياضيات']) {
+    await page.locator('#pastExamYear').selectOption('2023');
+    await page.locator('#pastExamSubject').selectOption(subject);
+    assert.ok(await page.locator('#pastExamResults .past-exam-card').count() >= 1, '2023 core subject must have a catalogued Ministry resource: ' + subject);
+  }
+  await page.locator('#pastExamSubject').selectOption('all');
+  await page.locator('#pastExamYear').selectOption('all');
+  assert.equal(await page.locator('#pastExamArchiveRoot a[href="https://moe.gov.eg/"]').count(), 1);
+
+  // Chemistry 2023 interactive answer sheet: all four Ministry keys and weighted objective grading.
+  await page.locator('#pastExamChemistryStart').click();
+  assert.equal(await page.locator('#pastExamChemistryQuiz [data-chem-answer]').count(), 44, 'Chemistry answer sheet must render 44 objective questions');
+  assert.equal(await page.locator('#pastExamChemistryQuiz .past-exam-answer-cell').filter({ hasText: 'سؤال 33' }).count(), 1, 'Chemistry questions 33–44 must be marked as two-point questions');
+  await page.locator('#pastExamChemistryQuiz [data-chem-answer="0"]').selectOption('أ');
+  await page.locator('#pastExamChemistrySubmit').click();
+  assert.ok((await page.locator('#pastExamChemistryQuiz .past-exam-quiz-result').innerText()).includes('من 56'), 'Chemistry result must use the official 56-point objective subtotal');
+  assert.ok((await page.locator('#pastExamChemistryQuiz .past-exam-quiz-result').innerText()).includes('60 درجة'), 'Chemistry result must disclose that two essay questions are excluded from the automated score');
+
 
   // Every navigation tab must activate its matching content section.
   for (const tab of await page.locator('.tabs [role="tab"]').all()) {
@@ -228,6 +411,46 @@ try {
   await page.locator('#noteForm button[type="submit"]').click();
   await page.locator('#noteList').getByText('ملاحظة اختبارية ثانية').waitFor({ state: 'visible' });
 
+  // Physics 2023 interactive answer sheet: official Arabic keys, compound-answer options, and weighted grading.
+  await page.locator('[data-tab="pastExamArchive"]').click();
+  await page.locator('#pastExamPhysicsStart').click();
+  assert.equal(await page.locator('#pastExamPhysicsQuiz [data-physics-answer]').count(), 44, 'Physics answer sheet must render 44 objective questions');
+  assert.equal(await page.locator('#pastExamPhysicsQuiz .past-exam-answer-cell').filter({ hasText: 'سؤال 33' }).count(), 1, 'Physics questions 33–44 must be marked as two-point questions');
+  await page.locator('#pastExamPhysicsQuiz [data-physics-answer="0"]').selectOption('د');
+  await page.locator('#pastExamPhysicsQuiz [data-physics-answer="22"]').selectOption('جميع الإجابات صحيحة');
+  await page.locator('#pastExamPhysicsQuiz [data-physics-answer="23"]').selectOption('ج');
+  await page.locator('#pastExamPhysicsSubmit').click();
+  assert.ok((await page.locator('#pastExamPhysicsQuiz .past-exam-quiz-result').innerText()).includes('إجابات صحيحة: 3'), 'Physics grading must accept either letter in a combined Ministry answer');
+  assert.match(await page.locator('#pastExamPhysicsQuiz .past-exam-key-review .past-exam-key-grid span').nth(23).evaluate(node => node.textContent), /س24:.*ب.*ج/, 'Physics review must show both alternatives for the combined Ministry answer');
+  assert.equal(await page.locator('#pastExamPhysicsQuiz .past-exam-key-review .is-correct').count(), 3, 'Accepted alternative answers must also be marked correct in the answer review');
+  assert.ok((await page.locator('#pastExamPhysicsQuiz .past-exam-quiz-result').innerText()).includes('من 56'), 'Physics result must use the official 56-point objective subtotal');
+  assert.ok((await page.locator('#pastExamPhysicsQuiz .past-exam-quiz-result').innerText()).includes('60 درجة'), 'Physics result must disclose that two essay questions are excluded from the automated score');
+  // Biology 2023 interactive answer sheet: official Arabic keys and weighted grading.
+  await page.locator('#pastExamBiologyStart').click();
+  assert.equal(await page.locator('#pastExamBiologyQuiz [data-biology-answer]').count(), 44, 'Biology answer sheet must render 44 objective questions');
+  assert.equal(await page.locator('#pastExamBiologyQuiz .past-exam-answer-cell').filter({ hasText: 'سؤال 33' }).count(), 1, 'Biology questions 33–44 must be marked as two-point questions');
+  await page.locator('#pastExamBiologyQuiz [data-biology-answer="0"]').selectOption('أ');
+  await page.locator('#pastExamBiologyQuiz [data-biology-answer="32"]').selectOption('ج');
+  await page.locator('#pastExamBiologySubmit').click();
+  assert.ok((await page.locator('#pastExamBiologyQuiz .past-exam-quiz-result').innerText()).includes('درجتك: 3 من 56'), 'Biology quiz must apply the official one-point and two-point weights');
+  assert.ok((await page.locator('#pastExamBiologyQuiz .past-exam-quiz-result').innerText()).includes('60 درجة'), 'Biology result must disclose the official 60-point total and excluded essay questions');
+  assert.equal(await page.locator('#pastExamBiologyQuiz .past-exam-key-review .is-correct').count(), 2, 'Biology answer review must mark correct answers');
+  // 2023 Mathematics: all four Arabic branches, four models, and weighted objective grading.
+  await page.locator('#pastExamMathStart').click();
+  assert.equal(await page.locator('#pastExamMathQuiz [data-math-answer]').count(), 18, 'Math answer sheet must render 18 objective questions');
+  assert.equal(await page.locator('#pastExamMathQuiz .past-exam-answer-cell').filter({ hasText: 'سؤال 11' }).count(), 1, 'Math questions 11–18 must be marked as two-point questions');
+  await page.locator('#pastExamMathQuiz [data-math-answer="0"]').selectOption('ب');
+  await page.locator('#pastExamMathQuiz [data-math-answer="10"]').selectOption('أ');
+  await page.locator('#pastExamMathSubmit').click();
+  assert.ok((await page.locator('#pastExamMathQuiz .past-exam-quiz-result').innerText()).includes('درجتك: 3 من 26'), 'Math quiz must apply the official one-point and two-point weights');
+  assert.ok((await page.locator('#pastExamMathQuiz .past-exam-quiz-result').innerText()).includes('السؤالين المقاليين (19 و20)'), 'Math result must disclose excluded essay questions');
+  assert.equal(await page.locator('#pastExamMathQuiz .past-exam-key-review .is-correct').count(), 2, 'Math answer review must mark correct answers');
+  await page.locator('#pastExamMathRetry').click();
+  await page.locator('#pastExamMathBranch').selectOption('dynamics');
+  await page.locator('#pastExamMathModel').selectOption('د');
+  await page.locator('#pastExamMathStart').click();
+  assert.equal(await page.locator('#pastExamMathQuiz [data-math-answer]').count(), 18, 'Math selector must switch branches and models');
+  await page.locator('[data-tab="notes"]').click();
   // A saved note should survive a full page reload.
   await page.reload({ waitUntil: 'domcontentloaded' });
   await page.locator('[data-tab="notes"]').click();
@@ -374,6 +597,50 @@ try {
   assert.equal(await page.locator('#brandName').textContent(), 'Backup Restored');
   await page.locator('[data-tab="sched"]').click();
   await page.locator('#upList').getByText('موعد مستعاد من النسخة').waitFor({ state: 'visible' });
+  await page.locator('[data-tab="pastExamArchive"]').click();
+
+  // 2023 Literary History and Geography: four models each, 44 objective questions, weighted to 56 marks.
+  assert.equal(await page.locator('#pastExamArtsModel option').count(), 4, 'History and Geography quiz must offer all four official models');
+  await page.locator('#pastExamArtsStart').click();
+  assert.equal(await page.locator('#pastExamArtsQuiz [data-arts-answer]').count(), 44, 'History answer sheet must render 44 objective questions');
+  await page.locator('#pastExamArtsQuiz [data-arts-answer="0"]').selectOption('أ');
+  await page.locator('#pastExamArtsQuiz [data-arts-answer="32"]').selectOption('ج');
+  await page.locator('#pastExamArtsSubmit').click();
+  assert.ok((await page.locator('#pastExamArtsQuiz .past-exam-quiz-result').innerText()).includes('درجتك: 3 من 56'), 'History model A must apply one-point and two-point scoring');
+  assert.ok((await page.locator('#pastExamArtsQuiz .past-exam-quiz-result').innerText()).includes('السؤالين المقاليين (45 و46)'), 'Arts result must explicitly exclude essay questions 45 and 46');
+  assert.equal(await page.locator('#pastExamArtsQuiz .past-exam-key-review .is-correct').count(), 2, 'History answer review must mark correct objective answers');
+  await page.locator('#pastExamArtsRetry').click();
+  await page.locator('#pastExamArtsSubject').selectOption('geography');
+  await page.locator('#pastExamArtsModel').selectOption('د');
+  await page.locator('#pastExamArtsStart').click();
+  assert.equal(await page.locator('#pastExamArtsQuiz [data-arts-answer]').count(), 44, 'Geography answer sheet must render 44 objective questions');
+  await page.locator('#pastExamArtsQuiz [data-arts-answer="0"]').selectOption('أ');
+  await page.locator('#pastExamArtsQuiz [data-arts-answer="32"]').selectOption('أ');
+  await page.locator('#pastExamArtsSubmit').click();
+  assert.ok((await page.locator('#pastExamArtsQuiz .past-exam-quiz-result').innerText()).includes('درجتك: 3 من 56'), 'Geography model D must apply weighted objective scoring');
+  assert.ok((await page.locator('#pastExamArtsQuiz .past-exam-key-review summary').innerText()).includes('الجغرافيا، النموذج د'), 'Geography answer review must identify the selected subject and model');
+  await page.locator('#pastExamArtsRetry').click();
+
+  // 2023 English first and second foreign languages, all four models.
+  await page.locator('#pastExamEnglishStart').click();
+  assert.equal(await page.locator('#pastExamEnglishQuiz .past-exam-answer-cell').count(), 34, 'First English language must display 34 objective-key rows');
+  assert.equal(await page.locator('#pastExamEnglishQuiz [data-english-answer]').count(), 33, 'First English multi-answer item must be excluded from automatic grading');
+  await page.locator('#pastExamEnglishQuiz [data-english-answer="0"]').selectOption('B');
+  await page.locator('#pastExamEnglishQuiz [data-english-answer="26"]').selectOption('A');
+  await page.locator('#pastExamEnglishSubmit').click();
+  assert.ok((await page.locator('#pastExamEnglishQuiz .past-exam-quiz-result').innerText()).includes('درجتك: 3 من 40'), 'First English language must use weighted objective scoring and exclude the multi-answer item');
+  assert.ok((await page.locator('#pastExamEnglishQuiz .past-exam-quiz-result').innerText()).includes('الأسئلة المقالية من 35 إلى 37'), 'First English result must identify its essay range');
+  assert.equal(await page.locator('#pastExamEnglishQuiz .past-exam-key-review .is-correct').count(), 2, 'First English review must mark correct answers');
+  await page.locator('#pastExamEnglishRetry').click();
+  await page.locator('#pastExamEnglishSubject').selectOption('second');
+  await page.locator('#pastExamEnglishModel').selectOption('D');
+  await page.locator('#pastExamEnglishStart').click();
+  assert.equal(await page.locator('#pastExamEnglishQuiz [data-english-answer]').count(), 29, 'Second English language must render 29 objective questions');
+  await page.locator('#pastExamEnglishQuiz [data-english-answer="0"]').selectOption('C');
+  await page.locator('#pastExamEnglishQuiz [data-english-answer="24"]').selectOption('C');
+  await page.locator('#pastExamEnglishSubmit').click();
+  assert.ok((await page.locator('#pastExamEnglishQuiz .past-exam-quiz-result').innerText()).includes('درجتك: 3 من 34'), 'Second English language must apply 24 one-point and five two-point objective scoring');
+  assert.ok((await page.locator('#pastExamEnglishQuiz .past-exam-quiz-result').innerText()).includes('الأسئلة المقالية من 30 إلى 31'), 'Second English result must identify its essay range');
   await page.locator('[data-tab="notes"]').click();
   await page.locator('#noteList').getByText('ملاحظة مستعادة').waitFor({ state: 'visible' });
 

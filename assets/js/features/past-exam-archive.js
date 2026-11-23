@@ -734,7 +734,7 @@
       label: 'اللغة الإنجليزية — لغة أجنبية أولى',
       questionUrl: 'https://www.myschool77.com/2023/07/English-exam-3secondary.html',
       answerUrl: 'https://moe.gov.eg/media/evqfv1il/scinece-exammodels.pdf',
-      questionPage: 8, answerPage: 8, questionCount: 34, officialTotal: 50,
+      questionPage: 8, answerPage: 8, questionCount: 34, totalQuestions: 37, officialTotal: 50,
       weights: Array.from({ length: 34 }, (_, index) => index < 26 ? 1 : 2),
       models: {
         A: ['B','A','D','C','B','B','D','A','B','C','C','B','A','D','B','A','C','D','B','A','C','B','D','D','A','C','A','C','D','C','A|B','D','B','C'],
@@ -747,7 +747,7 @@
       label: 'اللغة الإنجليزية — لغة أجنبية ثانية',
       questionUrl: 'https://bablsheet.blob.core.windows.net/examq2023/09.pdf',
       answerUrl: 'https://moe.gov.eg/media/evqfv1il/scinece-exammodels.pdf',
-      questionPage: 28, answerPage: 28, questionCount: 29, officialTotal: 40,
+      questionPage: 28, answerPage: 28, questionCount: 29, totalQuestions: 31, officialTotal: 40,
       weights: Array.from({ length: 29 }, (_, index) => index < 24 ? 1 : 2),
       models: {
         A: ['C','A','D','C','B','C','A','C','D','B','D','A','C','A','B','D','C','A','B','A','D','C','A','B','D','C','D','A','B'],

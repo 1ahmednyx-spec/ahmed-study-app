@@ -236,5 +236,13 @@
       explanation: lesson[9] || lesson[2] || ''
     })));
   }
-  global.StudySubjectCourses = {init, getExamQuestions};
+  function getProgressStats(state) {
+    return Object.entries(COURSES).map(([id, course]) => {
+      const total = course.units.reduce((sum, unit) => sum + unit.lessons.length, 0);
+      const done = state && state.subjectLessonDone && state.subjectLessonDone[id] || {};
+      const completed = Object.values(done).filter(Boolean).length;
+      return {id, name:course.title, total, completed, percent:total ? Math.round(completed / total * 100) : 0};
+    });
+  }
+  global.StudySubjectCourses = {init, getExamQuestions, getProgressStats};
 })(window);

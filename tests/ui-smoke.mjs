@@ -201,7 +201,6 @@ try {
   await page.locator('#home').waitFor({ state: 'visible' });
 
   // Schedule entries should be created and rendered.
-  assert.equal(await page.evaluate(() => JSON.parse(localStorage.getItem('study-v1')).studyPlan.tasks[0].id), 'backup-plan-task', 'Backup restore must preserve smart planner tasks');
   await page.locator('[data-tab="sched"]').click();
   await page.locator('#evT').fill('اختبار واجهة المنصة');
   await page.locator('#evD').fill('2027-01-15');
@@ -361,6 +360,7 @@ try {
     buffer: Buffer.from(JSON.stringify(validBackup))
   });
   await page.locator('#bkSt').getByText('اترجعت بياناتك').waitFor({ state: 'visible' });
+  assert.equal(await page.evaluate(() => JSON.parse(localStorage.getItem('study-v1')).studyPlan.tasks[0].id), 'backup-plan-task', 'Backup restore must preserve smart planner tasks');
   await page.locator('[data-tab="sched"]').click();
   await page.locator('#upList').getByText('موعد مستعاد من النسخة').waitFor({ state: 'visible' });
   await page.locator('[data-tab="notes"]').click();

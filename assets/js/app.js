@@ -60,6 +60,7 @@ const smartRevision=window.StudySmartRevision.init({state:S,save,escapeHtml:esc}
 window.smartReviewRender=smartRevision.render;
 window.examCenterRender=examCenter.render;
 window.StudyMinistryLibrary.init();
+window.StudyPastExamArchive.init();
 
 const {render:renderMist}=window.StudyMistakes.init({state:S,save,uid,today,addDays,escapeHtml:esc});
 

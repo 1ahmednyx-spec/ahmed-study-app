@@ -267,6 +267,20 @@
     "fileLabel": "فتح ورقة الامتحان"
   },
   {
+    "id": "2019-geography-blind-guide",
+    "year": "2019",
+    "system": "legacy",
+    "systemLabel": "نظام الثانوية العامة 2018/2019",
+    "subject": "الجغرافيا",
+    "type": "model",
+    "typeLabel": "امتحان تجريبي رسمي — فئة الدمج (مكفوفين)",
+    "fileKind": "model",
+    "title": "امتحان تجريبي الجغرافيا — نسخة دمج للمكفوفين",
+    "round": "نموذج تجريبي — وليس ورقة الامتحان العام",
+    "pdfUrl": "https://moe.gov.eg/media/2oxexd0r/geography_blind_guide_19.pdf",
+    "fileLabel": "فتح النموذج التجريبي"
+  },
+  {
     "id": "2019-history-model",
     "year": "2019",
     "system": "legacy",

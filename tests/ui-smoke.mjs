@@ -77,6 +77,16 @@ try {
   assert.match(pastExamArchiveSource, /32 سؤالًا بدرجة واحدة و12 سؤالًا بدرجتين/, 'Arts quiz must disclose official weighted question distribution');
 
 
+  for (const examId of [
+    '2020-chemistry-hearing-paper',
+    '2020-physics-blind-paper',
+    '2020-biology-mobility-paper',
+    '2020-pure-math-mobility-paper'
+  ]) {
+    assert.match(pastExamArchiveSource, new RegExp('"id": "' + examId + '"'), 'Archive must include the verified 2020 Ministry paper ' + examId);
+  }
+  assert.match(pastExamArchiveSource, /ورقة امتحان وزارة رسمية — نسخة دمج/, 'Inclusive exam papers must be clearly labeled as special-accommodation versions');
+
   assert.match(pastExamArchiveSource, /2023-official-question-paper-portal/, 'Archive must link to the official Ministry question-paper portal');
   assert.match(pastExamArchiveSource, /2024-official-question-and-answer-portal/, 'Archive must link to the official 2024 questions and answer resource');
   assert.match(pastExamArchiveSource, /2026-official-models-portal/, 'Archive must link to the official 2026 model-exam portal');

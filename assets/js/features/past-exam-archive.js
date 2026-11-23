@@ -879,6 +879,7 @@
           <div><label for="pastExamYear">السنة</label><select id="pastExamYear"><option value="all">كل السنوات</option>${YEARS.map(year => `<option value="${year}">${year}</option>`).join('')}</select></div>
           <div><label for="pastExamSubject">المادة</label><select id="pastExamSubject"><option value="all">كل المواد</option>${SUBJECTS.map(subject => `<option value="${escapeHTML(subject)}">${escapeHTML(subject)}</option>`).join('')}</select></div>
           <div><label for="pastExamType">نوع الامتحان</label><select id="pastExamType"><option value="all">كل الأنواع</option>${TYPES.map(item => option(item, '')).join('')}</select></div>
+          <div><label for="pastExamFileKind">نوع الملف</label><select id="pastExamFileKind"><option value="all">كل الملفات</option><option value="paper">ورقة أسئلة</option><option value="answer">نموذج إجابة</option><option value="model">نموذج استرشادي</option><option value="portal">بوابة مصدر</option></select></div>
         </div>
         <label for="pastExamSearch">بحث داخل الأرشيف</label>
         <input id="pastExamSearch" type="search" placeholder="ابحث باسم المادة أو السنة أو الدور...">
@@ -971,7 +972,7 @@
         <a href="https://moe.gov.eg/" target="_blank" rel="noopener noreferrer">الموقع الرسمي لوزارة التربية والتعليم المصرية</a>
       </div>`;
 
-    const controls = ['pastExamSystem', 'pastExamYear', 'pastExamSubject', 'pastExamType', 'pastExamSearch']
+    const controls = ['pastExamSystem', 'pastExamYear', 'pastExamSubject', 'pastExamType', 'pastExamFileKind', 'pastExamSearch']
       .map(id => document.getElementById(id));
     controls.forEach(control => control.addEventListener('input', render));
     render();
@@ -1265,12 +1266,13 @@
     }
 
     function render() {
-      const [system, year, subject, type, search] = controls.map(control => control.value.trim().toLowerCase());
+      const [system, year, subject, type, fileKind, search] = controls.map(control => control.value.trim().toLowerCase());
       const filtered = EXAMS.filter(exam =>
         (system === 'all' || exam.system === system) &&
         (year === 'all' || exam.year === year) &&
         (subject === 'all' || exam.subject === controls[2].value) &&
         (type === 'all' || exam.type === type) &&
+        (fileKind === 'all' || exam.fileKind === fileKind) &&
         (!search || [exam.year, exam.subject, exam.round, exam.title, exam.systemLabel, exam.typeLabel].join(' ').toLowerCase().includes(search))
       );
       document.getElementById('pastExamCount').textContent = `${filtered.length} ملف موثق من أصل ${EXAMS.length}`;

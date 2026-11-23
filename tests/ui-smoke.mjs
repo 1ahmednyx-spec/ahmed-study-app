@@ -312,7 +312,9 @@ try {
   assert.equal(await page.locator('#pastExamPhysicsQuiz .past-exam-answer-cell').filter({ hasText: 'سؤال 33' }).count(), 1, 'Physics questions 33–44 must be marked as two-point questions');
   await page.locator('#pastExamPhysicsQuiz [data-physics-answer="0"]').selectOption('د');
   await page.locator('#pastExamPhysicsQuiz [data-physics-answer="22"]').selectOption('جميع الإجابات صحيحة');
+  await page.locator('#pastExamPhysicsQuiz [data-physics-answer="23"]').selectOption('ج');
   await page.locator('#pastExamPhysicsSubmit').click();
+  assert.ok((await page.locator('#pastExamPhysicsQuiz .past-exam-quiz-result').innerText()).includes('إجابات صحيحة: 3'), 'Physics grading must accept either letter in a combined Ministry answer');
   assert.ok((await page.locator('#pastExamPhysicsQuiz .past-exam-quiz-result').innerText()).includes('من 56'), 'Physics result must use the official 56-point objective subtotal');
   assert.ok((await page.locator('#pastExamPhysicsQuiz .past-exam-quiz-result').innerText()).includes('60 درجة'), 'Physics result must disclose that two essay questions are excluded from the automated score');
   // A saved note should survive a full page reload.

@@ -710,10 +710,10 @@
   const CHEMISTRY_2023_WEIGHTS = Array.from({ length: 44 }, (_, index) => index < 32 ? 1 : 2);
 
   // Physics 2023 Arabic answer keys transcribed from the Ministry's official grading PDF (pages 68–71).
-  const PHYSICS_2023_MODEL_A_KEY = ['د','أ','ج','د','ب','أ','د','ب','ج','أ','د','أ','ج','ب','أ','أ','د','ب','ب','ج','ب','أ','جميع الإجابات صحيحة','ب، ج','ج','ب','ج','ج','ب','أ','د','ب','ج','أ','د','أ','ب','د','ج','أ','ج','ب','أ','د'];
-  const PHYSICS_2023_MODEL_B_KEY = ['ب','أ','د','ب','ج','أ','ب','ج','ج','ب','ب','ج','ب','أ','د','ب','ب، ج','ج','د','أ','ج','ب','أ','أ','د','د','أ','ج','د','ب','أ','جميع الإجابات صحيحة','أ','ب','د','ج','أ','د','ب','أ','د','ج','أ','ج'];
-  const PHYSICS_2023_MODEL_C_KEY = ['د','أ','ج','ب','أ','أ','د','ب','أ','جميع الإجابات صحيحة','د','أ','ج','د','ب','أ','د','ب','ج','أ','ب','أ','د','ب','ب','ج','ج','ب','ب','ج','ب، ج','ج','ج','أ','ج','ب','أ','د','أ','ب','د','ج','أ','د'];
-  const PHYSICS_2023_MODEL_D_KEY = ['ب','ب','ج','ب، ج','ج','د','أ','ج','ب','أ','أ','د','ب','أ','جميع الإجابات صحيحة','ب','ج','ج','ب','أ','د','ب','ج','أ','ب','أ','د','ب','د','أ','ج','د','ب','أ','د','ج','أ','د','ج','أ','ج','أ','ب','د'];
+  const PHYSICS_2023_MODEL_A_KEY = ['د','أ','ج','د','ب','أ','د','ب','ج','أ','د','أ','ج','ب','أ','أ','د','ب','ب','ج','ب','أ','جميع الإجابات صحيحة','ب|ج','ج','ب','ج','ج','ب','أ','د','ب','ج','أ','د','أ','ب','د','ج','أ','ج','ب','أ','د'];
+  const PHYSICS_2023_MODEL_B_KEY = ['ب','أ','د','ب','ج','أ','ب','ج','ج','ب','ب','ج','ب','أ','د','ب','ب|ج','ج','د','أ','ج','ب','أ','أ','د','د','أ','ج','د','ب','أ','جميع الإجابات صحيحة','أ','ب','د','ج','أ','د','ب','أ','د','ج','أ','ج'];
+  const PHYSICS_2023_MODEL_C_KEY = ['د','أ','ج','ب','أ','أ','د','ب','أ','جميع الإجابات صحيحة','د','أ','ج','د','ب','أ','د','ب','ج','أ','ب','أ','د','ب','ب','ج','ج','ب','ب','ج','ب|ج','ج','ج','أ','ج','ب','أ','د','أ','ب','د','ج','أ','د'];
+  const PHYSICS_2023_MODEL_D_KEY = ['ب','ب','ج','ب|ج','ج','د','أ','ج','ب','أ','أ','د','ب','أ','جميع الإجابات صحيحة','ب','ج','ج','ب','أ','د','ب','ج','أ','ب','أ','د','ب','د','أ','ج','د','ب','أ','د','ج','أ','د','ج','أ','ج','أ','ب','د'];
   const PHYSICS_2023_MODEL_KEYS = { أ: PHYSICS_2023_MODEL_A_KEY, ب: PHYSICS_2023_MODEL_B_KEY, ج: PHYSICS_2023_MODEL_C_KEY, د: PHYSICS_2023_MODEL_D_KEY };
   const PHYSICS_2023_QUESTION_URL = 'https://www.ta3lemkonline.com/2023/08/2023_32.html';
   const PHYSICS_2023_ANSWER_URL = 'https://moe.gov.eg/media/evqfv1il/scinece-exammodels.pdf#page=68';
@@ -862,7 +862,7 @@
         host.querySelector('#pastExamArabicSubmit').addEventListener('click', () => {
           const answers = selects.map(select => select.value);
           const answered = answers.filter(Boolean).length;
-          const correct = answers.reduce((sum, answer, index) => sum + (answer === answerKey[index] ? 1 : 0), 0);
+          const correct = answers.reduce((sum, answer, index) => sum + (answer === answerKey[index] || answerKey[index].split('|').includes(answer) ? 1 : 0), 0);
           const wrong = answered - correct;
           const percent = Math.round(correct / answerKey.length * 100);
           host.innerHTML = '<div class="past-exam-quiz-result"><strong>' + percent + '%</strong><h4>نتيجتك: ' + correct + ' من 51</h4><p>إجابات صحيحة: ' + correct + ' · خاطئة: ' + wrong + ' · بدون إجابة: ' + (51 - answered) + '</p><p class="hint">هذه نتيجة عدد الإجابات الصحيحة من 51 سؤالًا موضوعيًا، وليست الدرجة الرسمية من 80؛ لا تشمل الأسئلة المقالية أو توزيع درجات كل سؤال.</p><button class="p" type="button" id="pastExamArabicRetry">إعادة المحاولة</button></div>' +
@@ -917,7 +917,7 @@
       host.querySelector('#pastExamPhysicsStart').addEventListener('click', () => {
         const model = host.querySelector('#pastExamPhysicsModel').value;
         const answerKey = PHYSICS_2023_MODEL_KEYS[model];
-        const choices = ['أ','ب','ج','د','ب، ج','جميع الإجابات صحيحة'];
+        const choices = ['أ','ب','ج','د','جميع الإجابات صحيحة'];
         host.innerHTML = '<div class="past-exam-quiz-toolbar"><b>ورقة إجابة الفيزياء — النموذج ' + model + '</b><span id="pastExamPhysicsProgress">تمت الإجابة عن 0 من 44</span></div>' +
           '<div class="past-exam-answer-grid">' + answerKey.map((_, index) =>
             '<label class="past-exam-answer-cell"><span>سؤال ' + (index + 1) + (PHYSICS_2023_WEIGHTS[index] === 2 ? ' · درجتان' : ' · درجة') + '</span><select aria-label="إجابة السؤال ' + (index + 1) + '" data-physics-answer="' + index + '"><option value="">—</option>' +
@@ -932,7 +932,7 @@
         host.querySelector('#pastExamPhysicsSubmit').addEventListener('click', () => {
           const answers = selects.map(select => select.value);
           const answered = answers.filter(Boolean).length;
-          const score = answers.reduce((sum, answer, index) => sum + (answer === answerKey[index] ? PHYSICS_2023_WEIGHTS[index] : 0), 0);
+          const score = answers.reduce((sum, answer, index) => sum + (answer === answerKey[index] || answerKey[index].split('|').includes(answer) ? PHYSICS_2023_WEIGHTS[index] : 0), 0);
           const maxScore = PHYSICS_2023_WEIGHTS.reduce((sum, weight) => sum + weight, 0);
           const correct = answers.reduce((sum, answer, index) => sum + (answer === answerKey[index] ? 1 : 0), 0);
           const wrong = answered - correct;

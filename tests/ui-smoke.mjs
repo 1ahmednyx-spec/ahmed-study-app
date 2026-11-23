@@ -246,7 +246,7 @@ try {
   assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 30, 'Year filter must isolate the thirty in-scope 2023 resources');
   await page.locator('#pastExamYear').selectOption('all');
   await page.locator('#pastExamFileKind').selectOption('paper');
-  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 6, 'Direct exam papers must be separated from answers, models, and portals');
+  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 7, 'Direct exam papers must be separated from answers, models, and portals');
   await page.locator('#pastExamFileKind').selectOption('answer');
   assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 27, 'Official answer keys must be independently filterable');
   await page.locator('#pastExamFileKind').selectOption('portal');

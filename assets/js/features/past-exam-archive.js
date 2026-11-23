@@ -7,6 +7,19 @@
     'اللغة العربية', 'اللغة الأجنبية الأولى', 'اللغة الأجنبية الثانية',
     'الرياضيات', 'الكيمياء', 'الفيزياء', 'الأحياء', 'التاريخ', 'الجغرافيا', 'كل المواد'
   ];
+  const SUBJECT_ICONS = {
+    'اللغة العربية': '📖',
+    'اللغة الأجنبية الأولى': '🌐',
+    'اللغة الأجنبية الثانية': '🗣️',
+    'الرياضيات': '📐',
+    'الكيمياء': '🧪',
+    'الفيزياء': '⚛️',
+    'الأحياء': '🧬',
+    'التاريخ': '🏛️',
+    'الجغرافيا': '🗺️',
+    'كل المواد': '📚'
+  };
+
   const SYSTEMS = [
     { value: 'all', label: 'كل الأنظمة' },
     { value: 'legacy', label: 'النظام القديم' },
@@ -1535,7 +1548,7 @@
       results.innerHTML = filtered.map(exam => `
         <article class="past-exam-card">
           <div class="past-exam-card-top"><span>${escapeHTML(exam.typeLabel)}</span><b>${escapeHTML(exam.year)}</b></div>
-          <h3>${escapeHTML(exam.subject)}</h3>
+          <h3 class="past-exam-subject-title"><span class="past-exam-subject-icon" aria-hidden="true">${SUBJECT_ICONS[exam.subject] || "📘"}</span><span>${escapeHTML(exam.subject)}</span></h3>
           <p>${escapeHTML(exam.title)} · ${escapeHTML(exam.round)}</p>
           <div class="past-exam-card-meta"><span>${escapeHTML(exam.systemLabel)}</span><a href="${escapeHTML(exam.pdfUrl + (exam.pdfPage ? "#page=" + exam.pdfPage : ""))}" target="_blank" rel="noopener noreferrer">${escapeHTML(exam.fileLabel || "فتح الملف")} ↗</a></div>
           ${exam.fileKind === 'portal' ? '<small class="past-exam-source-note">هذه صفحة مصدر وليست ملف ورقة أسئلة PDF مباشرًا.</small>' : (exam.sourceNote ? '<small class="past-exam-source-note">' + escapeHTML(exam.sourceNote) + '</small>' : '')}

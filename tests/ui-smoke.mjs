@@ -273,7 +273,7 @@ try {
   assert.equal(await page.locator('#ecQuizBox .course-question').count(), 5, 'English course quiz should generate five questions');
 
   // Universal tutor should report a clear gateway error when the Worker is not deployed.
-  await page.route('https://sparkling-disk-d582ahmed-study-ai.1ahmednyx.workers.dev/**', route =>
+  await page.route('https://sparkling-disk-disk-d582ahmed-study-ai.1ahmednyx.workers.dev/**', route =>
     route.fulfill({ status: 503, contentType: 'application/json', body: JSON.stringify({ error: 'server_not_configured' }) })
   );
   await page.locator('[data-tab="chat"]').click();

@@ -87,8 +87,9 @@ export default {
     }
 
     const prompt = typeof body.prompt === "string" ? body.prompt.trim() : "";
+    const systemInstruction = typeof body.systemInstruction === "string" ? body.systemInstruction.trim() : "";
     if (!prompt) return json({ error: "empty_prompt" }, 400, origin);
-    if (prompt.length > MAX_INPUT_CHARS) return json({ error: "input_too_large" }, 413, origin);
+    if (prompt.length + systemInstruction.length > MAX_INPUT_CHARS) return json({ error: "input_too_large" }, 413, origin);
 
     try {
       const upstream = await fetch("https://generativelanguage.googleapis.com/v1beta/interactions", {
@@ -100,6 +101,7 @@ export default {
         body: JSON.stringify({
           model: MODEL,
           store: false,
+          system_instruction: systemInstruction || undefined,
           input: prompt
         })
       });

@@ -672,6 +672,22 @@
     'ج','ب','ب','أ','د','ج','ب','أ','د','ج','ب','أ','أ','ب','د','ج','أ','ب','ج','ج',
     'د','ب','ج','أ','د','ب','ج','أ','ج','ب','د'
   ];
+  const ARABIC_2023_MODEL_B_KEY = [
+    'د','ج','ب','أ','ج','ب','د','ج','أ','د','أ','ج','د','أ','ب','ج','أ','د','ب','ج',
+    'أ','ج','ب','أ','د','ج','ب','أ','ج','ب','أ','أ','د','ب','ج','ج','أ','ب','د','ج',
+    'أ','د','ج','أ','د','ب','د','أ','ب','ج','أ'
+  ];
+  const ARABIC_2023_MODEL_C_KEY = [
+    'ج','ب','أ','د','ج','ب','أ','ج','ب','ب','أ','د','د','ب','ج','أ','ج','ب','د','ج',
+    'أ','ب','أ','د','د','أ','ب','ج','أ','د','ب','د','أ','ج','ج','د','أ','أ','د','ج',
+    'أ','د','أ','ج','د','ج','ب','ج','أ','د','ب'
+  ];
+  const ARABIC_2023_MODEL_D_KEY = [
+    'ج','أ','أ','ج','ب','ب','أ','د','ج','ب','أ','د','ج','ب','د','ب','ج','أ','ج','ب',
+    'ج','أ','أ','ج','ب','ب','أ','د','ج','ب','أ','د','ج','ب','د','ب','ج','أ','ج','ب',
+    'د','ج','أ','د','أ','ج','د','أ','ب','ج','أ'
+  ];
+  const ARABIC_2023_MODEL_KEYS = { أ: ARABIC_2023_MODEL_A_KEY, ب: ARABIC_2023_MODEL_B_KEY, ج: ARABIC_2023_MODEL_C_KEY, د: ARABIC_2023_MODEL_D_KEY };
   const ARABIC_2023_PAPER_URL = 'https://drive.google.com/file/d/1Xdhd5Y8WgYdk9LoSfLjN0ktpgahl5tZr/view?usp=drivesdk';
   const ARABIC_2023_ANSWER_URL = 'https://moe.gov.eg/media/xmhd3sow/arts-answermodels.pdf#page=4';
 
@@ -777,11 +793,13 @@
     function renderArabicInteractiveExam() {
       const host = document.getElementById('pastExamArabicQuiz');
       if (!host) return;
-      host.innerHTML = '<button class="p past-exam-quiz-start" type="button" id="pastExamArabicStart">ابدأ تسجيل الإجابات</button><p class="hint">51 سؤالًا موضوعيًا · 4 اختيارات لكل سؤال · لا يوجد مؤقت في هذه النسخة</p>';
+      host.innerHTML = '<label class="past-exam-model-picker">اختر نموذج الإجابة: <select id="pastExamArabicModel"><option value="أ">النموذج أ</option><option value="ب">النموذج ب</option><option value="ج">النموذج ج</option><option value="د">النموذج د</option></select></label><button class="p past-exam-quiz-start" type="button" id="pastExamArabicStart">ابدأ تسجيل الإجابات</button><p class="hint">51 سؤالًا موضوعيًا · 4 اختيارات لكل سؤال · مفاتيح النماذج الأربعة من الوزارة</p>';
       host.querySelector('#pastExamArabicStart').addEventListener('click', () => {
+        const model = host.querySelector('#pastExamArabicModel').value;
+        const answerKey = ARABIC_2023_MODEL_KEYS[model];
         const choices = ['أ','ب','ج','د'];
-        host.innerHTML = '<div class="past-exam-quiz-toolbar"><b>ورقة الإجابة — النموذج أ</b><span id="pastExamArabicProgress">تمت الإجابة عن 0 من 51</span></div>' +
-          '<div class="past-exam-answer-grid">' + ARABIC_2023_MODEL_A_KEY.map((_, index) =>
+        host.innerHTML = '<div class="past-exam-quiz-toolbar"><b>ورقة الإجابة — النموذج ' + model + '</b><span id="pastExamArabicProgress">تمت الإجابة عن 0 من 51</span></div>' +
+          '<div class="past-exam-answer-grid">' + answerKey.map((_, index) =>
             '<label class="past-exam-answer-cell"><span>سؤال ' + (index + 1) + '</span><select aria-label="إجابة السؤال ' + (index + 1) + '" data-answer="' + index + '"><option value="">—</option>' +
             choices.map(choice => '<option value="' + choice + '">' + choice + '</option>').join('') + '</select></label>'
           ).join('') + '</div><button class="p past-exam-quiz-submit" type="button" id="pastExamArabicSubmit">تصحيح الإجابات</button>';
@@ -794,12 +812,12 @@
         host.querySelector('#pastExamArabicSubmit').addEventListener('click', () => {
           const answers = selects.map(select => select.value);
           const answered = answers.filter(Boolean).length;
-          const correct = answers.reduce((sum, answer, index) => sum + (answer === ARABIC_2023_MODEL_A_KEY[index] ? 1 : 0), 0);
+          const correct = answers.reduce((sum, answer, index) => sum + (answer === answerKey[index] ? 1 : 0), 0);
           const wrong = answered - correct;
-          const percent = Math.round(correct / ARABIC_2023_MODEL_A_KEY.length * 100);
-          host.innerHTML = '<div class="past-exam-quiz-result"><strong>' + percent + '%</strong><h4>نتيجتك: ' + correct + ' من 51</h4><p>إجابات صحيحة: ' + correct + ' · خاطئة: ' + wrong + ' · بدون إجابة: ' + (51 - answered) + '</p><p class="hint">هذه نتيجة الأسئلة الموضوعية فقط، وليست الدرجة النهائية الرسمية من 80؛ لا تشمل الأسئلة المقالية أو توزيع درجاتها.</p><button class="p" type="button" id="pastExamArabicRetry">إعادة المحاولة</button></div>' +
-            '<details class="past-exam-key-review"><summary>مراجعة مفتاح الإجابة الرسمي للأسئلة الـ51</summary><div class="past-exam-key-grid">' +
-            ARABIC_2023_MODEL_A_KEY.map((answer, index) => '<span class="' + (answers[index] === answer ? 'is-correct' : 'is-wrong') + '">س' + (index + 1) + ': ' + answer + (answers[index] ? (answers[index] === answer ? ' ✓' : ' · إجابتك ' + answers[index]) : ' · لم تجب') + '</span>').join('') +
+          const percent = Math.round(correct / answerKey.length * 100);
+          host.innerHTML = '<div class="past-exam-quiz-result"><strong>' + percent + '%</strong><h4>نتيجتك: ' + correct + ' من 51</h4><p>إجابات صحيحة: ' + correct + ' · خاطئة: ' + wrong + ' · بدون إجابة: ' + (51 - answered) + '</p><p class="hint">هذه نتيجة عدد الإجابات الصحيحة من 51 سؤالًا موضوعيًا، وليست الدرجة الرسمية من 80؛ لا تشمل الأسئلة المقالية أو توزيع درجات كل سؤال.</p><button class="p" type="button" id="pastExamArabicRetry">إعادة المحاولة</button></div>' +
+            '<details class="past-exam-key-review"><summary>مراجعة مفتاح الإجابة الرسمي للنموذج ' + model + '</summary><div class="past-exam-key-grid">' +
+            answerKey.map((answer, index) => '<span class="' + (answers[index] === answer ? 'is-correct' : 'is-wrong') + '">س' + (index + 1) + ': ' + answer + (answers[index] ? (answers[index] === answer ? ' ✓' : ' · إجابتك ' + answers[index]) : ' · لم تجب') + '</span>').join('') +
             '</div></details>';
           host.querySelector('#pastExamArabicRetry').addEventListener('click', renderArabicInteractiveExam);
         });

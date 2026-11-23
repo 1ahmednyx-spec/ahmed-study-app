@@ -108,10 +108,10 @@ try {
       assert.equal((keyLine.match(/'[^']+'/g) || []).length, 18, branch + ' model ' + model + ' must contain 18 objective answers');
     }
   }
-  assert.ok(pastExamArchiveSource.includes('mathematica-exammodels.pdf#page=82'), 'Math archive must link to the official Statics paper');
-  assert.ok(pastExamArchiveSource.includes('mathematica-exammodels.pdf#page=97'), 'Math archive must link to the official Dynamics paper');
-  assert.ok(pastExamArchiveSource.includes('mathematica-exammodels.pdf#page=112'), 'Math archive must link to the official Calculus paper');
-  assert.ok(pastExamArchiveSource.includes('mathematica-exammodels.pdf#page=127'), 'Math archive must link to the official Algebra and Geometry paper');
+  assert.ok(pastExamArchiveSource.includes('${MATH_2023_ANSWER_URL}#page=82'), 'Math archive must link to the official Statics paper');
+  assert.ok(pastExamArchiveSource.includes('${MATH_2023_ANSWER_URL}#page=97'), 'Math archive must link to the official Dynamics paper');
+  assert.ok(pastExamArchiveSource.includes('${MATH_2023_ANSWER_URL}#page=112'), 'Math archive must link to the official Calculus paper');
+  assert.ok(pastExamArchiveSource.includes('${MATH_2023_ANSWER_URL}#page=127'), 'Math archive must link to the official Algebra and Geometry paper');
   assert.match(pastExamArchiveSource, /44 سؤالًا موضوعيًا/, 'Physics quiz must grade 44 objective questions');
   assert.match(pastExamArchiveSource, /PHYSICS_2023_WEIGHTS/, 'Physics quiz must apply the Ministry mark distribution');
   assert.match(pastExamArchiveSource, /scinece-exammodels\.pdf#page=68/, 'Physics quiz must link to the official Ministry answer-key PDF');

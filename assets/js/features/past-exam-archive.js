@@ -508,15 +508,15 @@
   "id": "2025-ministry-models",
   "year": "2025",
   "system": "modern",
-  "systemLabel": "نظام الثانوية العامة 2025",
+  "systemLabel": "العام الدراسي 2025/2026",
   "subject": "كل المواد",
   "type": "model",
-  "typeLabel": "بوابة النماذج الاسترشادية الرسمية",
+  "typeLabel": "بوابة المكتبة الإلكترونية الرسمية",
     "fileKind": "portal",
-  "title": "نماذج الثانوية العامة 2025",
+  "title": "المكتبة الإلكترونية — نماذج الثانوية العامة 2025/2026",
   "round": "نماذج استرشادية",
-  "pdfUrl": "https://content.moe.gov.eg/qa",
-  "fileLabel": "فتح بوابة الوزارة"
+  "pdfUrl": "https://ellibrary.moe.gov.eg/",
+  "fileLabel": "فتح المكتبة الإلكترونية للوزارة"
 },
   {
     "id": "2023-science-french-first-answer",

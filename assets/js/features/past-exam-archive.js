@@ -86,7 +86,7 @@
     "type": "official",
     "typeLabel": "نموذج إجابة رسمي",
     "fileKind": "answer",
-    "title": "نماذج إجابة الرياضيات — الشعبة العلمية",
+    "title": "نموذج إجابة الديناميكا باللغة العربية — الشعبة العلمية رياضيات",
     "round": "الدور الأول",
     "pdfUrl": "https://moe.gov.eg/media/tzfj0lya/mathematica-exammodels.pdf",
     "fileLabel": "فتح نموذج الإجابة"

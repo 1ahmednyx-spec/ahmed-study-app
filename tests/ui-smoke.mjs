@@ -77,6 +77,14 @@ try {
   }
   assert.match(pastExamArchiveSource, /pastExamArabicModel/, 'Arabic interactive exam must allow selecting all four official models');
   assert.match(pastExamArchiveSource, /pastExamArabicQuiz/, 'Archive must render an interactive answer sheet');
+  for (const model of ['A', 'B', 'C', 'D']) {
+    assert.match(pastExamArchiveSource, new RegExp('CHEMISTRY_2023_MODEL_' + model + '_KEY'), 'Archive must include the 2023 Chemistry model ' + model + ' answer key');
+  }
+  assert.match(pastExamArchiveSource, /pastExamChemistryModel/, 'Chemistry quiz must allow selecting all four official models');
+  assert.match(pastExamArchiveSource, /44 سؤالًا موضوعيًا/, 'Chemistry quiz must grade 44 objective questions');
+  assert.match(pastExamArchiveSource, /CHEMISTRY_2023_WEIGHTS/, 'Chemistry quiz must apply the Ministry mark distribution');
+  assert.match(pastExamArchiveSource, /scinece-exammodels\\.pdf#page=54/, 'Chemistry quiz must link to the official Ministry answer-key PDF');
+  assert.match(pastExamArchiveSource, /mediafire\\.com\\/file\\//, 'Chemistry quiz must provide the external question-paper archive link');
   assert.match(pastExamArchiveSource, /51 سؤالًا موضوعيًا/, 'Arabic answer sheet must clearly limit automatic grading to 51 objective questions');
   assert.match(pastExamArchiveSource, /arts-answermodels\.pdf#page=4/, 'Arabic quiz must link to the Ministry answer-key PDF');
   assert.match(pastExamArchiveSource, /drive\.google\.com\/file\/d\//, 'Arabic quiz must provide a separate question-paper link');

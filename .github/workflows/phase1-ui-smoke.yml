@@ -6,6 +6,7 @@ on:
       - phase-1-ui-foundation
       - phase-2-modular-foundation
       - feature/subjects-2027-on-main
+      - feature/past-exam-archive
   pull_request:
     branches:
       - main

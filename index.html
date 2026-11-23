@@ -33,6 +33,7 @@
       <button type="button" role="tab" aria-selected="false" data-tab="eng"><span>文</span> قاموس الكلمات</button>
       <button type="button" role="tab" aria-selected="false" data-tab="library"><span>📚</span> مكتبة الوزارة</button>
       <button type="button" role="tab" aria-selected="false" data-tab="english2027"><span>EN</span> إنجليزي 2027</button>
+      <button type="button" role="tab" aria-selected="false" data-tab="englishPath"><span>✦</span> تعلم الإنجليزية</button>
       <button type="button" role="tab" aria-selected="false" data-tab="biology2027"><span>أ</span> أحياء 2027</button>
       <button type="button" role="tab" aria-selected="false" data-tab="math2027"><span>ر</span> رياضيات 2027</button>
       <button type="button" role="tab" aria-selected="false" data-tab="physics2027"><span>ف</span> فيزياء 2027</button>
@@ -60,6 +61,7 @@
           <button type="button" data-go-tab="prac"><span>✓</span><b>التدريب والخطة</b><small>سجّل حل الأسئلة ونظّم أسبوعك</small></button>
           <button type="button" data-go-tab="library"><span>📚</span><b>مكتبة الوزارة</b><small>كتب الصف الثالث الثانوي حسب المادة</small></button>
           <button type="button" data-go-tab="english2027"><span>EN</span><b>إنجليزي 2027</b><small>تابع وحدات ومراجعة الإنجليزية</small></button>
+          <button type="button" data-go-tab="englishPath"><span>✦</span><b>تعلم الإنجليزية</b><small>مسار مستقل من الأساسيات إلى المتوسط</small></button>
           <button type="button" data-go-tab="biology2027"><span>أ</span><b>أحياء 2027</b><small>افتح مساحة الأحياء للكتاب والوحدات والتدريبات</small></button>
           <button type="button" data-go-tab="math2027"><span>ر</span><b>رياضيات 2027</b><small>افتح مساحة الرياضيات للكتاب والوحدات والتدريبات</small></button>
           <button type="button" data-go-tab="physics2027"><span>ف</span><b>فيزياء 2027</b><small>افتح مساحة الفيزياء للكتاب والوحدات والتدريبات</small></button>
@@ -275,6 +277,12 @@
   <p class="hint">ملاحظة: المحتوى المضاف هنا خريطة منظمة للمنهج وأدوات متابعة شخصية. الكتاب الرسمي هو المرجع الأساسي للكلمات والنصوص والتدريبات الكاملة، وقد تتغير أي تفاصيل بصدور تحديث من الوزارة.</p>
 </section>
 
+<section id="englishPath" hidden>
+  <div class="english-path-hero"><span class="eyebrow">ENGLISH LEARNING PATH</span><h2>تعلم الإنجليزية خطوة بخطوة</h2><p>مسار تعليمي مستقل عن ملخصات منهج إنجليزي 2027. ابدأ بالأساسيات، وافهم القاعدة، ثم طبّق بنفسك في القراءة والكتابة والمحادثة.</p><div class="path-levels"><span>Beginner A1</span><span>Elementary A2</span><span>Intermediate B1</span></div></div>
+  <div class="panel path-progress-panel"><div class="row"><div><b>تقدمك في المسار</b><div class="hint" id="englishPathProgress">0 من 17 درس</div></div><strong id="englishPathPercent">0%</strong></div><div class="course-meter"><span id="englishPathBar"></span></div><label for="englishPathSearch">ابحث عن درس</label><input id="englishPathSearch" type="search" placeholder="ابحث عن قاعدة أو كلمة أو مهارة..."></div>
+  <div id="englishPathLessons"></div><p class="hint">هذا مسار تأسيسي وتطويري مستقل، وليس بديلًا عن كتاب الوزارة أو ملخصات إنجليزي 2027. أضفنا الشرح والأمثلة والتدريبات للممارسة الذاتية.</p>
+</section>
+
 <section id="arabic2027" hidden><div data-subject-course><div class="course-hero"><h2>منهج اللغة العربية — الصف الثالث الثانوي 2027</h2><p>شرح مبسّط للدروس، أمثلة، وتدريب سريع مع حفظ التقدم على جهازك.</p><div class="course-links"><a href="https://studentbooks.moe.gov.eg/Books" target="_blank" rel="noopener">كتاب الوزارة الرسمي ↗</a></div><p class="course-muted">خريطة دراسية مساعدة وفق موضوعات كتب 2026/2027. ارجع إلى كتاب الوزارة عند اختلاف ترتيب أو تفصيل أي جزئية.</p></div><div class="panel"><div class="row"><div><b>تقدمك في المادة</b><div class="hint" data-subject-count>جارٍ تحميل الدروس…</div></div><div data-subject-progress class="subject-progress"><b>0 درس</b><span>0%</span></div></div><div class="course-meter"><span data-subject-progress-bar></span></div><label>ابحث في الدروس</label><input type="search" data-subject-search placeholder="ابحث باسم الوحدة أو الدرس أو المفهوم…"></div><div data-subject-units></div></div></section>
 
 <section id="chemistry2027" hidden><div data-subject-course><div class="course-hero"><h2>منهج الكيمياء — الصف الثالث الثانوي 2027</h2><p>شرح مبسّط للدروس، أمثلة، وتدريب سريع مع حفظ التقدم على جهازك.</p><div class="course-links"><a href="https://studentbooks.moe.gov.eg/Books" target="_blank" rel="noopener">كتاب الوزارة الرسمي ↗</a></div><p class="course-muted">خريطة دراسية مساعدة وفق موضوعات كتب 2026/2027. ارجع إلى كتاب الوزارة عند اختلاف ترتيب أو تفصيل أي جزئية.</p></div><div class="panel"><div class="row"><div><b>تقدمك في المادة</b><div class="hint" data-subject-count>جارٍ تحميل الدروس…</div></div><div data-subject-progress class="subject-progress"><b>0 درس</b><span>0%</span></div></div><div class="course-meter"><span data-subject-progress-bar></span></div><label>ابحث في الدروس</label><input type="search" data-subject-search placeholder="ابحث باسم الوحدة أو الدرس أو المفهوم…"></div><div data-subject-units></div></div></section>
@@ -297,6 +305,7 @@
 <script src="./assets/js/features/mistakes.js"></script>
 <script src="./assets/js/features/tools.js"></script>
 <script src="./assets/js/features/english-course.js"></script>
+<script src="./assets/js/features/english-learning-path.js"></script>
 <script src="./assets/js/features/subject-courses.js"></script>
 <script src="./assets/js/features/ministry-library.js"></script>
 <script src="./assets/js/features/english-coach.js"></script>

@@ -1,6 +1,6 @@
 /* Main navigation */
 (function () {
-  const ids = ['home', 'sched', 'notes', 'chat', 'prac', 'tools', 'eng', 'library', 'english2027', 'arabic2027', 'chemistry2027', 'physics2027', 'math2027', 'biology2027'];
+  const ids = ['home', 'sched', 'notes', 'chat', 'prac', 'tools', 'eng', 'library', 'english2027', 'englishPath', 'arabic2027', 'chemistry2027', 'physics2027', 'math2027', 'biology2027'];
   const $ = selector => document.querySelector(selector);
 
   function activateTab(id) {
@@ -14,6 +14,7 @@
     });
     if (id === 'library' && typeof window.ministryLibraryRender === 'function') window.ministryLibraryRender();
     if (['arabic2027','chemistry2027','physics2027','math2027','biology2027'].includes(id) && typeof window.subjectCourseRender === 'function') window.subjectCourseRender(id);
+    if (id === 'englishPath' && typeof window.englishPathRender === 'function') window.englishPathRender();
     if (id === 'english2027' && typeof window.ecRender === 'function') {
       window.ecRender();
     }

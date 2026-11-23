@@ -71,6 +71,11 @@ try {
   assert.match(pastExamArchiveSource, /2023-official-question-paper-portal/, 'Archive must link to the official Ministry question-paper portal');
   assert.match(pastExamArchiveSource, /2024-official-question-and-answer-portal/, 'Archive must link to the official 2024 questions and answer resource');
   assert.match(pastExamArchiveSource, /2026-official-models-portal/, 'Archive must link to the official 2026 model-exam portal');
+  assert.match(pastExamArchiveSource, /ARABIC_2023_MODEL_A_KEY/, 'Archive must include the 2023 Arabic model A answer key');
+  assert.match(pastExamArchiveSource, /pastExamArabicQuiz/, 'Archive must render an interactive answer sheet');
+  assert.match(pastExamArchiveSource, /51 سؤالًا موضوعيًا/, 'Arabic answer sheet must clearly limit automatic grading to 51 objective questions');
+  assert.match(pastExamArchiveSource, /arts-answermodels\.pdf#page=4/, 'Arabic quiz must link to the Ministry answer-key PDF');
+  assert.match(pastExamArchiveSource, /drive\.google\.com\/file\/d\//, 'Arabic quiz must provide a separate question-paper link');
   assert.equal(dashboardResponse.status(), 200, 'Smart dashboard module must be served');
   assert.equal(smartRevisionResponse.status(), 200, 'Smart revision module must be served');
   assert.equal(ministryLibraryResponse.status(), 200, 'Ministry library module must be served');

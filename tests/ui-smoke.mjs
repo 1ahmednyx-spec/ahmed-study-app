@@ -116,9 +116,9 @@ try {
   await page.locator('[data-tab="pastExamArchive"]').click();
   assert.equal(await page.locator('#pastExamArchiveRoot #pastExamSystem option').count(), 4);
   assert.equal(await page.locator('#pastExamArchiveRoot #pastExamYear option').count(), 9);
-  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 18, 'Archive must render eighteen verified resources');
+  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 20, 'Archive must render twenty verified resources');
   await page.locator('#pastExamYear').selectOption('2020');
-  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 3, 'Year filter must isolate the three verified 2020 resources');
+  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 5, 'Year filter must isolate the five catalogued 2020 resources');
   await page.locator('#pastExamYear').selectOption('2023');
   assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 9, 'Year filter must isolate the nine catalogued 2023 resources');
   await page.locator('#pastExamYear').selectOption('all');

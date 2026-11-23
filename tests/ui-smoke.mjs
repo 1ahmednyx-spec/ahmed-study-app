@@ -202,11 +202,11 @@ try {
   await page.locator('[data-tab="pastExamArchive"]').click();
   assert.equal(await page.locator('#pastExamArchiveRoot #pastExamSystem option').count(), 4);
   assert.equal(await page.locator('#pastExamArchiveRoot #pastExamYear option').count(), 9);
-  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 44, 'Archive must render forty-four catalogued resources');
+  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 46, 'Archive must render forty-six catalogued resources');
   await page.locator('#pastExamYear').selectOption('2020');
   assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 5, 'Year filter must isolate the five catalogued 2020 resources');
   await page.locator('#pastExamYear').selectOption('2023');
-  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 31, 'Year filter must isolate the thirty-one catalogued 2023 resources');
+  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 33, 'Year filter must isolate the thirty-three catalogued 2023 resources');
   await page.locator('#pastExamYear').selectOption('all');
   await page.locator('#pastExamSubject').selectOption('علم النفس والاجتماع');
   assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 2, 'Subject filter must return the two correctly classified psychology and sociology resources');

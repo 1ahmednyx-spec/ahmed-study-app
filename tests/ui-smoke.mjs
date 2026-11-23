@@ -64,6 +64,13 @@ try {
   assert.match(pastExamArchiveSource, /2021–2024/, 'Biology previous-year coverage must be visible');
   assert.match(pastExamArchiveSource, /الصفحات 129–209/, 'French booklet index page range must be visible');
   assert.match(pastExamArchiveSource, /تفاصيل الفهرس/, 'External-book records must expose index details');
+  assert.match(pastExamArchiveSource, /2023-science-french-second-answer/, 'Archive must include official 2023 second-language French answer key');
+  assert.match(pastExamArchiveSource, /2023-science-biology-fr-answer/, 'Archive must include official 2023 Biology French answer key');
+  assert.match(pastExamArchiveSource, /2023-math-algebra-answer/, 'Archive must include official 2023 mathematics answer key');
+  assert.match(pastExamArchiveSource, /2023-arts-history-answer/, 'Archive must include official 2023 literary-division history answer key');
+  assert.match(pastExamArchiveSource, /2023-official-question-paper-portal/, 'Archive must link to the official Ministry question-paper portal');
+  assert.match(pastExamArchiveSource, /2024-official-question-and-answer-portal/, 'Archive must link to the official 2024 questions and answer resource');
+  assert.match(pastExamArchiveSource, /2026-official-models-portal/, 'Archive must link to the official 2026 model-exam portal');
   assert.equal(dashboardResponse.status(), 200, 'Smart dashboard module must be served');
   assert.equal(smartRevisionResponse.status(), 200, 'Smart revision module must be served');
   assert.equal(ministryLibraryResponse.status(), 200, 'Ministry library module must be served');

@@ -168,6 +168,16 @@ try {
   await page.locator('#pastExamYear').selectOption('all');
   assert.equal(await page.locator('#pastExamArchiveRoot a[href="https://moe.gov.eg/"]').count(), 1);
 
+  // Chemistry 2023 interactive answer sheet: all four Ministry keys and weighted objective grading.
+  await page.locator('#pastExamChemistryStart').click();
+  assert.equal(await page.locator('#pastExamChemistryQuiz [data-chem-answer]').count(), 44, 'Chemistry answer sheet must render 44 objective questions');
+  assert.equal(await page.locator('#pastExamChemistryQuiz .past-exam-answer-cell').filter({ hasText: 'سؤال 33' }).count(), 1, 'Chemistry questions 33–44 must be marked as two-point questions');
+  await page.locator('#pastExamChemistryQuiz [data-chem-answer="0"]').selectOption('أ');
+  await page.locator('#pastExamChemistrySubmit').click();
+  assert.ok((await page.locator('#pastExamChemistryQuiz .past-exam-quiz-result').innerText()).includes('من 56'), 'Chemistry result must use the official 56-point objective subtotal');
+  assert.ok((await page.locator('#pastExamChemistryQuiz .past-exam-quiz-result').innerText()).includes('60 درجة'), 'Chemistry result must disclose that two essay questions are excluded from the automated score');
+
+
   // Every navigation tab must activate its matching content section.
   for (const tab of await page.locator('.tabs [role="tab"]').all()) {
     const target = await tab.getAttribute('data-tab');

@@ -665,6 +665,16 @@
   }
 ];
 
+  // Official Ministry answer key, Arabic 2023 first round, model A (51 objective questions).
+  // Question text remains in the linked paper; this module provides a digital answer sheet.
+  const ARABIC_2023_MODEL_A_KEY = [
+    'أ','ج','ب','ب','أ','د','ج','ب','أ','د','ج','ب','د','أ','ج','د','ب','أ','ج','ب',
+    'ج','ب','ب','أ','د','ج','ب','أ','د','ج','ب','أ','أ','ب','د','ج','أ','ب','ج','ج',
+    'د','ب','ج','أ','د','ب','ج','أ','ج','ب','د'
+  ];
+  const ARABIC_2023_PAPER_URL = 'https://drive.google.com/file/d/1Xdhd5Y8WgYdk9LoSfLjN0ktpgahl5tZr/view?usp=drivesdk';
+  const ARABIC_2023_ANSWER_URL = 'https://moe.gov.eg/media/xmhd3sow/arts-answermodels.pdf#page=4';
+
   // External-book references only; no copyrighted book files are hosted here.
   const BOOK_SOURCES = [
     { id:'arabic-emtehan-2026', subject:'اللغة العربية', book:'كتاب الامتحان — ملحق امتحانات الأعوام السابقة 2026', publisher:'الامتحان', coverage:'امتحانات 2021 و2022 و2023 للشعبتين العلمية والأدبية، الدوران الأول والثاني', indexDetail:'السنوات: 2021، 2022، 2023. الشعبتان العلمية والأدبية. الدوران الأول والثاني. لم يُنشر رقم صفحة بداية الملحق في المصدر المفتوح.', classification:'امتحانات سابقة بحسب وصف الملحق', sourceUrl:'https://shbabbek.com/show/266322', sourceLabel:'عرض وصف الملحق' },
@@ -714,6 +724,15 @@
       </div>
       <div class="past-exam-results-head"><div><h3>الامتحانات والملفات</h3><span id="pastExamCount" class="hint"></span></div><span class="past-exam-integrity">المصدر يُراجع قبل الإضافة</span></div>
       <div id="pastExamResults" class="past-exam-results" aria-live="polite"></div>
+      <section class="panel past-exam-interactive" id="pastExamInteractive">
+        <div class="past-exam-results-head"><div><h3>امتحان تفاعلي تجريبي من أرشيف الوزارة</h3><span class="hint">اللغة العربية · الدور الأول 2023 · النموذج أ</span></div><span class="past-exam-integrity">مفتاح إجابة رسمي</span></div>
+        <p class="past-exam-interactive-note">افتح ورقة الأسئلة في نافذة مستقلة، ثم سجّل اختياراتك هنا حسب أرقام الأسئلة. هذه النسخة تصحح 51 سؤال اختيار من متعدد فقط؛ الأسئلة المقالية الأربعة لا تدخل في الدرجة الآلية.</p>
+        <div class="past-exam-source-links">
+          <a href="${ARABIC_2023_PAPER_URL}" target="_blank" rel="noopener noreferrer">فتح ورقة الأسئلة — رابط أرشيف خارجي ↗</a>
+          <a href="${ARABIC_2023_ANSWER_URL}" target="_blank" rel="noopener noreferrer">مفتاح الإجابة الرسمي من الوزارة ↗</a>
+        </div>
+        <div id="pastExamArabicQuiz"></div>
+      </section>
       <div class="past-exam-results-head"><div><h3>مراجع الكتب الخارجية</h3><span class="hint">روابط تعريفية لمحتوى الكتب — لا نستضيف نسخًا محمية</span></div></div>
       <div id="pastExamBookSources" class="past-exam-results"></div>
       <div class="panel past-exam-note">
@@ -732,6 +751,7 @@
     controls.forEach(control => control.addEventListener('input', render));
     render();
     renderBookSources();
+    renderArabicInteractiveExam();
 
     function renderBookSources() {
       const container = document.getElementById('pastExamBookSources');
@@ -752,6 +772,38 @@
           <p>${escapeHTML(item.note)}</p>
         </article>`).join('');
       container.innerHTML = cards + pending;
+    }
+
+    function renderArabicInteractiveExam() {
+      const host = document.getElementById('pastExamArabicQuiz');
+      if (!host) return;
+      host.innerHTML = '<button class="p past-exam-quiz-start" type="button" id="pastExamArabicStart">ابدأ تسجيل الإجابات</button><p class="hint">51 سؤالًا موضوعيًا · 4 اختيارات لكل سؤال · لا يوجد مؤقت في هذه النسخة</p>';
+      host.querySelector('#pastExamArabicStart').addEventListener('click', () => {
+        const choices = ['أ','ب','ج','د'];
+        host.innerHTML = '<div class="past-exam-quiz-toolbar"><b>ورقة الإجابة — النموذج أ</b><span id="pastExamArabicProgress">تمت الإجابة عن 0 من 51</span></div>' +
+          '<div class="past-exam-answer-grid">' + ARABIC_2023_MODEL_A_KEY.map((_, index) =>
+            '<label class="past-exam-answer-cell"><span>سؤال ' + (index + 1) + '</span><select aria-label="إجابة السؤال ' + (index + 1) + '" data-answer="' + index + '"><option value="">—</option>' +
+            choices.map(choice => '<option value="' + choice + '">' + choice + '</option>').join('') + '</select></label>'
+          ).join('') + '</div><button class="p past-exam-quiz-submit" type="button" id="pastExamArabicSubmit">تصحيح الإجابات</button>';
+        const selects = Array.from(host.querySelectorAll('[data-answer]'));
+        const updateProgress = () => {
+          const count = selects.filter(select => select.value).length;
+          host.querySelector('#pastExamArabicProgress').textContent = 'تمت الإجابة عن ' + count + ' من 51';
+        };
+        selects.forEach(select => select.addEventListener('change', updateProgress));
+        host.querySelector('#pastExamArabicSubmit').addEventListener('click', () => {
+          const answers = selects.map(select => select.value);
+          const answered = answers.filter(Boolean).length;
+          const correct = answers.reduce((sum, answer, index) => sum + (answer === ARABIC_2023_MODEL_A_KEY[index] ? 1 : 0), 0);
+          const wrong = answered - correct;
+          const percent = Math.round(correct / ARABIC_2023_MODEL_A_KEY.length * 100);
+          host.innerHTML = '<div class="past-exam-quiz-result"><strong>' + percent + '%</strong><h4>نتيجتك: ' + correct + ' من 51</h4><p>إجابات صحيحة: ' + correct + ' · خاطئة: ' + wrong + ' · بدون إجابة: ' + (51 - answered) + '</p><p class="hint">هذه نتيجة الأسئلة الموضوعية فقط، وليست الدرجة النهائية الرسمية من 80؛ لا تشمل الأسئلة المقالية أو توزيع درجاتها.</p><button class="p" type="button" id="pastExamArabicRetry">إعادة المحاولة</button></div>' +
+            '<details class="past-exam-key-review"><summary>مراجعة مفتاح الإجابة الرسمي للأسئلة الـ51</summary><div class="past-exam-key-grid">' +
+            ARABIC_2023_MODEL_A_KEY.map((answer, index) => '<span class="' + (answers[index] === answer ? 'is-correct' : 'is-wrong') + '">س' + (index + 1) + ': ' + answer + (answers[index] ? (answers[index] === answer ? ' ✓' : ' · إجابتك ' + answers[index]) : ' · لم تجب') + '</span>').join('') +
+            '</div></details>';
+          host.querySelector('#pastExamArabicRetry').addEventListener('click', renderArabicInteractiveExam);
+        });
+      });
     }
 
     function render() {

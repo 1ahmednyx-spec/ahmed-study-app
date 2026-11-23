@@ -71,6 +71,11 @@ try {
   assert.match(pastExamArchiveSource, /2023-arts-history-paper-portal/, 'Archive must include official 2023 literary-division History question-paper portal');
   assert.match(pastExamArchiveSource, /2023-arts-geography-paper-portal/, 'Archive must include official 2023 literary-division Geography question-paper portal');
   assert.match(pastExamArchiveSource, /2023-arts-geography-answer/, 'Archive must include official 2023 literary-division Geography answer key');
+  assert.match(pastExamArchiveSource, /const ARTS_2023_KEYS/, 'Archive must include interactive 2023 History and Geography answer keys');
+  assert.match(pastExamArchiveSource, /function renderArts2023InteractiveExam/, 'History and Geography must expose interactive grading');
+  assert.match(pastExamArchiveSource, /pastExamArtsQuiz/, 'History and Geography interactive answer sheet must render');
+  assert.match(pastExamArchiveSource, /32 سؤالًا بدرجة واحدة و12 سؤالًا بدرجتين/, 'Arts quiz must disclose official weighted question distribution');
+
 
   assert.match(pastExamArchiveSource, /2023-official-question-paper-portal/, 'Archive must link to the official Ministry question-paper portal');
   assert.match(pastExamArchiveSource, /2024-official-question-and-answer-portal/, 'Archive must link to the official 2024 questions and answer resource');
@@ -536,6 +541,29 @@ try {
   await page.locator('[data-tab="sched"]').click();
   await page.locator('#upList').getByText('موعد مستعاد من النسخة').waitFor({ state: 'visible' });
   await page.locator('[data-tab="pastExamArchive"]').click();
+
+  // 2023 Literary History and Geography: four models each, 44 objective questions, weighted to 56 marks.
+  await page.locator('#pastExamArtsStart').click();
+  assert.equal(await page.locator('#pastExamArtsQuiz [data-arts-answer]').count(), 44, 'History answer sheet must render 44 objective questions');
+  assert.equal(await page.locator('#pastExamArtsModel option').count(), 4, 'History and Geography quiz must offer all four official models');
+  await page.locator('#pastExamArtsQuiz [data-arts-answer="0"]').selectOption('أ');
+  await page.locator('#pastExamArtsQuiz [data-arts-answer="32"]').selectOption('ج');
+  await page.locator('#pastExamArtsSubmit').click();
+  assert.ok((await page.locator('#pastExamArtsQuiz .past-exam-quiz-result').innerText()).includes('درجتك: 3 من 56'), 'History model A must apply one-point and two-point scoring');
+  assert.ok((await page.locator('#pastExamArtsQuiz .past-exam-quiz-result').innerText()).includes('السؤالين المقاليين (45 و46)'), 'Arts result must explicitly exclude essay questions 45 and 46');
+  assert.equal(await page.locator('#pastExamArtsQuiz .past-exam-key-review .is-correct').count(), 2, 'History answer review must mark correct objective answers');
+  await page.locator('#pastExamArtsRetry').click();
+  await page.locator('#pastExamArtsSubject').selectOption('geography');
+  await page.locator('#pastExamArtsModel').selectOption('د');
+  await page.locator('#pastExamArtsStart').click();
+  assert.equal(await page.locator('#pastExamArtsQuiz [data-arts-answer]').count(), 44, 'Geography answer sheet must render 44 objective questions');
+  await page.locator('#pastExamArtsQuiz [data-arts-answer="0"]').selectOption('أ');
+  await page.locator('#pastExamArtsQuiz [data-arts-answer="32"]').selectOption('أ');
+  await page.locator('#pastExamArtsSubmit').click();
+  assert.ok((await page.locator('#pastExamArtsQuiz .past-exam-quiz-result').innerText()).includes('درجتك: 3 من 56'), 'Geography model D must apply weighted objective scoring');
+  assert.ok((await page.locator('#pastExamArtsQuiz .past-exam-key-review summary').innerText()).includes('الجغرافيا، النموذج د'), 'Geography answer review must identify the selected subject and model');
+  await page.locator('#pastExamArtsRetry').click();
+
   // 2023 English first and second foreign languages, all four models.
   await page.locator('#pastExamEnglishStart').click();
   assert.equal(await page.locator('#pastExamEnglishQuiz .past-exam-answer-cell').count(), 34, 'First English language must display 34 objective-key rows');

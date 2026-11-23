@@ -123,7 +123,7 @@ try {
   assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 4, 'Year filter must isolate the four verified 2023 resources');
   await page.locator('#pastExamYear').selectOption('all');
   await page.locator('#pastExamSubject').selectOption('علم النفس والاجتماع');
-  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 2, 'Subject filter must return both verified psychology and sociology resources');
+  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 1, 'Subject filter must return the single correctly classified psychology and sociology resource');
   await page.locator('#pastExamSubject').selectOption('all');
   assert.equal(await page.locator('#pastExamArchiveRoot a[href="https://moe.gov.eg/"]').count(), 1);
 

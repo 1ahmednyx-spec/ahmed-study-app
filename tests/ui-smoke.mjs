@@ -24,6 +24,7 @@ try {
   const examCenterResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/exam-center.js');
   const dashboardResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/dashboard.js');
   const smartRevisionResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/smart-revision.js');
+  const smartPlannerResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/smart-planner.js');
   const ministryLibraryResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/ministry-library.js');
   const englishCoachResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/english-coach.js');
   const preferencesResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/preferences.js');
@@ -31,7 +32,7 @@ try {
   assert.equal(serviceWorkerResponse.status(), 200, 'Service worker must be served');
   const serviceWorkerSource = await serviceWorkerResponse.text();
   assert.match(serviceWorkerSource, /ahmed-study-platform-v\d+/, 'Service worker cache must be versioned');
-  for (const modulePath of ['./assets/js/features/preferences.js', './assets/js/features/english-course.js', './assets/js/features/english-learning-path.js', './assets/js/features/subject-courses.js', './assets/js/features/exam-center.js', './assets/js/features/dashboard.js', './assets/js/features/smart-revision.js', './assets/js/features/ministry-library.js', './assets/js/features/english-coach.js']) {
+  for (const modulePath of ['./assets/js/features/preferences.js', './assets/js/features/english-course.js', './assets/js/features/english-learning-path.js', './assets/js/features/subject-courses.js', './assets/js/features/exam-center.js', './assets/js/features/dashboard.js', './assets/js/features/smart-revision.js', './assets/js/features/smart-planner.js', './assets/js/features/ministry-library.js', './assets/js/features/english-coach.js']) {
     assert.ok(serviceWorkerSource.includes(modulePath), `Service worker must precache ${modulePath}`);
   }
 
@@ -54,6 +55,7 @@ try {
   assert.equal(examCenterResponse.status(), 200, 'Exam center module must be served');
   assert.equal(dashboardResponse.status(), 200, 'Smart dashboard module must be served');
   assert.equal(smartRevisionResponse.status(), 200, 'Smart revision module must be served');
+  assert.equal(smartPlannerResponse.status(), 200, 'Smart planner module must be served');
   assert.equal(ministryLibraryResponse.status(), 200, 'Ministry library module must be served');
   assert.equal(englishCoachResponse.status(), 200, 'English coach module must be served');
   assert.equal(preferencesResponse.status(), 200, 'Preferences module must be served');
@@ -71,7 +73,8 @@ try {
   assert.ok(scriptOrder.indexOf('./assets/js/features/subject-courses.js') < scriptOrder.indexOf('./assets/js/features/exam-center.js'), 'Subject course bank must load before exam center');
   assert.ok(scriptOrder.indexOf('./assets/js/features/english-learning-path.js') < scriptOrder.indexOf('./assets/js/features/dashboard.js'), 'English progress source must load before dashboard');
   assert.ok(scriptOrder.indexOf('./assets/js/features/dashboard.js') < scriptOrder.indexOf('./assets/js/features/smart-revision.js'), 'Dashboard must load before smart revision');
-  assert.ok(scriptOrder.indexOf('./assets/js/features/smart-revision.js') < scriptOrder.indexOf('./assets/js/app.js'), 'Smart revision module must load before app initialization');
+  assert.ok(scriptOrder.indexOf('./assets/js/features/smart-revision.js') < scriptOrder.indexOf('./assets/js/features/smart-planner.js'), 'Smart revision must load before smart planner');
+  assert.ok(scriptOrder.indexOf('./assets/js/features/smart-planner.js') < scriptOrder.indexOf('./assets/js/app.js'), 'Smart planner module must load before app initialization');
   assert.ok(scriptOrder.indexOf('./assets/js/features/exam-center.js') < scriptOrder.indexOf('./assets/js/features/ministry-library.js'), 'Exam center must load before Ministry library feature');
   assert.ok(scriptOrder.indexOf('./assets/js/features/ministry-library.js') < scriptOrder.indexOf('./assets/js/features/english-coach.js'), 'Ministry library must load before English coach feature');
   assert.ok(scriptOrder.indexOf('./assets/js/features/english-coach.js') < scriptOrder.indexOf('./assets/js/features/preferences.js'), 'English coach must load before preferences feature');
@@ -95,7 +98,9 @@ try {
   assert.equal(await page.evaluate(() => typeof window.activateTab), 'function', 'Navigation module must expose tab activation');
   assert.match(await page.title(), /Ahmed Study Platform/);
   await page.locator('#home').waitFor({ state: 'visible' });
-  assert.equal(await page.locator('.tabs [role="tab"]').count(), 17, 'Smart revision, exam center, English learning path, and five subject tabs must preserve all existing tabs');
+  assert.equal(await page.locator('.tabs [role="tab"]').count(), 18, 'Smart planner, smart revision, exam center, English learning path, and five subject tabs must preserve all existing tabs');
+  assert.equal(await page.evaluate(() => typeof window.StudySmartPlanner?.init), 'function', 'Smart planner module must expose its initializer');
+  assert.equal(await page.locator('#studyPlanner #smartPlannerRoot').count(), 1, 'Smart planner must have its own content section');
   assert.equal(await page.evaluate(() => typeof window.StudySmartRevision?.init), 'function', 'Smart revision module must expose its initializer');
   assert.equal(await page.locator('#reviewCenter #smartReviewRoot').count(), 1, 'Smart revision must have its own content section');
   assert.equal(await page.locator('#smartDashboard .smart-metric').count(), 4, 'Homepage dashboard must show four live learning metrics');
@@ -442,6 +447,37 @@ try {
   await page.locator('[data-tab="home"]').click();
   await page.locator('#home').waitFor({state:'visible'});
 
+  // Smart planner supports task creation, edits, completion, weekly visibility, and persistence.
+  await page.locator('[data-tab="studyPlanner"]').click();
+  await page.locator('#smartPlannerRoot #plannerForm').waitFor({state:'visible'});
+  await page.locator('#plannerTitle').fill('مذاكرة اختبار مخطط المذاكرة');
+  await page.locator('#plannerSubject').selectOption('الكيمياء');
+  await page.locator('#plannerKind').selectOption('practice');
+  await page.locator('#plannerTaskDate').fill(new Date().toLocaleDateString('en-CA'));
+  await page.locator('#plannerTime').fill('19:30');
+  await page.locator('#plannerDuration').selectOption('45');
+  await page.locator('#plannerNote').fill('اختبار حفظ المهمة');
+  await page.locator('#plannerForm button[type="submit"]').click();
+  assert.equal(await page.locator('#smartPlannerRoot .planner-task').count(), 1, 'A new study task must appear in the selected day');
+  let savedPlan = await page.evaluate(() => JSON.parse(localStorage.getItem('study-v1')).studyPlan);
+  assert.equal(savedPlan.tasks.length, 1, 'A study task must persist in study-v1');
+  assert.equal(savedPlan.tasks[0].subject, 'الكيمياء');
+  await page.locator('#smartPlannerRoot [data-plan-edit]').click();
+  await page.locator('#plannerTitle').fill('مذاكرة كيمياء - تعديل');
+  await page.locator('#plannerForm button[type="submit"]').click();
+  assert.equal((await page.evaluate(() => JSON.parse(localStorage.getItem('study-v1')).studyPlan.tasks[0].title)), 'مذاكرة كيمياء - تعديل', 'Editing a task must update persisted data');
+  await page.locator('#smartPlannerRoot [data-plan-done]').click();
+  savedPlan = await page.evaluate(() => JSON.parse(localStorage.getItem('study-v1')).studyPlan);
+  assert.equal(savedPlan.tasks[0].done, true, 'Completing a task must persist its status');
+  await page.locator('#smartPlannerRoot [data-plan-view="week"]').click();
+  assert.equal(await page.locator('#smartPlannerRoot .planner-task').count(), 1, 'The weekly view must include tasks scheduled during that week');
+  assert.equal(await page.locator('#smartPlannerRoot .planner-stats article').nth(1).locator('strong').textContent(), '1', 'Weekly summary must count completed tasks');
+  await page.locator('#smartPlannerRoot [data-plan-delete]').click();
+  savedPlan = await page.evaluate(() => JSON.parse(localStorage.getItem('study-v1')).studyPlan);
+  assert.equal(savedPlan.tasks.length, 0, 'Deleting a task must remove it from the plan');
+  await page.locator('[data-tab="home"]').click();
+  await page.locator('#home').waitFor({state:'visible'});
+
   // Mobile layout must fit the viewport without page-level horizontal overflow.
   await page.setViewportSize({ width: 390, height: 844 });
   await page.locator('#home').waitFor({ state: 'visible' });
@@ -467,7 +503,7 @@ try {
   assert.ok(narrow.document <= narrow.viewport + 1, `Narrow mobile page overflow: ${JSON.stringify(narrow)}`);
 
   assert.deepEqual(pageErrors, [], `Uncaught browser errors: ${pageErrors.join('; ')}`);
-  console.log('PASS: homepage, navigation, smart revision queue and scheduling, schedule creation, local notes, theme persistence, local data preservation, mistake review, AI fallback, backup validation, mobile overflow at 390px and 320px, and browser console.');
+  console.log('PASS: homepage, navigation, smart revision queue and scheduling, daily/weekly study planner CRUD and persistence, schedule creation, local notes, theme persistence, local data preservation, mistake review, AI fallback, backup validation, mobile overflow at 390px and 320px, and browser console.');
 } finally {
   await browser.close();
 }

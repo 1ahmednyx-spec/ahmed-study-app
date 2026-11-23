@@ -21,6 +21,7 @@ try {
   const englishCourseResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/english-course.js');
   const englishLearningPathResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/english-learning-path.js');
   const subjectCoursesResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/subject-courses.js');
+  const examCenterResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/exam-center.js');
   const ministryLibraryResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/ministry-library.js');
   const englishCoachResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/english-coach.js');
   const preferencesResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/preferences.js');
@@ -28,7 +29,7 @@ try {
   assert.equal(serviceWorkerResponse.status(), 200, 'Service worker must be served');
   const serviceWorkerSource = await serviceWorkerResponse.text();
   assert.match(serviceWorkerSource, /ahmed-study-platform-v\d+/, 'Service worker cache must be versioned');
-  for (const modulePath of ['./assets/js/features/preferences.js', './assets/js/features/english-course.js', './assets/js/features/english-learning-path.js', './assets/js/features/subject-courses.js', './assets/js/features/ministry-library.js', './assets/js/features/english-coach.js']) {
+  for (const modulePath of ['./assets/js/features/preferences.js', './assets/js/features/english-course.js', './assets/js/features/english-learning-path.js', './assets/js/features/subject-courses.js', './assets/js/features/exam-center.js', './assets/js/features/ministry-library.js', './assets/js/features/english-coach.js']) {
     assert.ok(serviceWorkerSource.includes(modulePath), `Service worker must precache ${modulePath}`);
   }
 
@@ -48,6 +49,7 @@ try {
   assert.equal(englishCourseResponse.status(), 200, 'English course module must be served');
   assert.equal(englishLearningPathResponse.status(), 200, 'Separate English learning path module must be served');
   assert.equal(subjectCoursesResponse.status(), 200, '2027 subject courses module must be served');
+  assert.equal(examCenterResponse.status(), 200, 'Exam center module must be served');
   assert.equal(ministryLibraryResponse.status(), 200, 'Ministry library module must be served');
   assert.equal(englishCoachResponse.status(), 200, 'English coach module must be served');
   assert.equal(preferencesResponse.status(), 200, 'Preferences module must be served');
@@ -62,7 +64,8 @@ try {
   assert.ok(scriptOrder.indexOf('./assets/js/features/tools.js') < scriptOrder.indexOf('./assets/js/features/english-course.js'), 'Tools must load before English course feature');
   assert.ok(scriptOrder.indexOf('./assets/js/features/english-course.js') < scriptOrder.indexOf('./assets/js/features/english-learning-path.js'), 'English summary course must load before separate learning path');
   assert.ok(scriptOrder.indexOf('./assets/js/features/english-learning-path.js') < scriptOrder.indexOf('./assets/js/features/subject-courses.js'), 'English learning path must load before subject courses');
-  assert.ok(scriptOrder.indexOf('./assets/js/features/subject-courses.js') < scriptOrder.indexOf('./assets/js/features/ministry-library.js'), 'Subject courses must load before Ministry library feature');
+  assert.ok(scriptOrder.indexOf('./assets/js/features/subject-courses.js') < scriptOrder.indexOf('./assets/js/features/exam-center.js'), 'Subject course bank must load before exam center');
+  assert.ok(scriptOrder.indexOf('./assets/js/features/exam-center.js') < scriptOrder.indexOf('./assets/js/features/ministry-library.js'), 'Exam center must load before Ministry library feature');
   assert.ok(scriptOrder.indexOf('./assets/js/features/ministry-library.js') < scriptOrder.indexOf('./assets/js/features/english-coach.js'), 'Ministry library must load before English coach feature');
   assert.ok(scriptOrder.indexOf('./assets/js/features/english-coach.js') < scriptOrder.indexOf('./assets/js/features/preferences.js'), 'English coach must load before preferences feature');
   assert.ok(scriptOrder.indexOf('./assets/js/features/preferences.js') < scriptOrder.indexOf('./assets/js/app.js'), 'Preferences must load before app bootstrap');
@@ -76,6 +79,7 @@ try {
   assert.equal(await page.evaluate(() => typeof window.StudyEnglishCourse?.init), 'function', 'English course module must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.StudyEnglishPath?.init), 'function', 'Separate English learning path must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.StudySubjectCourses?.init), 'function', 'Subject courses module must expose its initializer');
+  assert.equal(await page.evaluate(() => typeof window.StudyExamCenter?.init), 'function', 'Exam center module must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.StudyMinistryLibrary?.init), 'function', 'Ministry library module must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.ecRender), 'function', 'English course renderer must be available to tab navigation');
   assert.equal(await page.evaluate(() => typeof window.StudyEnglishCoach?.init), 'function', 'English coach module must expose its initializer');
@@ -84,7 +88,7 @@ try {
   assert.equal(await page.evaluate(() => typeof window.activateTab), 'function', 'Navigation module must expose tab activation');
   assert.match(await page.title(), /Ahmed Study Platform/);
   await page.locator('#home').waitFor({ state: 'visible' });
-  assert.equal(await page.locator('.tabs [role="tab"]').count(), 15, 'New English learning path and five subject tabs must preserve all existing tabs');
+  assert.equal(await page.locator('.tabs [role="tab"]').count(), 16, 'Exam center, English learning path, and five subject tabs must preserve all existing tabs');
   for (const subject of ['arabic2027', 'chemistry2027', 'physics2027', 'math2027', 'biology2027']) {
     assert.equal(await page.locator(`.tabs [role="tab"][data-tab="${subject}"]`).count(), 1, `${subject} must have one navigation tab`);
     assert.equal(await page.locator(`#${subject}`).count(), 1, `${subject} must have one content section`);
@@ -124,6 +128,23 @@ try {
   assert.ok((await firstPathLesson.locator('[data-path-feedback]').textContent()).includes('إجابة صحيحة'), 'English lesson quiz must provide feedback');
   await firstPathLesson.locator('[data-path-done]').check();
   assert.ok((await page.locator('#englishPathProgress').textContent()).includes('1 من'), 'English learning progress must update');
+
+  // Exam center must build timed exams from the existing lesson question banks and save graded attempts.
+  await page.locator('[data-tab="examCenter"]').click();
+  await page.locator('#examSubject').selectOption('biology2027');
+  assert.ok((await page.locator('#examBankInfo').textContent()).includes('سؤالًا'), 'Exam center must report the available lesson question bank');
+  await page.locator('#examCount').selectOption('5');
+  await page.locator('#examMinutes').selectOption('10');
+  await page.locator('#examStart').click();
+  assert.equal(await page.locator('#examCenterRoot .exam-question').count(), 5, 'Exam center must start with the requested number of questions');
+  await page.locator('#examCenterRoot .exam-options input').first().check();
+  assert.ok((await page.locator('#examAnswered').textContent()).includes('1 من 5'), 'Exam center must count answered questions');
+  await page.locator('#examSubmit').click();
+  await page.locator('#examCenterRoot .exam-result-hero').waitFor({ state: 'visible' });
+  assert.equal(await page.locator('#examCenterRoot .exam-review').count(), 5, 'Exam center must review every submitted answer');
+  assert.equal(await page.evaluate(() => JSON.parse(localStorage.getItem('study-v1')).examHistory.length), 1, 'Exam result must persist in local study data');
+  await page.locator('#examShowHistory').click();
+  assert.equal(await page.locator('#examHistory .exam-history-item').count(), 1, 'Exam center must display the saved attempt in history');
 
   // Ministry library must show the 2026/2027 track subjects and shared pass/fail subjects.
   await page.locator('[data-tab="library"]').click();

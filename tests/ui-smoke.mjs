@@ -238,7 +238,7 @@ try {
   assert.equal(await page.locator('#pastExamArchiveRoot #pastExamSystem option').count(), 4);
   assert.equal(await page.locator('#pastExamArchiveRoot #pastExamYear option').count(), 9);
   assert.equal(await page.locator('#pastExamArchiveRoot #pastExamFileKind option').count(), 5, 'Archive must provide separate filters for papers, answer keys, models, and portals');
-  assert.ok((await page.locator('#pastExamArchiveRoot .past-exam-note').innerText()).includes('2019 و2021 و2022'), 'Archive must disclose years whose official exam papers are not yet verified');
+  assert.ok((await page.locator('#pastExamArchiveRoot p.past-exam-note').innerText()).includes('2019 و2021 و2022'), 'Archive must disclose years whose official exam papers are not yet verified');
   assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 45, 'Archive must render forty-five in-scope catalogued resources');
   await page.locator('#pastExamYear').selectOption('2020');
   assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 7, 'Year filter must isolate the seven in-scope 2020 resources');

@@ -209,12 +209,12 @@ try {
   await page.locator('#upList').getByText('اختبار واجهة المنصة').waitFor({ state: 'visible' });
 
   // Schedule completion, undo, deletion, and persistence should all work.
-  await page.evaluate(() => { const checkbox = document.querySelector('#upList [data-done]'); checkbox.checked = true; checkbox.dispatchEvent(new Event('change', { bubbles: true })); });
+  await page.evaluate(() => { const row = [...document.querySelectorAll('#upList .item')].find(item => item.textContent.includes('اختبار واجهة المنصة')); const checkbox = row?.querySelector('[data-done]'); if (!checkbox) throw new Error('Scheduled test task checkbox was not found'); checkbox.checked = true; checkbox.dispatchEvent(new Event('change', { bubbles: true })); });
   await page.locator('#doneList').getByText('اختبار واجهة المنصة').waitFor({ state: 'visible' });
   await page.reload({ waitUntil: 'domcontentloaded' });
   await page.locator('[data-tab="sched"]').click();
   await page.locator('#doneList').getByText('اختبار واجهة المنصة').waitFor({ state: 'visible' });
-  await page.evaluate(() => { const checkbox = document.querySelector('#doneList [data-done]'); checkbox.checked = false; checkbox.dispatchEvent(new Event('change', { bubbles: true })); });
+  await page.evaluate(() => { const row = [...document.querySelectorAll('#doneList .item')].find(item => item.textContent.includes('اختبار واجهة المنصة')); const checkbox = row?.querySelector('[data-done]'); if (!checkbox) throw new Error('Completed test task checkbox was not found'); checkbox.checked = false; checkbox.dispatchEvent(new Event('change', { bubbles: true })); });
   await page.locator('#upList').getByText('اختبار واجهة المنصة').waitFor({ state: 'visible' });
   await page.locator('#upList [data-del]').click();
   await page.locator('#upList').getByText('ضيف أول موعد مذاكرة من الأعلى').waitFor({ state: 'visible' });

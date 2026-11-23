@@ -237,12 +237,20 @@ try {
   await page.locator('[data-tab="pastExamArchive"]').click();
   assert.equal(await page.locator('#pastExamArchiveRoot #pastExamSystem option').count(), 4);
   assert.equal(await page.locator('#pastExamArchiveRoot #pastExamYear option').count(), 9);
+  assert.equal(await page.locator('#pastExamArchiveRoot #pastExamFileKind option').count(), 5, 'Archive must provide separate filters for papers, answer keys, models, and portals');
   assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 45, 'Archive must render forty-five in-scope catalogued resources');
   await page.locator('#pastExamYear').selectOption('2020');
   assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 7, 'Year filter must isolate the seven in-scope 2020 resources');
   await page.locator('#pastExamYear').selectOption('2023');
   assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 30, 'Year filter must isolate the thirty in-scope 2023 resources');
   await page.locator('#pastExamYear').selectOption('all');
+  await page.locator('#pastExamFileKind').selectOption('paper');
+  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 6, 'Direct exam papers must be separated from answers, models, and portals');
+  await page.locator('#pastExamFileKind').selectOption('answer');
+  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 27, 'Official answer keys must be independently filterable');
+  await page.locator('#pastExamFileKind').selectOption('portal');
+  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 9, 'Portal links must be independently filterable');
+  await page.locator('#pastExamFileKind').selectOption('all');
   const archiveSubjects = await page.locator('#pastExamSubject option').allTextContents();
   assert.ok(!archiveSubjects.some(subject => /علم النفس|الفلسفة|الاقتصاد|الإحصاء|التربية الوطنية/.test(subject)), 'Subject filter must be limited to the requested core subjects');
   for (const subject of ['التاريخ', 'الجغرافيا']) {

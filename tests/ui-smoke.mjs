@@ -298,9 +298,9 @@ try {
   await page.locator('#goalSt').getByText('من 30 سؤال').waitFor({ state: 'visible' });
   await page.locator('#qT').fill('درس تجريبي');
   await page.locator('#qBtn').click();
-  await page.locator('#qSt').getByText('مش متاحة هنا').waitFor({ state: 'visible' });
+  await page.locator('#qSt').getByText('لم يتم إعداد مفتاح Gemini').waitFor({ state: 'visible' });
   await page.locator('#plBtn').click();
-  await page.locator('#plSt').getByText('مش متاحة هنا').waitFor({ state: 'visible' });
+  await page.locator('#plSt').getByText('لم يتم إعداد مفتاح Gemini').waitFor({ state: 'visible' });
 
   // A newly recorded mistake must remain visible even when its spaced-review date is in the future.
   await page.locator('[data-tab="tools"]').click();
@@ -321,7 +321,7 @@ try {
   await page.locator('#aT').fill('A short lesson about photosynthesis.');
   await page.locator('#aQ').fill('Explain photosynthesis.');
   await page.locator('#aGo').click();
-  await page.locator('#aSt').getByText('غير مفعّل').waitFor({ state: 'visible' });
+  await page.locator('#aSt').getByText('لم يتم إعداد مفتاح Gemini').waitFor({ state: 'visible' });
 
   // Invalid backup files must be rejected without replacing the current study data.
   await page.locator('#bkIn').setInputFiles({

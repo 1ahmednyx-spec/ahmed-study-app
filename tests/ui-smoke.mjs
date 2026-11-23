@@ -90,6 +90,26 @@ try {
   assert.match(pastExamArchiveSource, /2023-official-question-paper-portal/, 'Archive must link to the official Ministry question-paper portal');
   assert.match(pastExamArchiveSource, /2024-official-question-and-answer-portal/, 'Archive must link to the official 2024 questions and answer resource');
   assert.match(pastExamArchiveSource, /2026-official-models-portal/, 'Archive must link to the official 2026 model-exam portal');
+  const examCatalogStart = pastExamArchiveSource.indexOf('const EXAMS = [');
+  const examCatalogEnd = pastExamArchiveSource.indexOf('];', examCatalogStart);
+  const examCatalogSource = pastExamArchiveSource.slice(examCatalogStart, examCatalogEnd);
+  const examRecordCount = (examCatalogSource.match(/"id":/g) || []).length;
+  const classifiedRecordCount = (examCatalogSource.match(/"fileKind":/g) || []).length;
+  assert.equal(classifiedRecordCount, examRecordCount, 'Every archive resource must declare whether it is a paper, answer key, model, or portal');
+  for (const portalId of [
+    '2023-ministry-exam-portal',
+    '2023-official-question-paper-portal',
+    '2023-arts-history-paper-portal',
+    '2023-arts-geography-paper-portal',
+    '2024-madrasetna-plus',
+    '2024-official-question-and-answer-portal',
+    '2025-ministry-models',
+    '2026-official-models-portal'
+  ]) {
+    const portalRecord = examCatalogSource.slice(examCatalogSource.indexOf('"id": "' + portalId + '"'));
+    assert.match(portalRecord, /"fileKind": "portal"/, 'Portal links must not be presented as direct exam-paper files: ' + portalId);
+  }
+
   assert.match(pastExamArchiveSource, /ARABIC_2023_MODEL_A_KEY/, 'Archive must include the 2023 Arabic model A answer key');
   for (const model of ['A', 'B', 'C', 'D']) {
     assert.match(pastExamArchiveSource, new RegExp('ARABIC_2023_MODEL_' + model + '_KEY'), 'Archive must include the 2023 Arabic model ' + model + ' answer key');

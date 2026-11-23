@@ -201,6 +201,7 @@ try {
   await page.locator('#home').waitFor({ state: 'visible' });
 
   // Schedule entries should be created and rendered.
+  assert.equal(await page.evaluate(() => JSON.parse(localStorage.getItem('study-v1')).studyPlan.tasks[0].id), 'backup-plan-task', 'Backup restore must preserve smart planner tasks');
   await page.locator('[data-tab="sched"]').click();
   await page.locator('#evT').fill('اختبار واجهة المنصة');
   await page.locator('#evD').fill('2027-01-15');
@@ -343,6 +344,7 @@ try {
   const exportedBackup = JSON.parse(Buffer.concat(backupChunks).toString('utf8'));
   assert.ok(Array.isArray(exportedBackup.ev));
   assert.ok(exportedBackup.mist.some(item => item.q === 'خطأ ثانٍ لاختبار استعادة النسخة الاحتياطية'));
+  assert.ok(exportedBackup.studyPlan && Array.isArray(exportedBackup.studyPlan.tasks), 'Backup must include the smart study plan');
 
   // A valid backup must restore schedule, notes, study track, and appearance immediately.
   const validBackup = {
@@ -350,6 +352,7 @@ try {
     notes: [{ id: 'restored-note', title: 'ملاحظة مستعادة', sub: 'فيزياء', sum: 'ملخص تم استعادته بنجاح.' }],
     words: [], track: 'math', prac: [], goal: 40, mist: [], focus: {},
     courseDone: {}, courseWords: [], courseWriting: [], courseExamChecks: {},
+    studyPlan: {tasks:[{id:'backup-plan-task',title:'مهمة من النسخة الاحتياطية',subject:'الفيزياء',kind:'lesson',date:'2027-01-16',time:'11:00',duration:45,note:'تم استرجاعها',done:false}]},
     theme: 'dark', app: 'Backup Restored', me: 'Restored Student', color: '#4F46E5'
   };
   await page.locator('#bkIn').setInputFiles({
@@ -422,11 +425,12 @@ try {
     Object.assign(state, {
       ev: [], notes: [],
       words: [{id:'word-revision-smoke',e:'resilient',a:'مرن',box:0}],
-      track: 'sci', prac: [], goal: 100,
+      track: 'sci', prac: [{id:'weak-practice-smoke',s:'الكيمياء',n:10,c:3,d:new Date().toLocaleDateString('en-CA')}], goal: 100,
       mist: [{id:'mistake-revision-smoke',s:'الأحياء',q:'ما وظيفة الميتوكوندريا؟',r:'معلومة ناسيها',box:0,due:new Date().toLocaleDateString('en-CA')}],
       subjectLessonDone: {biology2027:{'0-0':true}},
       englishPathDone: {0:true},
-      smartReview: {}
+      smartReview: {},
+      studyPlan: {tasks:[]}
     });
     localStorage.setItem('study-v1', JSON.stringify(state));
     return true;
@@ -450,6 +454,8 @@ try {
   // Smart planner supports task creation, edits, completion, weekly visibility, and persistence.
   await page.locator('[data-tab="studyPlanner"]').click();
   await page.locator('#smartPlannerRoot #plannerForm').waitFor({state:'visible'});
+  assert.ok(await page.locator('#smartPlannerRoot .planner-empty').count(), 'An empty plan must show a helpful empty state');
+  assert.ok(await page.locator('#smartPlannerRoot .planner-idea b').filter({hasText:'تدريب إضافي في الكيمياء'}).count(), 'Recommendations must use recorded low-accuracy practice');
   await page.locator('#plannerTitle').fill('مذاكرة اختبار مخطط المذاكرة');
   await page.locator('#plannerSubject').selectOption('الكيمياء');
   await page.locator('#plannerKind').selectOption('practice');

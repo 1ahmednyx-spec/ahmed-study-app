@@ -198,7 +198,7 @@ body{background:var(--bg);color:var(--ink);font-family:Tajawal,"Segoe UI",Tahoma
 .past-exam-stats{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
 .past-exam-stats div{min-width:112px;padding:10px 13px;border:1px solid rgba(255,255,255,.2);border-radius:12px;background:rgba(255,255,255,.08)}
 .past-exam-stats strong,.past-exam-stats span{display:block}.past-exam-stats strong{font-size:22px}.past-exam-stats span{font-size:11px;color:#D5E6FA}
-.past-exam-filters{margin-bottom:16px}.past-exam-filter-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.past-exam-filters{margin-bottom:16px}.past-exam-filter-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
 .past-exam-results-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:18px 2px 10px}
 .past-exam-results-head h3{font-size:19px;margin:0}.past-exam-integrity{font-size:11px;color:var(--ok);background:rgba(22,160,105,.1);padding:6px 10px;border-radius:30px}
 .past-exam-results{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}

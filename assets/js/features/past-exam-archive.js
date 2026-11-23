@@ -885,6 +885,17 @@
         </div>
         <div id="pastExamBiologyQuiz"></div>
       </section>
+      <section class="panel past-exam-interactive" id="pastExamEnglishInteractive">
+        <div class="past-exam-results-head"><div><h3>امتحانات اللغة الإنجليزية التفاعلية — الدور الأول 2023</h3><span class="hint">اللغة الأجنبية الأولى واللغة الأجنبية الثانية · النماذج A وB وC وD</span></div><span class="past-exam-integrity">مفاتيح إجابة الوزارة</span></div>
+        <p class="past-exam-interactive-note">اللغة الأولى: 34 سؤالًا موضوعيًا، منها سؤال اختيار إجابتين لا يدخل في التصحيح الآلي، بالإضافة إلى 3 أسئلة مقالية. اللغة الثانية: 29 سؤالًا موضوعيًا بالإضافة إلى سؤالين مقاليين. التصحيح يعرض نتيجة الجزء الموضوعي الآلي فقط، ولا يدّعي احتساب الدرجة الرسمية الكاملة.</p>
+        <div class="past-exam-source-links">
+          <a href="https://www.myschool77.com/2023/07/English-exam-3secondary.html" target="_blank" rel="noopener noreferrer">ورقة اللغة الإنجليزية الأولى — نسخة أرشيفية خارجية ↗</a>
+          <a href="https://bablsheet.blob.core.windows.net/examq2023/09.pdf" target="_blank" rel="noopener noreferrer">ورقة اللغة الإنجليزية الثانية — PDF ↗</a>
+          <a href="https://moe.gov.eg/media/evqfv1il/scinece-exammodels.pdf#page=8" target="_blank" rel="noopener noreferrer">مفتاح الوزارة للغة الأولى — صفحة 8 ↗</a>
+          <a href="https://moe.gov.eg/media/evqfv1il/scinece-exammodels.pdf#page=28" target="_blank" rel="noopener noreferrer">مفتاح الوزارة للغة الثانية — صفحة 28 ↗</a>
+        </div>
+        <div id="pastExamEnglishQuiz"></div>
+      </section>
       <section class="panel past-exam-interactive" id="pastExamMathInteractive">
         <div class="past-exam-results-head"><div><h3>امتحانات الرياضيات التفاعلية — الدور الأول 2023</h3><span class="hint">الشعبة العلمية رياضيات · الاستاتيكا · الديناميكا · التفاضل والتكامل · الجبر والهندسة الفراغية</span></div><span class="past-exam-integrity">مفاتيح إجابة رسمية</span></div>
         <p class="past-exam-interactive-note">اختر فرع المادة والنموذج (أ، ب، ج، د). لكل فرع 18 سؤالًا موضوعيًا: أول 10 أسئلة بدرجة واحدة، وآخر 8 أسئلة بدرجتين. السؤالان المقاليان (19 و20) مستبعدان من التصحيح الآلي. الدرجة الكلية لكل فرع 30 درجة، منها 26 درجة للأسئلة الموضوعية.</p>
@@ -923,6 +934,7 @@
     renderPhysicsInteractiveExam();
     renderBiologyInteractiveExam();
     renderMath2023InteractiveExam();
+    renderEnglish2023InteractiveExam();
 
     function renderBookSources() {
       const container = document.getElementById('pastExamBookSources');
@@ -1082,6 +1094,48 @@
             answerKey.map((answer, index) => '<span class="' + (answers[index] === answer ? 'is-correct' : 'is-wrong') + '">س' + (index + 1) + ': ' + answer + ' (' + BIOLOGY_2023_WEIGHTS[index] + ' د)' + (answers[index] ? (answers[index] === answer ? ' ✓' : ' · إجابتك ' + answers[index]) : ' · لم تجب') + '</span>').join('') +
             '</div></details>';
           host.querySelector('#pastExamBiologyRetry').addEventListener('click', renderBiologyInteractiveExam);
+        });
+      });
+    }
+
+    function renderEnglish2023InteractiveExam() {
+      const host = document.getElementById('pastExamEnglishQuiz');
+      if (!host) return;
+      const subjectOptions = Object.entries(ENGLISH_2023_KEYS).map(([id, subject]) =>
+        '<option value="' + id + '">' + subject.label + '</option>').join('');
+      host.innerHTML = '<div class="past-exam-model-picker"><label>المادة: <select id="pastExamEnglishSubject">' + subjectOptions + '</select></label> <label>النموذج: <select id="pastExamEnglishModel"><option value="A">النموذج A</option><option value="B">النموذج B</option><option value="C">النموذج C</option><option value="D">النموذج D</option></select></label></div><button class="p past-exam-quiz-start" type="button" id="pastExamEnglishStart">ابدأ حل الامتحان</button><p class="hint">اختر اللغة الأولى أو الثانية، ثم نموذج A أو B أو C أو D. التصحيح الآلي للأسئلة الموضوعية فقط.</p>';
+      host.querySelector('#pastExamEnglishStart').addEventListener('click', () => {
+        const subjectId = host.querySelector('#pastExamEnglishSubject').value;
+        const subject = ENGLISH_2023_KEYS[subjectId];
+        const model = host.querySelector('#pastExamEnglishModel').value;
+        const answerKey = subject.models[model];
+        const autoIndexes = answerKey.map((answer, index) => answer.includes('|') ? -1 : index).filter(index => index >= 0);
+        const maxScore = autoIndexes.reduce((sum, index) => sum + subject.weights[index], 0);
+        host.innerHTML = '<div class="past-exam-quiz-toolbar"><b>' + subject.label + ' — النموذج ' + model + '</b><span id="pastExamEnglishProgress">تمت الإجابة عن 0 من ' + autoIndexes.length + '</span></div>' +
+          '<div class="past-exam-answer-grid">' + answerKey.map((answer, index) => {
+            if (answer.includes('|')) return '<div class="past-exam-answer-cell"><span>سؤال ' + (index + 1) + ' · إجابة متعددة</span><p class="hint">مستبعد من التصحيح الآلي — مفتاح الوزارة يتطلب اختيار إجابتين: ' + answer.replace('|', ' و ') + '</p></div>';
+            return '<label class="past-exam-answer-cell"><span>سؤال ' + (index + 1) + (subject.weights[index] === 2 ? ' · درجتان' : ' · درجة') + '</span><select aria-label="إجابة السؤال ' + (index + 1) + '" data-english-answer="' + index + '"><option value="">—</option>' +
+              ['A','B','C','D'].map(choice => '<option value="' + choice + '">' + choice + '</option>').join('') + '</select></label>';
+          }).join('') + '</div><button class="p past-exam-quiz-submit" type="button" id="pastExamEnglishSubmit">تصحيح الإجابات</button>';
+        const selects = Array.from(host.querySelectorAll('[data-english-answer]'));
+        const updateProgress = () => {
+          const count = selects.filter(select => select.value).length;
+          host.querySelector('#pastExamEnglishProgress').textContent = 'تمت الإجابة عن ' + count + ' من ' + autoIndexes.length;
+        };
+        selects.forEach(select => select.addEventListener('change', updateProgress));
+        host.querySelector('#pastExamEnglishSubmit').addEventListener('click', () => {
+          const answers = answerKey.map((answer, index) => answer.includes('|') ? null : (host.querySelector('[data-english-answer="' + index + '"]')?.value || ''));
+          const answered = answers.filter(Boolean).length;
+          const correct = autoIndexes.filter(index => answers[index] === answerKey[index]).length;
+          const score = autoIndexes.reduce((sum, index) => sum + (answers[index] === answerKey[index] ? subject.weights[index] : 0), 0);
+          const percent = Math.round(score / maxScore * 100);
+          const excluded = answerKey.filter(answer => answer.includes('|')).length;
+          const essayStart = subject.questionCount + 1;
+          host.innerHTML = '<div class="past-exam-quiz-result"><strong>' + percent + '%</strong><h4>درجتك: ' + score + ' من ' + maxScore + '</h4><p>إجابات صحيحة: ' + correct + ' · خاطئة: ' + (answered - correct) + ' · بدون إجابة: ' + (autoIndexes.length - answered) + '</p><p class="hint">هذه نتيجة الأسئلة الموضوعية التي يمكن تصحيحها آليًا فقط. الدرجة الكلية الرسمية للمادة: ' + subject.officialTotal + '. ' + (excluded ? 'تم استبعاد سؤال اختيار متعدد يتطلب إجابتين من التصحيح الآلي. ' : '') + 'الأسئلة المقالية من ' + essayStart + ' إلى ' + subject.questionCount + ' خارج التصحيح الآلي.</p><button class="p" type="button" id="pastExamEnglishRetry">إعادة المحاولة</button></div>' +
+            '<details class="past-exam-key-review"><summary>مراجعة مفتاح الوزارة — ' + subject.label + '، النموذج ' + model + '</summary><div class="past-exam-key-grid">' +
+            answerKey.map((answer, index) => '<span class="' + (answer.includes('|') ? '' : (answers[index] === answer ? 'is-correct' : 'is-wrong')) + '">س' + (index + 1) + ': ' + answer.replace('|', ' + ') + (answer.includes('|') ? ' · مراجعة يدوية' : ' (' + subject.weights[index] + ' د)' + (answers[index] ? (answers[index] === answer ? ' ✓' : ' · إجابتك ' + answers[index]) : ' · لم تجب')) + '</span>').join('') +
+            '</div></details>';
+          host.querySelector('#pastExamEnglishRetry').addEventListener('click', renderEnglish2023InteractiveExam);
         });
       });
     }

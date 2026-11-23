@@ -65,6 +65,81 @@
     "fileLabel": "فتح نموذج الإجابة"
   },
   {
+    "id": "2023-science-arabic-answer",
+    "year": "2023",
+    "system": "modern",
+    "systemLabel": "النظام الحديث",
+    "subject": "اللغة العربية",
+    "type": "official",
+    "typeLabel": "نموذج إجابة رسمي — الشعبة العلمية علوم",
+    "fileKind": "answer",
+    "title": "نموذج إجابة اللغة العربية — الشعبة العلمية علوم",
+    "round": "الدور الأول",
+    "pdfPage": 3,
+    "pdfUrl": "https://moe.gov.eg/media/evqfv1il/scinece-exammodels.pdf",
+    "fileLabel": "فتح نموذج الإجابة"
+  },
+  {
+    "id": "2023-science-english-first-answer",
+    "year": "2023",
+    "system": "modern",
+    "systemLabel": "النظام الحديث",
+    "subject": "اللغة الأجنبية الأولى",
+    "type": "official",
+    "typeLabel": "نموذج إجابة رسمي — الشعبة العلمية علوم",
+    "fileKind": "answer",
+    "title": "نموذج إجابة الإنجليزية — لغة أجنبية أولى",
+    "round": "الدور الأول",
+    "pdfPage": 8,
+    "pdfUrl": "https://moe.gov.eg/media/evqfv1il/scinece-exammodels.pdf",
+    "fileLabel": "فتح نموذج الإجابة"
+  },
+  {
+    "id": "2023-science-english-second-answer",
+    "year": "2023",
+    "system": "modern",
+    "systemLabel": "النظام الحديث",
+    "subject": "اللغة الأجنبية الثانية",
+    "type": "official",
+    "typeLabel": "نموذج إجابة رسمي — الشعبة العلمية علوم",
+    "fileKind": "answer",
+    "title": "نموذج إجابة الإنجليزية — لغة أجنبية ثانية",
+    "round": "الدور الأول",
+    "pdfPage": 28,
+    "pdfUrl": "https://moe.gov.eg/media/evqfv1il/scinece-exammodels.pdf",
+    "fileLabel": "فتح نموذج الإجابة"
+  },
+  {
+    "id": "2023-science-chemistry-answer",
+    "year": "2023",
+    "system": "modern",
+    "systemLabel": "النظام الحديث",
+    "subject": "الكيمياء",
+    "type": "official",
+    "typeLabel": "نموذج إجابة رسمي — الشعبة العلمية علوم",
+    "fileKind": "answer",
+    "title": "نموذج إجابة الكيمياء باللغة العربية",
+    "round": "الدور الأول",
+    "pdfPage": 53,
+    "pdfUrl": "https://moe.gov.eg/media/evqfv1il/scinece-exammodels.pdf",
+    "fileLabel": "فتح نموذج الإجابة"
+  },
+  {
+    "id": "2023-science-biology-answer",
+    "year": "2023",
+    "system": "modern",
+    "systemLabel": "النظام الحديث",
+    "subject": "الأحياء",
+    "type": "official",
+    "typeLabel": "نموذج إجابة رسمي — الشعبة العلمية علوم",
+    "fileKind": "answer",
+    "title": "نموذج إجابة الأحياء باللغة العربية",
+    "round": "الدور الأول",
+    "pdfPage": 98,
+    "pdfUrl": "https://moe.gov.eg/media/evqfv1il/scinece-exammodels.pdf",
+    "fileLabel": "فتح نموذج الإجابة"
+  },
+  {
     "id": "2023-science-answer",
     "year": "2023",
     "system": "modern",
@@ -75,6 +150,7 @@
     "fileKind": "answer",
     "title": "نموذج إجابة الفيزياء باللغة العربية — الشعبة العلمية",
     "round": "الدور الأول",
+    "pdfPage": 68,
     "pdfUrl": "https://moe.gov.eg/media/evqfv1il/scinece-exammodels.pdf",
     "fileLabel": "فتح نموذج الإجابة"
   },
@@ -89,6 +165,7 @@
     "fileKind": "answer",
     "title": "نموذج إجابة الديناميكا باللغة العربية — الشعبة العلمية رياضيات",
     "round": "الدور الأول",
+    "pdfPage": 97,
     "pdfUrl": "https://moe.gov.eg/media/tzfj0lya/mathematica-exammodels.pdf",
     "fileLabel": "فتح نموذج الإجابة"
   },
@@ -263,7 +340,7 @@
           <div class="past-exam-card-top"><span>${escapeHTML(exam.typeLabel)}</span><b>${escapeHTML(exam.year)}</b></div>
           <h3>${escapeHTML(exam.subject)}</h3>
           <p>${escapeHTML(exam.title)} · ${escapeHTML(exam.round)}</p>
-          <div class="past-exam-card-meta"><span>${escapeHTML(exam.systemLabel)}</span><a href="${escapeHTML(exam.pdfUrl)}" target="_blank" rel="noopener noreferrer">${escapeHTML(exam.fileLabel || "فتح الملف")} ↗</a></div>
+          <div class="past-exam-card-meta"><span>${escapeHTML(exam.systemLabel)}</span><a href="${escapeHTML(exam.pdfUrl + (exam.pdfPage ? "#page=" + exam.pdfPage : ""))}" target="_blank" rel="noopener noreferrer">${escapeHTML(exam.fileLabel || "فتح الملف")} ↗</a></div>
           ${exam.answerUrl ? `<a class="past-exam-answer" href="${escapeHTML(exam.answerUrl)}" target="_blank" rel="noopener noreferrer">نموذج الإجابة ↗</a>` : ''}
         </article>`).join('');
     }

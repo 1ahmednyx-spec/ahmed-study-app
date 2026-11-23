@@ -2,7 +2,7 @@
 (function (global) {
   'use strict';
   function init({state, save, escapeHtml: esc}) {
-    const root = document.getElementById('examCenter');
+    const root = document.getElementById('examCenterRoot');
     if (!root) return;
     state.examHistory = Array.isArray(state.examHistory) ? state.examHistory : [];
     let active = null;
@@ -64,7 +64,6 @@
     }
     function updateBankInfo() {
       const bank=bankFor($('#examSubject').value);
-      const count=Math.min(+$(' #examCount')?.value || 10,bank.length);
       $('#examBankInfo').textContent=bank.length ? 'متاح حاليًا '+bank.length+' سؤالًا في بنك هذه المادة. سيختار الامتحان أسئلة متنوعة عشوائيًا.' : 'لا توجد أسئلة متاحة لهذه المادة حتى الآن.';
       $('#examStart').disabled=bank.length===0;
     }

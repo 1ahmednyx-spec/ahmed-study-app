@@ -72,6 +72,10 @@ try {
   assert.match(pastExamArchiveSource, /2024-official-question-and-answer-portal/, 'Archive must link to the official 2024 questions and answer resource');
   assert.match(pastExamArchiveSource, /2026-official-models-portal/, 'Archive must link to the official 2026 model-exam portal');
   assert.match(pastExamArchiveSource, /ARABIC_2023_MODEL_A_KEY/, 'Archive must include the 2023 Arabic model A answer key');
+  for (const model of ['A', 'B', 'C', 'D']) {
+    assert.match(pastExamArchiveSource, new RegExp('ARABIC_2023_MODEL_' + model + '_KEY'), 'Archive must include the 2023 Arabic model ' + model + ' answer key');
+  }
+  assert.match(pastExamArchiveSource, /pastExamArabicModel/, 'Arabic interactive exam must allow selecting all four official models');
   assert.match(pastExamArchiveSource, /pastExamArabicQuiz/, 'Archive must render an interactive answer sheet');
   assert.match(pastExamArchiveSource, /51 سؤالًا موضوعيًا/, 'Arabic answer sheet must clearly limit automatic grading to 51 objective questions');
   assert.match(pastExamArchiveSource, /arts-answermodels\.pdf#page=4/, 'Arabic quiz must link to the Ministry answer-key PDF');
@@ -138,11 +142,11 @@ try {
   await page.locator('[data-tab="pastExamArchive"]').click();
   assert.equal(await page.locator('#pastExamArchiveRoot #pastExamSystem option').count(), 4);
   assert.equal(await page.locator('#pastExamArchiveRoot #pastExamYear option').count(), 9);
-  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 20, 'Archive must render twenty verified resources');
+  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 44, 'Archive must render forty-four catalogued resources');
   await page.locator('#pastExamYear').selectOption('2020');
   assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 5, 'Year filter must isolate the five catalogued 2020 resources');
   await page.locator('#pastExamYear').selectOption('2023');
-  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 9, 'Year filter must isolate the nine catalogued 2023 resources');
+  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 31, 'Year filter must isolate the thirty-one catalogued 2023 resources');
   await page.locator('#pastExamYear').selectOption('all');
   await page.locator('#pastExamSubject').selectOption('علم النفس والاجتماع');
   assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 1, 'Subject filter must return the single correctly classified psychology and sociology resource');

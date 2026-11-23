@@ -75,5 +75,17 @@
     const completed = lessonBank.reduce((sum, lesson, index) => sum + (done[index] ? 1 : 0), 0);
     return {id:'englishPath', name:'تعلم الإنجليزية', total, completed, percent:total ? Math.round(completed / total * 100) : 0};
   }
-  global.StudyEnglishPath=Object.freeze({init, getExamQuestions, getProgressStats});
+  function getReviewItems(state) {
+    const done = state && state.englishPathDone || {};
+    return lessonBank.flatMap((lesson, index) => done[index] ? [{
+      id: 'englishPath:' + index,
+      source: 'lesson',
+      sourceId: 'englishPath:' + index,
+      subject: 'تعلم الإنجليزية',
+      title: lesson.title,
+      front: lesson.title + ' — ' + lesson.unit,
+      back: [lesson.goal, lesson.explain, (lesson.points || []).slice(0, 4).join('\n')].filter(Boolean).join('\n\n')
+    }] : []);
+  }
+  global.StudyEnglishPath=Object.freeze({init, getExamQuestions, getProgressStats, getReviewItems});
 })(window);

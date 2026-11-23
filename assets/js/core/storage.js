@@ -20,10 +20,11 @@
     courseExamChecks: {},
     subjectLessonDone: {},
     englishPathDone: {},
-    examHistory: []
+    examHistory: [],
+    smartReview: {}
   };
   const ARRAY_FIELDS = ['ev', 'notes', 'words', 'prac', 'mist', 'courseWords', 'courseWriting', 'examHistory'];
-  const OBJECT_FIELDS = ['focus', 'courseDone', 'courseExamChecks', 'subjectLessonDone', 'englishPathDone'];
+  const OBJECT_FIELDS = ['focus', 'courseDone', 'courseExamChecks', 'subjectLessonDone', 'englishPathDone', 'smartReview'];
 
   function isRecord(value) {
     return value !== null && typeof value === 'object' && !Array.isArray(value);

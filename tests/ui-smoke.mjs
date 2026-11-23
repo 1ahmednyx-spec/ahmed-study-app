@@ -23,6 +23,7 @@ try {
   const subjectCoursesResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/subject-courses.js');
   const examCenterResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/exam-center.js');
   const dashboardResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/dashboard.js');
+  const smartRevisionResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/smart-revision.js');
   const ministryLibraryResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/ministry-library.js');
   const englishCoachResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/english-coach.js');
   const preferencesResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/preferences.js');
@@ -30,7 +31,7 @@ try {
   assert.equal(serviceWorkerResponse.status(), 200, 'Service worker must be served');
   const serviceWorkerSource = await serviceWorkerResponse.text();
   assert.match(serviceWorkerSource, /ahmed-study-platform-v\d+/, 'Service worker cache must be versioned');
-  for (const modulePath of ['./assets/js/features/preferences.js', './assets/js/features/english-course.js', './assets/js/features/english-learning-path.js', './assets/js/features/subject-courses.js', './assets/js/features/exam-center.js', './assets/js/features/dashboard.js', './assets/js/features/ministry-library.js', './assets/js/features/english-coach.js']) {
+  for (const modulePath of ['./assets/js/features/preferences.js', './assets/js/features/english-course.js', './assets/js/features/english-learning-path.js', './assets/js/features/subject-courses.js', './assets/js/features/exam-center.js', './assets/js/features/dashboard.js', './assets/js/features/smart-revision.js', './assets/js/features/ministry-library.js', './assets/js/features/english-coach.js']) {
     assert.ok(serviceWorkerSource.includes(modulePath), `Service worker must precache ${modulePath}`);
   }
 
@@ -52,6 +53,7 @@ try {
   assert.equal(subjectCoursesResponse.status(), 200, '2027 subject courses module must be served');
   assert.equal(examCenterResponse.status(), 200, 'Exam center module must be served');
   assert.equal(dashboardResponse.status(), 200, 'Smart dashboard module must be served');
+  assert.equal(smartRevisionResponse.status(), 200, 'Smart revision module must be served');
   assert.equal(ministryLibraryResponse.status(), 200, 'Ministry library module must be served');
   assert.equal(englishCoachResponse.status(), 200, 'English coach module must be served');
   assert.equal(preferencesResponse.status(), 200, 'Preferences module must be served');
@@ -68,7 +70,8 @@ try {
   assert.ok(scriptOrder.indexOf('./assets/js/features/english-learning-path.js') < scriptOrder.indexOf('./assets/js/features/subject-courses.js'), 'English learning path must load before subject courses');
   assert.ok(scriptOrder.indexOf('./assets/js/features/subject-courses.js') < scriptOrder.indexOf('./assets/js/features/exam-center.js'), 'Subject course bank must load before exam center');
   assert.ok(scriptOrder.indexOf('./assets/js/features/english-learning-path.js') < scriptOrder.indexOf('./assets/js/features/dashboard.js'), 'English progress source must load before dashboard');
-  assert.ok(scriptOrder.indexOf('./assets/js/features/dashboard.js') < scriptOrder.indexOf('./assets/js/app.js'), 'Dashboard module must load before app initialization');
+  assert.ok(scriptOrder.indexOf('./assets/js/features/dashboard.js') < scriptOrder.indexOf('./assets/js/features/smart-revision.js'), 'Dashboard must load before smart revision');
+  assert.ok(scriptOrder.indexOf('./assets/js/features/smart-revision.js') < scriptOrder.indexOf('./assets/js/app.js'), 'Smart revision module must load before app initialization');
   assert.ok(scriptOrder.indexOf('./assets/js/features/exam-center.js') < scriptOrder.indexOf('./assets/js/features/ministry-library.js'), 'Exam center must load before Ministry library feature');
   assert.ok(scriptOrder.indexOf('./assets/js/features/ministry-library.js') < scriptOrder.indexOf('./assets/js/features/english-coach.js'), 'Ministry library must load before English coach feature');
   assert.ok(scriptOrder.indexOf('./assets/js/features/english-coach.js') < scriptOrder.indexOf('./assets/js/features/preferences.js'), 'English coach must load before preferences feature');
@@ -92,7 +95,9 @@ try {
   assert.equal(await page.evaluate(() => typeof window.activateTab), 'function', 'Navigation module must expose tab activation');
   assert.match(await page.title(), /Ahmed Study Platform/);
   await page.locator('#home').waitFor({ state: 'visible' });
-  assert.equal(await page.locator('.tabs [role="tab"]').count(), 16, 'Exam center, English learning path, and five subject tabs must preserve all existing tabs');
+  assert.equal(await page.locator('.tabs [role="tab"]').count(), 17, 'Smart revision, exam center, English learning path, and five subject tabs must preserve all existing tabs');
+  assert.equal(await page.evaluate(() => typeof window.StudySmartRevision?.init), 'function', 'Smart revision module must expose its initializer');
+  assert.equal(await page.locator('#reviewCenter #smartReviewRoot').count(), 1, 'Smart revision must have its own content section');
   assert.equal(await page.locator('#smartDashboard .smart-metric').count(), 4, 'Homepage dashboard must show four live learning metrics');
   assert.equal(await page.locator('#smartDashboard .smart-subject').count(), 6, 'Homepage dashboard must show five school subjects and the English learning path');
   assert.equal(await page.evaluate(() => typeof window.StudyDashboard?.init), 'function', 'Dashboard module must expose its initializer');
@@ -406,6 +411,37 @@ try {
   await page.reload({ waitUntil: 'domcontentloaded' });
   assert.equal(await page.evaluate(() => JSON.parse(localStorage.getItem('study-v1')).smokeTestMarker), 'preserved');
 
+  // Smart revision collects vocabulary, active mistakes, and completed lessons, then schedules ratings.
+  const revisionSeed = await page.evaluate(() => {
+    const state = JSON.parse(localStorage.getItem('study-v1') || '{}');
+    Object.assign(state, {
+      ev: [], notes: [],
+      words: [{id:'word-revision-smoke',e:'resilient',a:'مرن',box:0}],
+      track: 'sci', prac: [], goal: 100,
+      mist: [{id:'mistake-revision-smoke',s:'الأحياء',q:'ما وظيفة الميتوكوندريا؟',r:'معلومة ناسيها',box:0,due:new Date().toLocaleDateString('en-CA')}],
+      subjectLessonDone: {biology2027:{'0-0':true}},
+      englishPathDone: {0:true},
+      smartReview: {}
+    });
+    localStorage.setItem('study-v1', JSON.stringify(state));
+    return true;
+  });
+  assert.equal(revisionSeed, true);
+  await page.reload({waitUntil:'domcontentloaded'});
+  await page.locator('[data-tab="reviewCenter"]').click();
+  await page.locator('#smartReviewRoot .revision-stats').waitFor({state:'visible'});
+  assert.equal(await page.locator('#smartReviewRoot .revision-preview-item').count(), 4, 'Revision queue must include a word, a mistake, a subject lesson, and an English lesson');
+  await page.locator('#smartReviewRoot [data-review-start]').click();
+  await page.locator('#smartReviewRoot [data-review-reveal]').click();
+  await page.locator('#smartReviewRoot [data-review-rate="good"]').click();
+  const savedReview = await page.evaluate(() => JSON.parse(localStorage.getItem('study-v1')).smartReview);
+  assert.equal(Object.keys(savedReview).length, 1, 'A revision rating must be saved in study-v1');
+  assert.equal(Object.values(savedReview)[0].lastRating, 'good', 'The selected review rating must persist');
+  assert.ok(Object.values(savedReview)[0].due > new Date().toLocaleDateString('en-CA'), 'A successful recall must schedule the next review in the future');
+  await page.locator('#smartReviewRoot [data-review-exit]').click();
+  await page.locator('[data-tab="home"]').click();
+  await page.locator('#home').waitFor({state:'visible'});
+
   // Mobile layout must fit the viewport without page-level horizontal overflow.
   await page.setViewportSize({ width: 390, height: 844 });
   await page.locator('#home').waitFor({ state: 'visible' });
@@ -431,7 +467,7 @@ try {
   assert.ok(narrow.document <= narrow.viewport + 1, `Narrow mobile page overflow: ${JSON.stringify(narrow)}`);
 
   assert.deepEqual(pageErrors, [], `Uncaught browser errors: ${pageErrors.join('; ')}`);
-  console.log('PASS: homepage, navigation, schedule creation, local notes, theme persistence, local data preservation, mistake review, AI fallback, backup validation, mobile overflow at 390px and 320px, and browser console.');
+  console.log('PASS: homepage, navigation, smart revision queue and scheduling, schedule creation, local notes, theme persistence, local data preservation, mistake review, AI fallback, backup validation, mobile overflow at 390px and 320px, and browser console.');
 } finally {
   await browser.close();
 }

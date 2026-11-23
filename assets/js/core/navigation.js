@@ -1,6 +1,6 @@
 /* Main navigation */
 (function () {
-  const ids = ['home', 'sched', 'notes', 'chat', 'prac', 'examCenter', 'tools', 'eng', 'library', 'english2027', 'englishPath', 'arabic2027', 'chemistry2027', 'physics2027', 'math2027', 'biology2027'];
+  const ids = ['home', 'sched', 'notes', 'chat', 'prac', 'examCenter', 'reviewCenter', 'tools', 'eng', 'library', 'english2027', 'englishPath', 'arabic2027', 'chemistry2027', 'physics2027', 'math2027', 'biology2027'];
   const $ = selector => document.querySelector(selector);
 
   function activateTab(id) {
@@ -14,6 +14,7 @@
     });
     if (id === 'home' && typeof window.dashboardRender === 'function') window.dashboardRender();
     if (id === 'examCenter' && typeof window.examCenterRender === 'function') window.examCenterRender();
+    if (id === 'reviewCenter' && typeof window.smartReviewRender === 'function') window.smartReviewRender();
     if (id === 'library' && typeof window.ministryLibraryRender === 'function') window.ministryLibraryRender();
     if (['arabic2027','chemistry2027','physics2027','math2027','biology2027'].includes(id) && typeof window.subjectCourseRender === 'function') window.subjectCourseRender(id);
     if (id === 'englishPath' && typeof window.englishPathRender === 'function') window.englishPathRender();

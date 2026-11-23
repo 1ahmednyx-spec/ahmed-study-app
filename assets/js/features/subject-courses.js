@@ -244,5 +244,25 @@
       return {id, name:course.title, total, completed, percent:total ? Math.round(completed / total * 100) : 0};
     });
   }
-  global.StudySubjectCourses = {init, getExamQuestions, getProgressStats};
+  function getReviewItems(state) {
+    const items = [];
+    Object.entries(COURSES).forEach(([id, course]) => {
+      const done = state && state.subjectLessonDone && state.subjectLessonDone[id] || {};
+      course.units.forEach((unit, ui) => unit.lessons.forEach((lesson, li) => {
+        const key = ui + '-' + li;
+        if (!done[key]) return;
+        items.push({
+          id: 'subject:' + id + ':' + key,
+          source: 'lesson',
+          sourceId: id + ':' + key,
+          subject: course.title,
+          title: lesson[0],
+          front: lesson[0] + ' — ' + unit.name,
+          back: [lesson[2], lesson[1]].filter(Boolean).join('\n\n')
+        });
+      }));
+    });
+    return items;
+  }
+  global.StudySubjectCourses = {init, getExamQuestions, getProgressStats, getReviewItems};
 })(window);

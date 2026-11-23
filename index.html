@@ -41,6 +41,7 @@
       <button type="button" role="tab" aria-selected="false" data-tab="arabic2027"><span>ع</span> عربي 2027</button>
       <button type="button" role="tab" aria-selected="false" data-tab="chat"><span>✦</span> خبير الإنجليزي</button>
       <button type="button" role="tab" aria-selected="false" data-tab="examCenter"><span>✎</span> مركز الاختبارات</button>
+      <button type="button" role="tab" aria-selected="false" data-tab="reviewCenter"><span>↻</span> المراجعة الذكية</button>
       <button type="button" role="tab" aria-selected="false" data-tab="prac"><span>✓</span> التدريب والخطة</button>
       <button type="button" role="tab" aria-selected="false" data-tab="tools"><span>⚙</span> أدوات المذاكرة</button>
     </nav>
@@ -60,6 +61,7 @@
         <div class="dashboard-panel"><div class="section-heading"><div><span class="eyebrow">QUICK ACCESS</span><h2>وصول سريع</h2></div></div><div class="quick-links">
           <button type="button" data-go-tab="notes"><span>▤</span><b>ملخصاتي</b><small>احفظ وراجع ملخصات الدروس</small></button>
           <button type="button" data-go-tab="prac"><span>✓</span><b>التدريب والخطة</b><small>سجّل حل الأسئلة ونظّم أسبوعك</small></button>
+          <button type="button" data-go-tab="reviewCenter"><span>↻</span><b>المراجعة الذكية</b><small>راجع كلماتك وأخطاءك والدروس المكتملة</small></button>
           <button type="button" data-go-tab="library"><span>📚</span><b>مكتبة الوزارة</b><small>كتب الصف الثالث الثانوي حسب المادة</small></button>
           <button type="button" data-go-tab="english2027"><span>EN</span><b>إنجليزي 2027</b><small>تابع وحدات ومراجعة الإنجليزية</small></button>
           <button type="button" data-go-tab="englishPath"><span>✦</span><b>تعلم الإنجليزية</b><small>مسار مستقل من الأساسيات إلى المتوسط</small></button>
@@ -150,6 +152,10 @@
 <section id="examCenter" hidden>
   <div class="exam-intro"><h2>مركز الاختبارات</h2><p>امتحانات تفاعلية من أسئلة الدروس الموجودة في المنصة، مع توقيت وتصحيح ومراجعة للنتائج.</p></div>
   <div id="examCenterRoot"></div>
+</section>
+
+<section id="reviewCenter" hidden>
+  <div class="panel" id="smartReviewRoot" aria-label="نظام المراجعة الذكية"></div>
 </section>
 
 <section id="tools" hidden>
@@ -318,6 +324,7 @@
 <script src="./assets/js/features/ministry-library.js"></script>
 <script src="./assets/js/features/english-coach.js"></script>
 <script src="./assets/js/features/dashboard.js"></script>
+<script src="./assets/js/features/smart-revision.js"></script>
 <script src="./assets/js/features/preferences.js"></script>
 <script src="./assets/js/app.js"></script>
 </body>

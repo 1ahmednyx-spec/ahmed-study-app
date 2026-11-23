@@ -116,7 +116,7 @@ try {
   await page.locator('[data-tab="pastExamArchive"]').click();
   assert.equal(await page.locator('#pastExamArchiveRoot #pastExamSystem option').count(), 4);
   assert.equal(await page.locator('#pastExamArchiveRoot #pastExamYear option').count(), 9);
-  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 17, 'Archive must render seventeen verified resources');
+  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 18, 'Archive must render eighteen verified resources');
   await page.locator('#pastExamYear').selectOption('2020');
   assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 3, 'Year filter must isolate the three verified 2020 resources');
   await page.locator('#pastExamYear').selectOption('2023');

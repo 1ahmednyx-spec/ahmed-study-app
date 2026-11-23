@@ -718,6 +718,15 @@
   const PHYSICS_2023_QUESTION_URL = 'https://www.ta3lemkonline.com/2023/08/2023_32.html';
   const PHYSICS_2023_ANSWER_URL = 'https://moe.gov.eg/media/evqfv1il/scinece-exammodels.pdf#page=68';
   const PHYSICS_2023_WEIGHTS = Array.from({ length: 44 }, (_, index) => index < 32 ? 1 : 2);
+  // Biology 2023 Arabic answer keys transcribed from the Ministry's official science key, printed pages 98–101.
+  const BIOLOGY_2023_MODEL_A_KEY = ['أ','ج','ب','أ','د','ج','ب','د','أ','ج','ب','د','أ','ج','ب','د','ب','أ','د','ج','ب','د','أ','ج','ب','د','أ','ج','ج','ب','د','أ','ج','ب','د','أ','د','ج','ب','أ','د','ج','ب','أ'];
+  const BIOLOGY_2023_MODEL_B_KEY = ['ب','د','أ','ج','ج','ب','د','أ','ب','أ','د','ج','ب','د','أ','ج','أ','ج','ب','د','أ','ج','ب','د','أ','ج','ب','أ','د','ج','ب','د','ج','ب','أ','ب','أ','د','أ','د','ج','ج','ب','د'];
+  const BIOLOGY_2023_MODEL_C_KEY = ['أ','ج','ب','د','أ','ج','ب','د','ب','د','أ','ج','ج','ب','د','أ','أ','ج','ب','أ','د','ج','ب','د','ب','أ','د','ج','ب','د','أ','ج','أ','د','ج','ج','ب','أ','ج','ب','د','ب','أ','د'];
+  const BIOLOGY_2023_MODEL_D_KEY = ['ب','أ','د','ج','ب','د','أ','ج','أ','ج','ب','أ','د','ج','ب','د','ب','د','أ','ج','ج','ب','د','أ','أ','ج','ب','د','أ','ج','ب','د','ب','أ','د','ج','ب','د','ج','ب','أ','أ','د','ج'];
+  const BIOLOGY_2023_MODEL_KEYS = { أ: BIOLOGY_2023_MODEL_A_KEY, ب: BIOLOGY_2023_MODEL_B_KEY, ج: BIOLOGY_2023_MODEL_C_KEY, د: BIOLOGY_2023_MODEL_D_KEY };
+  const BIOLOGY_2023_QUESTION_URL = 'https://www.ta3lemkonline.com/2023/08/2023_33.html';
+  const BIOLOGY_2023_ANSWER_URL = 'https://moe.gov.eg/media/evqfv1il/scinece-exammodels.pdf#page=98';
+  const BIOLOGY_2023_WEIGHTS = Array.from({ length: 44 }, (_, index) => index < 32 ? 1 : 2);
   const ARABIC_2023_PAPER_URL = 'https://drive.google.com/file/d/1Xdhd5Y8WgYdk9LoSfLjN0ktpgahl5tZr/view?usp=drivesdk';
   const ARABIC_2023_ANSWER_URL = 'https://moe.gov.eg/media/xmhd3sow/arts-answermodels.pdf#page=4';
 
@@ -818,6 +827,7 @@
     renderArabicInteractiveExam();
     renderChemistryInteractiveExam();
     renderPhysicsInteractiveExam();
+    renderBiologyInteractiveExam();
 
     function renderBookSources() {
       const container = document.getElementById('pastExamBookSources');
@@ -942,6 +952,41 @@
             answerKey.map((answer, index) => '<span class="' + (answers[index] === answer || answer.split('|').includes(answers[index]) ? 'is-correct' : 'is-wrong') + '">س' + (index + 1) + ': ' + answer.replace('|', ' أو ') + ' (' + PHYSICS_2023_WEIGHTS[index] + ' د)' + (answers[index] ? (answers[index] === answer ? ' ✓' : ' · إجابتك ' + answers[index]) : ' · لم تجب') + '</span>').join('') +
             '</div></details>';
           host.querySelector('#pastExamPhysicsRetry').addEventListener('click', renderPhysicsInteractiveExam);
+        });
+      });
+    }
+
+    function renderBiologyInteractiveExam() {
+      const host = document.getElementById('pastExamBiologyQuiz');
+      if (!host) return;
+      host.innerHTML = '<label class="past-exam-model-picker">اختر نموذج الامتحان: <select id="pastExamBiologyModel"><option value="أ">النموذج أ</option><option value="ب">النموذج ب</option><option value="ج">النموذج ج</option><option value="د">النموذج د</option></select></label><button class="p past-exam-quiz-start" type="button" id="pastExamBiologyStart">ابدأ تسجيل الإجابات</button><p class="hint">44 سؤالًا موضوعيًا · الدرجة القصوى 56 · مفاتيح النماذج الأربعة من الوزارة</p>';
+      host.querySelector('#pastExamBiologyStart').addEventListener('click', () => {
+        const model = host.querySelector('#pastExamBiologyModel').value;
+        const answerKey = BIOLOGY_2023_MODEL_KEYS[model];
+        const choices = ['أ','ب','ج','د'];
+        host.innerHTML = '<div class="past-exam-quiz-toolbar"><b>ورقة إجابة الأحياء — النموذج ' + model + '</b><span id="pastExamBiologyProgress">تمت الإجابة عن 0 من 44</span></div>' +
+          '<div class="past-exam-answer-grid">' + answerKey.map((_, index) =>
+            '<label class="past-exam-answer-cell"><span>سؤال ' + (index + 1) + (BIOLOGY_2023_WEIGHTS[index] === 2 ? ' · درجتان' : ' · درجة') + '</span><select aria-label="إجابة السؤال ' + (index + 1) + '" data-biology-answer="' + index + '"><option value="">—</option>' +
+            choices.map(choice => '<option value="' + choice + '">' + choice + '</option>').join('') + '</select></label>'
+          ).join('') + '</div><button class="p past-exam-quiz-submit" type="button" id="pastExamBiologySubmit">تصحيح الإجابات</button>';
+        const selects = Array.from(host.querySelectorAll('[data-biology-answer]'));
+        const updateProgress = () => {
+          const count = selects.filter(select => select.value).length;
+          host.querySelector('#pastExamBiologyProgress').textContent = 'تمت الإجابة عن ' + count + ' من 44';
+        };
+        selects.forEach(select => select.addEventListener('change', updateProgress));
+        host.querySelector('#pastExamBiologySubmit').addEventListener('click', () => {
+          const answers = selects.map(select => select.value);
+          const answered = answers.filter(Boolean).length;
+          const correct = answers.reduce((sum, answer, index) => sum + (answer === answerKey[index] ? 1 : 0), 0);
+          const score = answers.reduce((sum, answer, index) => sum + (answer === answerKey[index] ? BIOLOGY_2023_WEIGHTS[index] : 0), 0);
+          const maxScore = BIOLOGY_2023_WEIGHTS.reduce((sum, weight) => sum + weight, 0);
+          const percent = Math.round(score / maxScore * 100);
+          host.innerHTML = '<div class="past-exam-quiz-result"><strong>' + percent + '%</strong><h4>درجتك: ' + score + ' من ' + maxScore + '</h4><p>إجابات صحيحة: ' + correct + ' · خاطئة: ' + (answered - correct) + ' · بدون إجابة: ' + (44 - answered) + '</p><p class="hint">النتيجة للأسئلة الموضوعية فقط من 56 درجة. لا تشمل السؤالين المقاليين (45 و46)، والدرجة الكلية الرسمية للمادة 60 درجة.</p><button class="p" type="button" id="pastExamBiologyRetry">إعادة المحاولة</button></div>' +
+            '<details class="past-exam-key-review"><summary>مراجعة مفتاح الإجابة الرسمي للنموذج ' + model + '</summary><div class="past-exam-key-grid">' +
+            answerKey.map((answer, index) => '<span class="' + (answers[index] === answer ? 'is-correct' : 'is-wrong') + '">س' + (index + 1) + ': ' + answer + ' (' + BIOLOGY_2023_WEIGHTS[index] + ' د)' + (answers[index] ? (answers[index] === answer ? ' ✓' : ' · إجابتك ' + answers[index]) : ' · لم تجب') + '</span>').join('') +
+            '</div></details>';
+          host.querySelector('#pastExamBiologyRetry').addEventListener('click', renderBiologyInteractiveExam);
         });
       });
     }

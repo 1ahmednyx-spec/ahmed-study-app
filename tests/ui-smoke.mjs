@@ -322,7 +322,7 @@ try {
   await page.locator('#pastExamPhysicsQuiz [data-physics-answer="23"]').selectOption('ج');
   await page.locator('#pastExamPhysicsSubmit').click();
   assert.ok((await page.locator('#pastExamPhysicsQuiz .past-exam-quiz-result').innerText()).includes('إجابات صحيحة: 3'), 'Physics grading must accept either letter in a combined Ministry answer');
-  assert.match(await page.locator('#pastExamPhysicsQuiz .past-exam-key-review .past-exam-key-grid span').nth(23).innerText(), /س24:.*ب.*ج/, 'Physics review must show both alternatives for the combined Ministry answer');
+  assert.match(await page.locator('#pastExamPhysicsQuiz .past-exam-key-review .past-exam-key-grid span').nth(23).evaluate(node => node.textContent), /س24:.*ب.*ج/, 'Physics review must show both alternatives for the combined Ministry answer');
   assert.equal(await page.locator('#pastExamPhysicsQuiz .past-exam-key-review .is-correct').count(), 3, 'Accepted alternative answers must also be marked correct in the answer review');
   assert.ok((await page.locator('#pastExamPhysicsQuiz .past-exam-quiz-result').innerText()).includes('من 56'), 'Physics result must use the official 56-point objective subtotal');
   assert.ok((await page.locator('#pastExamPhysicsQuiz .past-exam-quiz-result').innerText()).includes('60 درجة'), 'Physics result must disclose that two essay questions are excluded from the automated score');

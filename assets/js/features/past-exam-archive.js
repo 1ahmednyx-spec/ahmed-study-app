@@ -295,6 +295,20 @@
     "fileLabel": "فتح النموذج التجريبي"
   },
   {
+    "id": "2019-physics-mobility-guide",
+    "year": "2019",
+    "system": "legacy",
+    "systemLabel": "نظام الثانوية العامة 2018/2019",
+    "subject": "الفيزياء",
+    "type": "model",
+    "typeLabel": "امتحان رسمي لفئة الدمج — الإعاقة الحركية",
+    "fileKind": "model",
+    "title": "نموذج اختبار الفيزياء — فئة الدمج (الإعاقة الحركية)",
+    "round": "نموذج خاص — وليس ورقة الامتحان العام",
+    "pdfUrl": "https://moe.gov.eg/media/il5jtng4/physics_movement_disability_guide_19.pdf",
+    "fileLabel": "فتح نموذج الفيزياء الرسمي"
+  },
+  {
     "id": "2019-history-model",
     "year": "2019",
     "system": "legacy",

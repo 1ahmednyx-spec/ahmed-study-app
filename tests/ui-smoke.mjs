@@ -307,6 +307,7 @@ try {
   await page.locator('#noteList').getByText('ملاحظة اختبارية ثانية').waitFor({ state: 'visible' });
 
   // Physics 2023 interactive answer sheet: official Arabic keys, compound-answer options, and weighted grading.
+  await page.locator('[data-tab="pastExamArchive"]').click();
   await page.locator('#pastExamPhysicsStart').click();
   assert.equal(await page.locator('#pastExamPhysicsQuiz [data-physics-answer]').count(), 44, 'Physics answer sheet must render 44 objective questions');
   assert.equal(await page.locator('#pastExamPhysicsQuiz .past-exam-answer-cell').filter({ hasText: 'سؤال 33' }).count(), 1, 'Physics questions 33–44 must be marked as two-point questions');
@@ -317,6 +318,7 @@ try {
   assert.ok((await page.locator('#pastExamPhysicsQuiz .past-exam-quiz-result').innerText()).includes('إجابات صحيحة: 3'), 'Physics grading must accept either letter in a combined Ministry answer');
   assert.ok((await page.locator('#pastExamPhysicsQuiz .past-exam-quiz-result').innerText()).includes('من 56'), 'Physics result must use the official 56-point objective subtotal');
   assert.ok((await page.locator('#pastExamPhysicsQuiz .past-exam-quiz-result').innerText()).includes('60 درجة'), 'Physics result must disclose that two essay questions are excluded from the automated score');
+  await page.locator('[data-tab="notes"]').click();
   // A saved note should survive a full page reload.
   await page.reload({ waitUntil: 'domcontentloaded' });
   await page.locator('[data-tab="notes"]').click();

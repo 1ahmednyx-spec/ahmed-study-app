@@ -85,6 +85,15 @@ try {
   assert.match(pastExamArchiveSource, /CHEMISTRY_2023_WEIGHTS/, 'Chemistry quiz must apply the Ministry mark distribution');
   assert.match(pastExamArchiveSource, /scinece-exammodels\.pdf#page=53/, 'Chemistry quiz must link to the official Ministry answer-key PDF');
   assert.match(pastExamArchiveSource, /mediafire\.com\/file\//, 'Chemistry quiz must provide the external question-paper archive link');
+  assert.match(pastExamArchiveSource, /PHYSICS_2023_MODEL_[ABCD]_KEY/, 'Archive must include official Arabic Physics 2023 answer keys');
+  for (const model of ['A', 'B', 'C', 'D']) {
+    assert.match(pastExamArchiveSource, new RegExp('PHYSICS_2023_MODEL_' + model + '_KEY'), 'Archive must include the 2023 Physics model ' + model + ' answer key');
+  }
+  assert.match(pastExamArchiveSource, /pastExamPhysicsModel/, 'Physics quiz must allow selecting all four official models');
+  assert.match(pastExamArchiveSource, /44 سؤالًا موضوعيًا/, 'Physics quiz must grade 44 objective questions');
+  assert.match(pastExamArchiveSource, /PHYSICS_2023_WEIGHTS/, 'Physics quiz must apply the Ministry mark distribution');
+  assert.match(pastExamArchiveSource, /scinece-exammodels\.pdf#page=68/, 'Physics quiz must link to the official Ministry answer-key PDF');
+  assert.match(pastExamArchiveSource, /ta3lemkonline\.com\/2023\/08\/2023_32\.html/, 'Physics quiz must link to a separate exam-paper download page');
   assert.match(pastExamArchiveSource, /51 سؤالًا موضوعيًا/, 'Arabic answer sheet must clearly limit automatic grading to 51 objective questions');
   assert.match(pastExamArchiveSource, /arts-answermodels\.pdf#page=4/, 'Arabic quiz must link to the Ministry answer-key PDF');
   assert.match(pastExamArchiveSource, /drive\.google\.com\/file\/d\//, 'Arabic quiz must provide a separate question-paper link');
@@ -297,6 +306,15 @@ try {
   await page.locator('#noteForm button[type="submit"]').click();
   await page.locator('#noteList').getByText('ملاحظة اختبارية ثانية').waitFor({ state: 'visible' });
 
+  // Physics 2023 interactive answer sheet: official Arabic keys, compound-answer options, and weighted grading.
+  await page.locator('#pastExamPhysicsStart').click();
+  assert.equal(await page.locator('#pastExamPhysicsQuiz [data-physics-answer]').count(), 44, 'Physics answer sheet must render 44 objective questions');
+  assert.equal(await page.locator('#pastExamPhysicsQuiz .past-exam-answer-cell').filter({ hasText: 'سؤال 33' }).count(), 1, 'Physics questions 33–44 must be marked as two-point questions');
+  await page.locator('#pastExamPhysicsQuiz [data-physics-answer="0"]').selectOption('د');
+  await page.locator('#pastExamPhysicsQuiz [data-physics-answer="22"]').selectOption('جميع الإجابات صحيحة');
+  await page.locator('#pastExamPhysicsSubmit').click();
+  assert.ok((await page.locator('#pastExamPhysicsQuiz .past-exam-quiz-result').innerText()).includes('من 56'), 'Physics result must use the official 56-point objective subtotal');
+  assert.ok((await page.locator('#pastExamPhysicsQuiz .past-exam-quiz-result').innerText()).includes('60 درجة'), 'Physics result must disclose that two essay questions are excluded from the automated score');
   // A saved note should survive a full page reload.
   await page.reload({ waitUntil: 'domcontentloaded' });
   await page.locator('[data-tab="notes"]').click();

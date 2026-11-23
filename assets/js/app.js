@@ -11,7 +11,7 @@ $('#closeAlert').onclick=()=>$('#alert').style.display='none';
 const {render:renderSched,checkReminders}=window.StudySchedule.init({state:S,save,uid,escapeHtml:esc,showAlert});
 
 /* AI gateway — the API key stays on the Cloudflare Worker. */
-const AI_ENDPOINT='https://sparkling-disk-d582ahmed-study-ai.1ahmednyx.workers.dev';
+const AI_ENDPOINT='https://sparkling-disk-disk-d582ahmed-study-ai.1ahmednyx.workers.dev';
 const AI=async(input)=>{
   const messages=Array.isArray(input)?input:[];
   const systemInstruction=messages.filter(item=>item.role==='system').map(item=>item.content).join('\n\n');

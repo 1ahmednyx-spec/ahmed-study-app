@@ -249,7 +249,7 @@
     "fileKind": "paper",
     "title": "امتحان التاريخ — الدور الأول 2019",
     "round": "الدور الأول",
-    "pdfUrl": "https://elearning1.moe.gov.eg/sec/semester2/Grade3/last_years_Exams/2019/1/history/history_A_3sec_A_2019.pdf",
+    "pdfUrl": "http://elearning1.moe.gov.eg/sec/semester2/Grade3/last_years_Exams/2019/1/history/history_A_3sec_A_2019.pdf",
     "fileLabel": "فتح ورقة الامتحان"
   },
   {

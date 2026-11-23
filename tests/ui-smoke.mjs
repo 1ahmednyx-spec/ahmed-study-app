@@ -54,6 +54,12 @@ try {
   assert.equal(subjectCoursesResponse.status(), 200, '2027 subject courses module must be served');
   assert.equal(examCenterResponse.status(), 200, 'Exam center module must be served');
   assert.equal(pastExamArchiveResponse.status(), 200, 'Past exam archive module must be served');
+  const pastExamArchiveSource = await pastExamArchiveResponse.text();
+  assert.match(pastExamArchiveSource, /مراجع الكتب الخارجية/, 'Past exam archive must include the external-book references section');
+  assert.match(pastExamArchiveSource, /arabic-emtehan-2026/, 'Archive must include the Arabic previous-exam book reference');
+  assert.match(pastExamArchiveSource, /biology-emtehan-2026/, 'Archive must include the Biology previous-exam book reference');
+  assert.match(pastExamArchiveSource, /french-bravo-2026/, 'Archive must include the French second-language book reference');
+  assert.match(pastExamArchiveSource, /نماذج تدريبية — ليست امتحانات سابقة مؤكدة/, 'Practice models must not be mislabeled as previous official exams');
   assert.equal(dashboardResponse.status(), 200, 'Smart dashboard module must be served');
   assert.equal(smartRevisionResponse.status(), 200, 'Smart revision module must be served');
   assert.equal(ministryLibraryResponse.status(), 200, 'Ministry library module must be served');

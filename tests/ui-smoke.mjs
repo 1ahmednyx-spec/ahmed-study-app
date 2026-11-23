@@ -71,6 +71,7 @@ try {
   assert.match(pastExamArchiveSource, /2023-arts-history-paper-portal/, 'Archive must include official 2023 literary-division History question-paper portal');
   assert.match(pastExamArchiveSource, /2023-arts-geography-paper-portal/, 'Archive must include official 2023 literary-division Geography question-paper portal');
   assert.match(pastExamArchiveSource, /2021-june-trial-portal/, 'Archive must include the official 2021 trial-exam portal as a portal, not a final paper');
+  assert.match(pastExamArchiveSource, /2019-biology-first-answer/, 'Archive must include the verified 2019 Biology Ministry answer key as an answer, not a question paper');
   assert.match(pastExamArchiveSource, /2023-arts-geography-answer/, 'Archive must include official 2023 literary-division Geography answer key');
   assert.match(pastExamArchiveSource, /const ARTS_2023_KEYS/, 'Archive must include interactive 2023 History and Geography answer keys');
   assert.match(pastExamArchiveSource, /function renderArts2023InteractiveExam/, 'History and Geography must expose interactive grading');
@@ -240,7 +241,7 @@ try {
   assert.equal(await page.locator('#pastExamArchiveRoot #pastExamYear option').count(), 9);
   assert.equal(await page.locator('#pastExamArchiveRoot #pastExamFileKind option').count(), 5, 'Archive must provide separate filters for papers, answer keys, models, and portals');
   assert.ok((await page.locator('#pastExamArchiveRoot p.past-exam-note').innerText()).includes('2021 و2022'), 'Archive must disclose years whose official exam papers are not yet verified');
-  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 46, 'Archive must render forty-six in-scope catalogued resources');
+  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 47, 'Archive must render forty-seven in-scope catalogued resources');
   await page.locator('#pastExamYear').selectOption('2020');
   assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 7, 'Year filter must isolate the seven in-scope 2020 resources');
   await page.locator('#pastExamYear').selectOption('2023');
@@ -249,7 +250,7 @@ try {
   await page.locator('#pastExamFileKind').selectOption('paper');
   assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 8, 'Direct exam papers must be separated from answers, models, and portals');
   await page.locator('#pastExamFileKind').selectOption('answer');
-  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 27, 'Official answer keys must be independently filterable');
+  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 28, 'Official answer keys must be independently filterable');
   await page.locator('#pastExamFileKind').selectOption('portal');
   assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 10, 'Portal links must be independently filterable');
   await page.locator('#pastExamFileKind').selectOption('all');

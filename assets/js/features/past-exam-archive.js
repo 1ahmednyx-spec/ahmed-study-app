@@ -51,6 +51,34 @@
     "fileLabel": "فتح ورقة الامتحان"
   },
   {
+    "id": "2020-arabic-second-blind-paper",
+    "year": "2020",
+    "system": "modern",
+    "systemLabel": "نظام الثانوية العامة 2020",
+    "subject": "اللغة العربية",
+    "type": "official",
+    "typeLabel": "امتحان وزارة رسمي — دمج للمكفوفين",
+    "fileKind": "paper",
+    "title": "امتحان اللغة العربية — نسخة دمج للمكفوفين",
+    "round": "الدور الثاني",
+    "pdfUrl": "https://moe.gov.eg/media/4lvbjegj/اللفه_العربيه-مكفوفين.pdf",
+    "fileLabel": "فتح ورقة الامتحان"
+  },
+  {
+    "id": "2020-arabic-first-answer-cerebral-palsy",
+    "year": "2020",
+    "system": "modern",
+    "systemLabel": "نظام الثانوية العامة 2020",
+    "subject": "اللغة العربية",
+    "type": "official",
+    "typeLabel": "نموذج إجابة رسمي — فئات خاصة",
+    "fileKind": "answer",
+    "title": "نموذج إجابة اللغة العربية — طلاب الشلل الدماغي",
+    "round": "الدور الأول",
+    "pdfUrl": "https://moe.gov.eg/media/y4aa4wct/نموذج_إجابة_اللغه_العربيه-شلل_دماغى.pdf",
+    "fileLabel": "فتح نموذج الإجابة"
+  },
+  {
     "id": "2020-economics-answer",
     "year": "2020",
     "system": "modern",

@@ -116,11 +116,11 @@ try {
   await page.locator('[data-tab="pastExamArchive"]').click();
   assert.equal(await page.locator('#pastExamArchiveRoot #pastExamSystem option').count(), 4);
   assert.equal(await page.locator('#pastExamArchiveRoot #pastExamYear option').count(), 9);
-  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 8, 'Archive must render eight verified Ministry resources');
+  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 12, 'Archive must render twelve verified resources');
   await page.locator('#pastExamYear').selectOption('2020');
   assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 3, 'Year filter must isolate the three verified 2020 resources');
   await page.locator('#pastExamYear').selectOption('2023');
-  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 3, 'Year filter must isolate the three verified 2023 answer files');
+  assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 4, 'Year filter must isolate the four verified 2023 resources');
   await page.locator('#pastExamYear').selectOption('all');
   await page.locator('#pastExamSubject').selectOption('علم النفس والاجتماع');
   assert.equal(await page.locator('#pastExamResults .past-exam-card').count(), 2, 'Subject filter must return both verified psychology and sociology resources');

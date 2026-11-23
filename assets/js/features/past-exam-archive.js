@@ -867,7 +867,7 @@
           const percent = Math.round(correct / answerKey.length * 100);
           host.innerHTML = '<div class="past-exam-quiz-result"><strong>' + percent + '%</strong><h4>نتيجتك: ' + correct + ' من 51</h4><p>إجابات صحيحة: ' + correct + ' · خاطئة: ' + wrong + ' · بدون إجابة: ' + (51 - answered) + '</p><p class="hint">هذه نتيجة عدد الإجابات الصحيحة من 51 سؤالًا موضوعيًا، وليست الدرجة الرسمية من 80؛ لا تشمل الأسئلة المقالية أو توزيع درجات كل سؤال.</p><button class="p" type="button" id="pastExamArabicRetry">إعادة المحاولة</button></div>' +
             '<details class="past-exam-key-review"><summary>مراجعة مفتاح الإجابة الرسمي للنموذج ' + model + '</summary><div class="past-exam-key-grid">' +
-            answerKey.map((answer, index) => '<span class="' + (answers[index] === answer ? 'is-correct' : 'is-wrong') + '">س' + (index + 1) + ': ' + answer + (answers[index] ? (answers[index] === answer ? ' ✓' : ' · إجابتك ' + answers[index]) : ' · لم تجب') + '</span>').join('') +
+            answerKey.map((answer, index) => '<span class="' + (answers[index] === answer || answer.split('|').includes(answers[index]) ? 'is-correct' : 'is-wrong') + '">س' + (index + 1) + ': ' + answer + (answers[index] ? (answers[index] === answer ? ' ✓' : ' · إجابتك ' + answers[index]) : ' · لم تجب') + '</span>').join('') +
             '</div></details>';
           host.querySelector('#pastExamArabicRetry').addEventListener('click', renderArabicInteractiveExam);
         });

@@ -101,7 +101,9 @@ try {
     for (const model of ['أ', 'ب', 'ج', 'د']) {
       const branchStart = pastExamArchiveSource.indexOf(branch + ': {', pastExamArchiveSource.indexOf('const MATH_2023_KEYS'));
       const branchSource = pastExamArchiveSource.slice(branchStart, branchStart + 1800);
-      const keyLine = branchSource.split('\\n').find(line => line.trim().startsWith(model + ': ['));
+      const keyStart = branchSource.indexOf(model + ': [');
+      const keyEnd = branchSource.indexOf(']', keyStart);
+      const keyLine = keyStart >= 0 && keyEnd >= 0 ? branchSource.slice(keyStart, keyEnd + 1) : '';
       assert.ok(keyLine, 'Math archive must include ' + branch + ' model ' + model);
       assert.equal((keyLine.match(/'[^']+'/g) || []).length, 18, branch + ' model ' + model + ' must contain 18 objective answers');
     }

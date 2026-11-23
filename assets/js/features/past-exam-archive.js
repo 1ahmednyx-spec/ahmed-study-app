@@ -639,7 +639,7 @@
     "subject": "كل المواد",
     "type": "model",
     "typeLabel": "نماذج استرشادية رسمية — وزارة التربية والتعليم",
-    "fileKind": "model",
+    "fileKind": "portal",
     "title": "النماذج الاسترشادية للثانوية العامة 2026 — حتى 10 نماذج لكل مادة",
     "round": "العام الدراسي 2025/2026",
     "pdfUrl": "https://ellibrary.moe.gov.eg/sec3guideforms/",

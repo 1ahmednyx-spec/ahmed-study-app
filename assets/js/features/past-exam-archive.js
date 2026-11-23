@@ -785,6 +785,32 @@
       }
     }
   };
+
+  // 2023 Literary Division: official Ministry answer keys (History pp. 53–56; Geography pp. 58–61).
+  const ARTS_2023_WEIGHTS = Array.from({ length: 44 }, (_, index) => index < 32 ? 1 : 2);
+  const ARTS_2023_KEYS = {
+    history: {
+      label: 'التاريخ',
+      models: {
+        أ: ['أ','د','ج','ب','د','د','ب','ج','أ','أ','ب','د','أ','ج','ج','أ','ب','ج','د','ب','أ','د','أ','ج','ج','ب','ب','أ','ج','د','د','ج','ج','ب','د','ب','أ','ب','أ','د','ج','ب','د','أ'],
+        ب: ['ب','أ','ج','د','أ','ب','د','ج','أ','ج','د','د','ب','د','أ','أ','ج','ب','ج','ج','د','ج','ب','أ','د','ج','د','ج','ب','ب','ب','ج','أ','أ','ب','ب','د','د','ج','ب','أ','ج','ب','د'],
+        ج: ['د','أ','ج','ج','د','ب','د','ج','أ','أ','ج','ب','د','ج','أ','د','ج','ب','ج','ب','أ','ج','ب','د','أ','د','ب','ج','أ','ب','د','أ','ج','د','ب','أ','ج','ب','ب','د','ب','أ','د','أ'],
+        د: ['أ','د','ج','د','ب','أ','د','ج','ج','ب','د','د','ج','ج','أ','ب','أ','ج','د','ج','أ','د','ب','ج','ب','أ','أ','د','ب','ج','ب','ب','د','ب','أ','أ','ج','أ','ب','د','ب','ج','ب','د']
+      }
+    },
+    geography: {
+      label: 'الجغرافيا',
+      models: {
+        أ: ['ج','د','ب','أ','د','أ','ج','ب','ب','د','ج','أ','د','ج','أ','ب','أ','أ','د','ج','د','ب','ب','ب','ج','أ','ج','د','أ','ب','د','ج','د','أ','ج','د','أ','ب','ب','أ','أ','د','ج','ب'],
+        ب: ['د','ج','ب','أ','ج','أ','أ','ج','أ','ج','د','ج','د','أ','ب','د','أ','د','ج','ب','د','ج','د','ب','أ','ب','أ','ج','ب','د','د','أ','ب','ب','أ','ب','د','ج','ج','أ','ج','ب','د','أ'],
+        ج: ['د','ب','ج','د','ج','ب','أ','أ','د','د','ج','أ','أ','أ','أ','د','ب','ج','د','ج','د','ب','ج','أ','ب','ب','د','ج','ج','أ','ب','د','ج','ج','أ','ب','د','ب','ب','د','أ','أ','ب','د'],
+        د: ['أ','د','ب','ج','ج','أ','د','أ','ب','د','أ','أ','ج','ب','أ','ج','ج','ب','ب','د','أ','د','د','د','ب','د','أ','ب','أ','ج','د','ج','أ','ج','ج','د','ب','ب','د','ب','ج','أ','د','أ']
+      }
+    }
+  };
+  const ARTS_2023_ANSWER_URL = 'https://moe.gov.eg/media/xmhd3sow/arts-answermodels.pdf';
+  const ARTS_2023_PAPER_PORTAL = 'https://moe.gov.eg/ar/exam-model2022-2023/';
+
   const MATH_2023_KEYS = {
     statics: {
       label: 'الاستاتيكا', questionPage: 82, answerPage: 83,
@@ -913,6 +939,17 @@
         </div>
         <div id="pastExamBiologyQuiz"></div>
       </section>
+
+      <section class="panel past-exam-interactive" id="pastExamArtsInteractive">
+        <div class="past-exam-results-head"><div><h3>امتحانات التاريخ والجغرافيا التفاعلية — الدور الأول 2023</h3><span class="hint">الشعبة الأدبية · النماذج أ، ب، ج، د لكل مادة</span></div><span class="past-exam-integrity">مفاتيح إجابة الوزارة</span></div>
+        <p class="past-exam-interactive-note">لكل مادة 44 سؤالًا موضوعيًا: 32 سؤالًا بدرجة واحدة و12 سؤالًا بدرجتين، بإجمالي 56 درجة آلية. السؤالان المقاليان (45 و46) مستبعدان من التصحيح الآلي؛ والدرجة الرسمية الكلية 60 درجة.</p>
+        <div class="past-exam-source-links">
+          <a href="${ARTS_2023_PAPER_PORTAL}" target="_blank" rel="noopener noreferrer">بوابة كراسات الأسئلة الرسمية للوزارة ↗</a>
+          <a href="${ARTS_2023_ANSWER_URL}#page=53" target="_blank" rel="noopener noreferrer">مفتاح التاريخ الرسمي — صفحة 53 ↗</a>
+          <a href="${ARTS_2023_ANSWER_URL}#page=58" target="_blank" rel="noopener noreferrer">مفتاح الجغرافيا الرسمي — صفحة 58 ↗</a>
+        </div>
+        <div id="pastExamArtsQuiz"></div>
+      </section>
       <section class="panel past-exam-interactive" id="pastExamEnglishInteractive">
         <div class="past-exam-results-head"><div><h3>امتحانات اللغة الإنجليزية التفاعلية — الدور الأول 2023</h3><span class="hint">اللغة الأجنبية الأولى واللغة الأجنبية الثانية · النماذج A وB وC وD</span></div><span class="past-exam-integrity">مفاتيح إجابة الوزارة</span></div>
         <p class="past-exam-interactive-note">اللغة الأولى: 34 سؤالًا موضوعيًا، منها سؤال اختيار إجابتين لا يدخل في التصحيح الآلي، بالإضافة إلى 3 أسئلة مقالية. اللغة الثانية: 29 سؤالًا موضوعيًا بالإضافة إلى سؤالين مقاليين. التصحيح يعرض نتيجة الجزء الموضوعي الآلي فقط، ولا يدّعي احتساب الدرجة الرسمية الكاملة.</p>
@@ -962,6 +999,7 @@
     renderPhysicsInteractiveExam();
     renderBiologyInteractiveExam();
     renderMath2023InteractiveExam();
+    renderArts2023InteractiveExam();
     renderEnglish2023InteractiveExam();
 
     function renderBookSources() {
@@ -1122,6 +1160,44 @@
             answerKey.map((answer, index) => '<span class="' + (answers[index] === answer ? 'is-correct' : 'is-wrong') + '">س' + (index + 1) + ': ' + answer + ' (' + BIOLOGY_2023_WEIGHTS[index] + ' د)' + (answers[index] ? (answers[index] === answer ? ' ✓' : ' · إجابتك ' + answers[index]) : ' · لم تجب') + '</span>').join('') +
             '</div></details>';
           host.querySelector('#pastExamBiologyRetry').addEventListener('click', renderBiologyInteractiveExam);
+        });
+      });
+    }
+
+
+    function renderArts2023InteractiveExam() {
+      const host = document.getElementById('pastExamArtsQuiz');
+      if (!host) return;
+      const subjectOptions = Object.entries(ARTS_2023_KEYS).map(([id, subject]) =>
+        '<option value="' + id + '">' + subject.label + '</option>').join('');
+      host.innerHTML = '<div class="past-exam-model-picker"><label>المادة: <select id="pastExamArtsSubject">' + subjectOptions + '</select></label> <label>النموذج: <select id="pastExamArtsModel"><option value="أ">النموذج أ</option><option value="ب">النموذج ب</option><option value="ج">النموذج ج</option><option value="د">النموذج د</option></select></label></div><button class="p past-exam-quiz-start" type="button" id="pastExamArtsStart">ابدأ حل الامتحان</button><p class="hint">44 سؤالًا موضوعيًا · الدرجة القصوى 56 · سؤالان مقاليان خارج التصحيح الآلي</p>';
+      host.querySelector('#pastExamArtsStart').addEventListener('click', () => {
+        const subject = ARTS_2023_KEYS[host.querySelector('#pastExamArtsSubject').value];
+        const model = host.querySelector('#pastExamArtsModel').value;
+        const answerKey = subject.models[model];
+        host.innerHTML = '<div class="past-exam-quiz-toolbar"><b>' + subject.label + ' — النموذج ' + model + '</b><span id="pastExamArtsProgress">تمت الإجابة عن 0 من 44</span></div>' +
+          '<div class="past-exam-answer-grid">' + answerKey.map((_, index) =>
+            '<label class="past-exam-answer-cell"><span>سؤال ' + (index + 1) + (ARTS_2023_WEIGHTS[index] === 2 ? ' · درجتان' : ' · درجة') + '</span><select aria-label="إجابة السؤال ' + (index + 1) + '" data-arts-answer="' + index + '"><option value="">—</option>' +
+            ['أ','ب','ج','د'].map(choice => '<option value="' + choice + '">' + choice + '</option>').join('') + '</select></label>'
+          ).join('') + '</div><button class="p past-exam-quiz-submit" type="button" id="pastExamArtsSubmit">تصحيح الإجابات</button>';
+        const selects = Array.from(host.querySelectorAll('[data-arts-answer]'));
+        const updateProgress = () => {
+          const count = selects.filter(select => select.value).length;
+          host.querySelector('#pastExamArtsProgress').textContent = 'تمت الإجابة عن ' + count + ' من 44';
+        };
+        selects.forEach(select => select.addEventListener('change', updateProgress));
+        host.querySelector('#pastExamArtsSubmit').addEventListener('click', () => {
+          const answers = selects.map(select => select.value);
+          const answered = answers.filter(Boolean).length;
+          const correct = answers.reduce((sum, answer, index) => sum + (answer === answerKey[index] ? 1 : 0), 0);
+          const score = answers.reduce((sum, answer, index) => sum + (answer === answerKey[index] ? ARTS_2023_WEIGHTS[index] : 0), 0);
+          const maxScore = ARTS_2023_WEIGHTS.reduce((sum, weight) => sum + weight, 0);
+          const percent = Math.round(score / maxScore * 100);
+          host.innerHTML = '<div class="past-exam-quiz-result"><strong>' + percent + '%</strong><h4>درجتك: ' + score + ' من ' + maxScore + '</h4><p>إجابات صحيحة: ' + correct + ' · خاطئة: ' + (answered - correct) + ' · بدون إجابة: ' + (44 - answered) + '</p><p class="hint">النتيجة للأسئلة الموضوعية فقط من 56 درجة. لا تشمل السؤالين المقاليين (45 و46)، والدرجة الكلية الرسمية للمادة 60 درجة.</p><button class="p" type="button" id="pastExamArtsRetry">إعادة المحاولة</button></div>' +
+            '<details class="past-exam-key-review"><summary>مراجعة مفتاح الإجابة الرسمي — ' + subject.label + '، النموذج ' + model + '</summary><div class="past-exam-key-grid">' +
+            answerKey.map((answer, index) => '<span class="' + (answers[index] === answer ? 'is-correct' : 'is-wrong') + '">س' + (index + 1) + ': ' + answer + ' (' + ARTS_2023_WEIGHTS[index] + ' د)' + (answers[index] ? (answers[index] === answer ? ' ✓' : ' · إجابتك ' + answers[index]) : ' · لم تجب') + '</span>').join('') +
+            '</div></details>';
+          host.querySelector('#pastExamArtsRetry').addEventListener('click', renderArts2023InteractiveExam);
         });
       });
     }

@@ -228,6 +228,10 @@ try {
   assert.equal(await page.evaluate(() => typeof window.StudySchedule?.init), 'function', 'Schedule module must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.activateTab), 'function', 'Navigation module must expose tab activation');
   assert.match(await page.title(), /Ahmed Study Platform/);
+  await page.locator('#welcomeScreen').waitFor({ state: 'visible' });
+  assert.equal(await page.locator('#welcomeScreen img').getAttribute('src'), './assets/images/welcome-screen.svg', 'Pre-login welcome artwork must be present');
+  await page.locator('#enterPlatform').click();
+  await page.locator('#welcomeScreen').waitFor({ state: 'hidden' });
   await page.locator('#home').waitFor({ state: 'visible' });
   assert.equal(await page.locator('.tabs [role="tab"]').count(), 18, 'Smart revision, exam center, English learning path, and five subject tabs must preserve all existing tabs');
   assert.equal(await page.evaluate(() => typeof window.StudySmartRevision?.init), 'function', 'Smart revision module must expose its initializer');

@@ -1,11 +1,30 @@
 (function (global) {
   'use strict';
 
-  const SUBJECTS = ['كل المواد','اللغة العربية','اللغة الأجنبية الأولى','الأحياء','الرياضيات','الفيزياء','الكيمياء','التاريخ','الجغرافيا','الإحصاء','مواد أخرى'];
+  const SUBJECTS = ['كل المواد','اللغة العربية','اللغة الأجنبية الأولى','اللغة الإنجليزية','الأحياء','الرياضيات','الفيزياء','الكيمياء','التاريخ','الجغرافيا','الإحصاء','مواد أخرى'];
   const $ = selector => document.querySelector(selector);
+  const DEFAULT_PLATFORMS = [
+    {id:'teacher-platform-mohamed-salah',name:'بسطتهالك – محمد صلاح',subject:'اللغة العربية',url:'https://bassthalk.com/',description:'منصة محمد صلاح للغة العربية'},
+    {id:'teacher-platform-reda-elfarouk',name:'مستر رضا الفاروق',subject:'اللغة العربية',url:'https://mrredaelfarouk.com/',description:'منصة مستر رضا الفاروق للغة العربية'},
+    {id:'teacher-platform-khaled-sakr',name:'خالد صقر',subject:'الكيمياء',url:'https://www.khaled-sakr.com/',description:'منصة خالد صقر للكيمياء'},
+    {id:'teacher-platform-mohamed-abdelgawad',name:'منصة محمد عبد الجواد – MAG Academy',subject:'الكيمياء',url:'https://magacademy.co/',description:'منصة محمد عبد الجواد للكيمياء'},
+    {id:'teacher-platform-abdelmaaboud',name:'منصة عبد المعبود',subject:'الفيزياء',url:'https://abdelmaaboud.com/',description:'منصة عبد المعبود للفيزياء'},
+    {id:'teacher-platform-kirillos',name:'منصة كيرليس – Doctor in Physics',subject:'الفيزياء',url:'https://doctorinphysics.com/',description:'منصة كيرليس للفيزياء'},
+    {id:'teacher-platform-mrenglishawy',name:'إنجلشاوي – Mr Englishawy',subject:'اللغة الإنجليزية',url:'https://www.mrenglishawy.com/ar/dashboard',description:'منصة إنجلشاوي للغة الإنجليزية'},
+    {id:'teacher-platform-may-magdy',name:'مس مي مجدي – More English',subject:'اللغة الإنجليزية',url:'https://more-english.net/',description:'منصة مس مي مجدي للغة الإنجليزية'},
+    {id:'teacher-platform-ahmed-elgohary',name:'أحمد الجوهري',subject:'الأحياء',url:'https://ahmed-elgohary.com/',description:'منصة أحمد الجوهري للأحياء'}
+  ];
 
   function init({state, save, escapeHtml, showAlert}) {
     if (!Array.isArray(state.teacherPlatforms)) state.teacherPlatforms = [];
+    // Seed the curated directory once per browser profile. Personal links remain intact.
+    if (state.teacherPlatformsSeedVersion !== '2026-11-v1') {
+      const knownUrls = new Set(state.teacherPlatforms.map(item => item.url));
+      const missingDefaults = DEFAULT_PLATFORMS.filter(item => !knownUrls.has(item.url));
+      state.teacherPlatforms = [...missingDefaults, ...state.teacherPlatforms];
+      state.teacherPlatformsSeedVersion = '2026-11-v1';
+      save();
+    }
     let editingId = null;
     let searchTerm = '';
     let subjectFilter = 'كل المواد';
@@ -31,7 +50,7 @@
           <span class="eyebrow">TEACHER PLATFORMS</span>
           <h2>منصات المدرسين</h2>
           <p>اجمع روابط المدرسين والمنصات التعليمية في مكان واحد، وارجع إليها وقت ما تحتاج.</p>
-          <div class="teacher-platforms-stats"><span>إجمالي المنصات: <b>${state.teacherPlatforms.length}</b></span><span>روابط محفوظة على هذا الجهاز</span></div>
+          <div class="teacher-platforms-stats"><span>إجمالي المنصات: <b>${state.teacherPlatforms.length}</b></span><span>المنصات الأساسية متاحة على كل الأجهزة</span><span>إضافاتك الشخصية محفوظة على هذا الجهاز</span></div>
         </div>
         <div class="teacher-platforms-layout">
           <form class="teacher-platforms-form" id="teacherPlatformForm">

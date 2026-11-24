@@ -281,3 +281,13 @@ body{background:var(--bg);color:var(--ink);font-family:Tajawal,"Segoe UI",Tahoma
 .teacher-platforms-empty{grid-column:1/-1;padding:25px 12px;text-align:center;border:1px dashed var(--line);border-radius:12px;color:var(--muted)}
 @media(max-width:850px){.teacher-platforms-layout{grid-template-columns:1fr}}
 @media(max-width:560px){.teacher-platforms-hero{padding:17px}.teacher-platforms-cards{grid-template-columns:1fr}.teacher-platforms-toolbar{grid-template-columns:1fr}.teacher-platforms-form,.teacher-platforms-list{padding:12px}}
+
+
+/* Mobile usability for the teacher directory */
+.teacher-platform-card a{min-height:44px;align-items:center;padding:7px 10px;border-radius:9px;background:rgba(22,119,232,.08)}
+.teacher-platform-card-actions button{min-height:40px;flex:1}
+@media(max-width:560px){
+  .teacher-platforms-toolbar input,.teacher-platforms-toolbar select{min-height:44px}
+  .teacher-platform-card{padding:14px}
+  .teacher-platform-card h4{font-size:17px}
+}

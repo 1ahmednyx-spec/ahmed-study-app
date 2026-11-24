@@ -826,7 +826,7 @@ try {
   await page.locator('#teacherPlatformSearch').fill('غير موجود');
   assert.ok((await page.locator('#teacherPlatformsList').innerText()).includes('لا توجد منصات مطابقة'));
   await page.locator('#teacherPlatformSearch').fill('');
-  await page.locator('#teacherPlatformsList [data-platform-edit]').click();
+  await page.locator('#teacherPlatformsList .teacher-platform-card').filter({has: page.getByRole('heading', {name:'منصة اختبار المدرس', exact:true})}).locator('[data-platform-edit]').click();
   await page.locator('#teacherPlatformName').fill('منصة المدرس بعد التعديل');
   await page.locator('#teacherPlatformSave').click();
   await page.locator('#teacherPlatformsList').getByText('منصة المدرس بعد التعديل').waitFor({state:'visible'});
@@ -835,7 +835,7 @@ try {
   await page.locator('[data-tab="teacherPlatforms"]').click();
   await page.locator('#teacherPlatformsList').getByText('منصة المدرس بعد التعديل').waitFor({state:'visible'});
   page.once('dialog', dialog => dialog.accept());
-  await page.locator('#teacherPlatformsList [data-platform-delete]').click();
+  await page.locator('#teacherPlatformsList .teacher-platform-card').filter({has: page.getByRole('heading', {name:'منصة المدرس بعد التعديل', exact:true})}).locator('[data-platform-delete]').click();
   assert.equal(await page.locator('#teacherPlatformsList .teacher-platform-card').count(), 9, 'Deleting a personal test link must preserve the nine default teacher platforms');
 
   // Mobile layout must fit the viewport without page-level horizontal overflow.

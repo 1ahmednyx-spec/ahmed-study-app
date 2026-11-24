@@ -790,6 +790,23 @@ try {
         ]).finally(() => clearTimeout(timer));
       };
       const registration = await withTimeout(navigator.serviceWorker.ready, 'navigator.serviceWorker.ready');
+      const activeWorker = registration.active;
+      if (!activeWorker) throw new Error('Service worker registration has no active worker');
+      if (activeWorker.state !== 'activated') {
+        await withTimeout(new Promise((resolve, reject) => {
+          const onStateChange = () => {
+            if (activeWorker.state === 'activated') {
+              activeWorker.removeEventListener('statechange', onStateChange);
+              resolve();
+            } else if (activeWorker.state === 'redundant') {
+              activeWorker.removeEventListener('statechange', onStateChange);
+              reject(new Error('Service worker became redundant before activation'));
+            }
+          };
+          activeWorker.addEventListener('statechange', onStateChange);
+          onStateChange();
+        }), 'service worker activation');
+      }
       const cacheKeys = await caches.keys();
       return {
         activeState: registration.active?.state,

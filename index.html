@@ -13,7 +13,13 @@
 <link rel="stylesheet" href="./assets/css/app.css">
 </head>
 <body>
-<div class="wrap">
+<section id="welcomeScreen" class="welcome-screen" aria-label="الشاشة الترحيبية">
+  <div class="welcome-art">
+    <img src="./assets/images/welcome-screen.jpg" alt="مرحبًا بك في منصة أحمد التعليمية — أحمد، عزبة صادق" fetchpriority="high">
+    <button id="enterPlatform" class="welcome-enter" type="button" aria-label="الدخول إلى المنصة"></button>
+  </div>
+</section>
+<div class="wrap" id="appRoot" hidden>
 <div id="alert" role="alert"><button aria-label="إغلاق" id="closeAlert">×</button><span id="alertText"></span></div>
 <header class="app-topbar">
   <a class="brand-lockup" href="#home" data-go-tab="home" aria-label="Ahmed Study Platform - الرئيسية">
@@ -339,5 +345,20 @@
 <script src="./assets/js/features/smart-revision.js"></script>
 <script src="./assets/js/features/preferences.js"></script>
 <script src="./assets/js/app.js"></script>
+<script>
+(() => {
+  const screen = document.getElementById('welcomeScreen');
+  const app = document.getElementById('appRoot');
+  const enter = document.getElementById('enterPlatform');
+  if (!screen || !app || !enter) return;
+  enter.addEventListener('click', () => {
+    screen.hidden = true;
+    app.hidden = false;
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    const firstTab = app.querySelector('[role="tab"]');
+    if (firstTab) firstTab.focus();
+  });
+})();
+</script>
 </body>
 </html>

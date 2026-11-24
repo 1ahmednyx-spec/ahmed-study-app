@@ -84,7 +84,7 @@ async function handleAI(request, env) {
   }
 
   const requestBody = {
-    model: env.GEMINI_MODEL || "gemini-3.8-flash",
+    model: env.GEMINI_MODEL || "gemini-3.5-flash-lite",
     input,
     store: false
   };

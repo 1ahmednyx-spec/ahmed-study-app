@@ -757,8 +757,83 @@ try {
   }));
   assert.ok(narrow.document <= narrow.viewport + 1, `Narrow mobile page overflow: ${JSON.stringify(narrow)}`);
 
+  // Exercise the service worker in an isolated browser context with seeded cache entries.
+  const swContext = await browser.newContext({ serviceWorkers: 'allow' });
+  const swPage = await swContext.newPage();
+  try {
+    await swPage.addInitScript(() => {
+      if (!('serviceWorker' in navigator)) return;
+      const seedCaches = Promise.all([
+        caches.open('ahmed-study-platform-v25'),
+        caches.open('unrelated-cache-preserve')
+      ]);
+      const nativeRegister = navigator.serviceWorker.register.bind(navigator.serviceWorker);
+      Object.defineProperty(navigator.serviceWorker, 'register', {
+        configurable: true,
+        value: async (...args) => {
+          await seedCaches;
+          return nativeRegister(...args);
+        }
+      });
+    });
+    await swPage.goto('http://127.0.0.1:4173/', { waitUntil: 'load' });
+    const lifecycle = await swPage.evaluate(async () => {
+      const registration = await navigator.serviceWorker.ready;
+      const cacheKeys = await caches.keys();
+      return {
+        activeState: registration.active?.state,
+        currentCachePresent: cacheKeys.includes('ahmed-study-platform-v26'),
+        oldAppCachePresent: cacheKeys.includes('ahmed-study-platform-v25'),
+        unrelatedCachePresent: cacheKeys.includes('unrelated-cache-preserve')
+      };
+    });
+    assert.equal(lifecycle.activeState, 'activated', 'Service worker must activate');
+    assert.equal(lifecycle.currentCachePresent, true, 'Current app-shell cache must be created');
+    assert.equal(lifecycle.oldAppCachePresent, false, 'Activation must delete the previous app cache');
+    assert.equal(lifecycle.unrelatedCachePresent, true, 'Activation must preserve unrelated caches');
+
+    await swPage.reload({ waitUntil: 'load' });
+    await swPage.evaluate(async () => {
+      if (navigator.serviceWorker.controller) return;
+      await new Promise(resolve => navigator.serviceWorker.addEventListener('controllerchange', resolve, { once: true }));
+    });
+
+    const apiCacheCheck = await swPage.evaluate(async () => {
+      const response = await fetch('/api/sw-cache-probe');
+      const cache = await caches.open('ahmed-study-platform-v26');
+      const cachedResponse = await cache.match(new Request(new URL('/api/sw-cache-probe', location.origin)));
+      return { status: response.status, cached: Boolean(cachedResponse) };
+    });
+    assert.equal(apiCacheCheck.status, 404, 'Unconfigured API probe should reach the local server');
+    assert.equal(apiCacheCheck.cached, false, 'API responses must never enter the app-shell cache');
+
+    await swContext.setOffline(true);
+    const offlineChecks = await swPage.evaluate(async () => {
+      let staticAsset;
+      try {
+        const response = await fetch('/assets/css/app.css');
+        staticAsset = { ok: response.ok, status: response.status };
+      } catch (error) {
+        staticAsset = { ok: false, error: error.message };
+      }
+      let apiRequest;
+      try {
+        const response = await fetch('/api/sw-cache-probe');
+        apiRequest = { resolved: true, status: response.status };
+      } catch {
+        apiRequest = { resolved: false };
+      }
+      return { staticAsset, apiRequest };
+    });
+    assert.equal(offlineChecks.staticAsset.ok, true, 'A precached static asset must remain available offline');
+    assert.equal(offlineChecks.apiRequest.resolved, false, 'API requests must not be served from the app-shell cache offline');
+    await swContext.setOffline(false);
+  } finally {
+    await swContext.close();
+  }
+
   assert.deepEqual(pageErrors, [], `Uncaught browser errors: ${pageErrors.join('; ')}`);
-  console.log('PASS: homepage, navigation, smart revision queue and scheduling, schedule creation, local notes, theme persistence, local data preservation, mistake review, AI fallback, backup validation, mobile overflow at 390px and 320px, and browser console.');
+  console.log('PASS: homepage, navigation, smart revision queue and scheduling, schedule creation, local notes, theme persistence, local data preservation, mistake review, AI fallback, backup validation, mobile overflow at 390px and 320px, service-worker cache cleanup, API cache exclusion, offline static assets, and browser console.');
 } finally {
   await browser.close();
 }

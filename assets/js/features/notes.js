@@ -48,7 +48,7 @@
 النص:
 ${body}`)).text.trim();
         } catch (error) {
-          status.textContent = getErrorMessage(error.code) + '، استخدمت تلخيصًا بسيطًا بدله';
+          status.textContent = getErrorMessage(error) + '، استخدمت تلخيصًا بسيطًا بدله';
         }
       }
       if (!summary) summary = summarize(body);

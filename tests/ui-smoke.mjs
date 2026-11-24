@@ -828,8 +828,8 @@ try {
       const cacheKeys = await caches.keys();
       return {
         activeState: registration.active?.state,
-        currentCachePresent: cacheKeys.includes('ahmed-study-platform-v26'),
-        oldAppCachePresent: cacheKeys.includes('ahmed-study-platform-v25'),
+        currentCachePresent: cacheKeys.includes('ahmed-study-platform-v27'),
+        oldAppCachePresent: cacheKeys.includes('ahmed-study-platform-v26'),
         unrelatedCachePresent: cacheKeys.includes('unrelated-cache-preserve')
       };
     });
@@ -854,7 +854,7 @@ try {
 
     const apiCacheCheck = await swPage.evaluate(async () => {
       const response = await fetch('/api/sw-cache-probe');
-      const cache = await caches.open('ahmed-study-platform-v26');
+      const cache = await caches.open('ahmed-study-platform-v27');
       const cachedResponse = await cache.match(new Request(new URL('/api/sw-cache-probe', location.origin)));
       return { status: response.status, cached: Boolean(cachedResponse) };
     });

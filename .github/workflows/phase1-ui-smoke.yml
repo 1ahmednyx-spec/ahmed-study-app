@@ -35,6 +35,8 @@ jobs:
           node-version: 22
       - name: Run Gemini provider diagnostics unit tests
         run: npm test --prefix cloudflare
+      - name: Check JavaScript syntax
+        run: node --check cloudflare/src/index.js && node --check assets/js/features/lesson-videos.js && node --check assets/js/features/subject-courses.js
       - name: Install Playwright
         run: npm install --no-save playwright
       - name: Install Chromium

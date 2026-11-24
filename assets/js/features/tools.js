@@ -13,7 +13,7 @@
       setTimeout(()=>URL.revokeObjectURL(url),1000);
     }
     const tm=s=>String(Math.floor(Math.max(0,s)/60)).padStart(2,'0')+':'+String(Math.max(0,s)%60).padStart(2,'0');
-    const noAI=el=>{el.textContent='الذكاء الاصطناعي غير مفعّل في نسخة GitHub Pages الحالية. الأدوات الأساسية والحفظ المحلي يعملان.'};
+    const noAI=el=>{el.textContent='خدمة الذكاء الاصطناعي غير متاحة حاليًا. تحقق من إعدادات الخادم ثم حاول مرة أخرى.'};
     
     $('#plAdd').onclick=async()=>{const st=$('#plSt');if(!ai())return noAI(st);st.textContent='جاري الإضافة…';
       try{const arr=await ai().json(`اليوم ${today()}. حوّل خطة المذاكرة دي لجلسات في الجدول للأيام السبعة الجاية فقط. ارجع JSON فقط: مصفوفة عناصرها {"title":"المادة وموضوع الجلسة","date":"YYYY-MM-DD","time":"HH:MM"} بحد أقصى 14 جلسة والوقت بنظام 24 ساعة.\nالخطة:\n${getPlanText()}`);

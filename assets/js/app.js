@@ -95,6 +95,7 @@ window.StudyEnglishCoach.init({getAI:()=>AI,errMsg,escapeHtml:esc,showAlert});
 
 window.StudyEnglishCourse.init({state:S,save,escapeHtml:esc,showAlert});
 window.StudyEnglishPath.init({state:S,save,escapeHtml:esc,showAlert});
+window.StudyLessonVideos.init({showAlert});
 window.StudySubjectCourses.init({state:S,save,escapeHtml:esc,showAlert});
 const examCenter=window.StudyExamCenter.init({state:S,save,escapeHtml:esc});
 const dashboard=window.StudyDashboard.init({state:S,escapeHtml:esc});

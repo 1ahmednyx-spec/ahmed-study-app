@@ -508,6 +508,26 @@ try {
   await page.locator('#ministrySubjectDetail h2').getByText('اللغة الأجنبية الأولى').waitFor({ state: 'visible' });
   await page.locator('#ministrySubjectDetail').getByText('كتاب اللغة الإنجليزية — الفصل الدراسي الأول').waitFor({ state: 'visible' });
   await page.locator('[data-tab="english2027"]').click();
+  const subjectLibraryChecks = [
+    {tab:'biology2027', name:'الأحياء', title:'كتاب الأحياء باللغة العربية — الفصل الدراسي الأول'},
+    {tab:'physics2027', name:'الفيزياء', title:'كتاب الفيزياء باللغة العربية — الفصل الدراسي الأول'},
+    {tab:'chemistry2027', name:'الكيمياء', title:'كتاب الكيمياء باللغة العربية — الفصل الدراسي الأول'},
+    {tab:'arabic2027', name:'اللغة العربية', title:'كتاب اللغة العربية — الفصل الدراسي الأول'},
+    {tab:'math2027', name:'الرياضيات', title:'كتاب الرياضيات البحتة — الفصل الدراسي الأول'}
+  ];
+  for (const item of subjectLibraryChecks) {
+    await page.locator('[data-tab="' + item.tab + '"]').click();
+    const openBook = page.locator('#' + item.tab + ' [data-open-ministry-subject]');
+    assert.ok(await openBook.count() === 1, item.name + ' course must link to the internal Ministry library');
+    await openBook.click();
+    await page.locator('#ministrySubjectDetail h2').getByText(item.name).waitFor({state:'visible'});
+    await page.locator('#ministrySubjectDetail').getByText(item.title).waitFor({state:'visible'});
+    if (item.tab === 'math2027') {
+      await page.locator('#ministrySubjectDetail').getByText('كتاب الرياضيات التطبيقية باللغة العربية — الفصل الدراسي الأول').waitFor({state:'visible'});
+      assert.equal(await page.locator('#trk').inputValue(), 'math', 'Mathematics course must switch the library to the Math track');
+    }
+  }
+  await page.locator('[data-tab="english2027"]').click();
   assert.ok(await page.locator('#ecUnitList').getByText('محاور للمذاكرة وليست قائمة رسمية بعناوين الدروس').count() > 0, 'Unit details must identify lesson prompts as unverified official titles');
   assert.ok(await page.locator('#english2027').getByText('فهرس مساعد غير رسمي').count() === 1, 'Supplementary curriculum index must be labeled unofficial');
   await page.locator('#ecWord').fill('caregiver');

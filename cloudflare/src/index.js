@@ -12,13 +12,9 @@ function json(data, status = 200) {
   return new Response(JSON.stringify(data), { status, headers: JSON_HEADERS });
 }
 
-function getClientKey(request) {
-  return request.headers.get("CF-Connecting-IP") || "unknown";
-}
-
 function isRateLimited(request) {
   const now = Date.now();
-  const key = getClientKey(request);
+  const key = request.headers.get("CF-Connecting-IP") || "unknown";
   const current = requestBuckets.get(key);
   if (!current || now - current.startedAt >= WINDOW_MS) {
     requestBuckets.set(key, { startedAt: now, count: 1 });
@@ -33,25 +29,22 @@ function isRateLimited(request) {
   return current.count > MAX_REQUESTS;
 }
 
-function normalizeContents(input) {
+function normalizeInput(input) {
   if (typeof input === "string") {
-    if (!input.trim() || input.length > MAX_INPUT_CHARS) return null;
-    return [{ role: "user", parts: [{ text: input }] }];
+    return input.trim() && input.length <= MAX_INPUT_CHARS ? input.trim() : null;
   }
-
   if (!Array.isArray(input) || input.length === 0 || input.length > 20) return null;
-  const contents = [];
+  const transcript = [];
   for (const item of input) {
     if (!item || typeof item.content !== "string" || !item.content.trim() ||
         item.content.length > 10000 || !["user", "assistant", "model"].includes(item.role)) {
       return null;
     }
-    contents.push({
-      role: item.role === "assistant" || item.role === "model" ? "model" : "user",
-      parts: [{ text: item.content }]
-    });
+    const speaker = item.role === "assistant" || item.role === "model" ? "المساعد" : "الطالب";
+    transcript.push(speaker + ": " + item.content.trim());
   }
-  return contents;
+  const combined = transcript.join("\n\n");
+  return combined.length <= MAX_INPUT_CHARS ? combined : null;
 }
 
 async function handleAI(request, env) {
@@ -79,33 +72,30 @@ async function handleAI(request, env) {
     return json({ error: { code: "invalid_request" } }, 400);
   }
 
-  const contents = normalizeContents(body?.input);
-  if (!contents) {
+  const input = normalizeInput(body?.input);
+  if (!input) {
     return json({ error: { code: "invalid_request" } }, 400);
   }
 
-  const generationConfig = {
-    temperature: body?.responseFormat === "json" ? 0.2 : 0.7,
-    maxOutputTokens: 4096
+  const requestBody = {
+    model: env.GEMINI_MODEL || "gemini-3.8-flash",
+    input,
+    store: false
   };
   if (body?.responseFormat === "json") {
-    generationConfig.responseMimeType = "application/json";
+    requestBody.response_format = { type: "text", mime_type: "application/json" };
   }
 
   let upstream;
   try {
-    upstream = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/" +
-        encodeURIComponent(env.GEMINI_MODEL || "gemini-3.8-flash") + ":generateContent",
-      {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-          "x-goog-api-key": env.GEMINI_API_KEY
-        },
-        body: JSON.stringify({ contents, generationConfig })
-      }
-    );
+    upstream = await fetch("https://generativelanguage.googleapis.com/v1beta/interactions", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "x-goog-api-key": env.GEMINI_API_KEY
+      },
+      body: JSON.stringify(requestBody)
+    });
   } catch {
     return json({ error: { code: "provider_unavailable" } }, 502);
   }
@@ -130,12 +120,14 @@ async function handleAI(request, env) {
     return json({ error: { code: "invalid_provider_response" } }, 502);
   }
 
-  const text = (result?.candidates?.[0]?.content?.parts || [])
+  const text = (result?.steps || [])
+    .filter(step => step.type === "model_output")
+    .flatMap(step => step.content || [])
     .map(part => typeof part.text === "string" ? part.text : "")
     .join("")
     .trim();
 
-  if (!text) {
+  if (!text || result?.status !== "completed") {
     return json({ error: { code: "empty_response" } }, 502);
   }
 

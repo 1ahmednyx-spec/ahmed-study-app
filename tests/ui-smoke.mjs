@@ -539,11 +539,11 @@ try {
   await page.locator('#mForm button[type="submit"]').click();
   await page.locator('#mList').getByText('خطأ ثانٍ لاختبار استعادة النسخة الاحتياطية').waitFor({ state: 'visible' });
 
-  // AI-dependent tools must explain the Pages limitation instead of failing silently.
+  // AI-dependent tools should display the Worker's missing-secret error clearly.
   await page.locator('#aT').fill('A short lesson about photosynthesis.');
   await page.locator('#aQ').fill('Explain photosynthesis.');
   await page.locator('#aGo').click();
-  await page.locator('#aSt').getByText('غير مفعّل').waitFor({ state: 'visible' });
+  await page.locator('#aSt').getByText('لم تتم إضافة مفتاح Gemini إلى أسرار Cloudflare بعد.').waitFor({ state: 'visible' });
 
   // Invalid backup files must be rejected without replacing the current study data.
   await page.locator('#bkIn').setInputFiles({

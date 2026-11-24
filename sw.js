@@ -2,7 +2,7 @@ const CACHE_NAME = 'ahmed-study-platform-v27';
 const APP_FILES = [
   './',
   './index.html',
-  './assets/images/welcome-screen.jpg',
+  './assets/images/welcome-screen.svg',
   './assets/css/app.css',
   './assets/js/core/storage.js',
   './assets/js/core/navigation.js',

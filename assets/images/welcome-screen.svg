@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1672" height="941" viewBox="0 0 1672 941" role="img" aria-labelledby="title desc">
+<title id="title">مرحبًا بك في منصة أحمد التعليمية</title><desc id="desc">أحمد، عزبة صادق — Learn. Practice. Achieve.</desc>
+<defs>
+ <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#050916"/><stop offset=".55" stop-color="#071b38"/><stop offset="1" stop-color="#020711"/></linearGradient>
+ <radialGradient id="glow"><stop stop-color="#087cff" stop-opacity=".5"/><stop offset="1" stop-color="#087cff" stop-opacity="0"/></radialGradient>
+ <linearGradient id="blue" x2="0" y2="1"><stop stop-color="#27c8ff"/><stop offset="1" stop-color="#0752dc"/></linearGradient>
+ <linearGradient id="gold" x2="0" y2="1"><stop stop-color="#ffe17a"/><stop offset=".45" stop-color="#ffb51d"/><stop offset="1" stop-color="#d98500"/></linearGradient>
+ <linearGradient id="book" x2="0" y2="1"><stop stop-color="#163e70"/><stop offset="1" stop-color="#07152b"/></linearGradient>
+ <filter id="shadow"><feGaussianBlur stdDeviation="18"/></filter>
+ <filter id="shine"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<rect width="1672" height="941" fill="url(#bg)"/>
+<circle cx="820" cy="410" r="560" fill="url(#glow)"/>
+<path d="M0 760 Q420 690 830 825 T1672 780" fill="none" stroke="#087cff" stroke-width="12" opacity=".8" filter="url(#shine)"/>
+<g opacity=".16" stroke="#2b75c7" fill="none"><path d="M0 100H1672M0 190H1672M0 280H1672M0 370H1672M0 460H1672M0 550H1672"/><path d="M140 0V941M300 0V941M1460 0V941M1580 0V941"/></g>
+<!-- brand -->
+<g transform="translate(940 34)">
+ <path d="M0 90 42 8 83 90 42 70Z" fill="url(#blue)" stroke="#7bdfff" stroke-width="3"/>
+ <path d="M-10 98Q42 65 94 98L42 132Z" fill="#071b38" stroke="#1bbcff" stroke-width="5"/>
+ <path d="M42 70V132" stroke="#dff8ff" stroke-width="4"/>
+ <text x="135" y="60" fill="#fff" font-size="43" font-weight="800" font-family="Tajawal,Arial" text-anchor="start">منصة أحمد التعليمية</text>
+ <text x="135" y="104" fill="#20aaff" font-size="35" font-weight="700" font-family="Arial">Ahmed Study Platform</text>
+ <text x="135" y="145" fill="#dbeaff" font-size="24" font-style="italic" font-family="Arial">Learn. Practice. Achieve.</text>
+</g>
+<!-- books -->
+<g transform="translate(25 420)">
+ <path d="M0 0Q180 -30 420 0V95Q180 65 0 95Z" fill="url(#book)" stroke="#298fff" stroke-width="4"/>
+ <path d="M0 108Q180 78 420 108V205Q180 175 0 205Z" fill="url(#book)" stroke="#298fff" stroke-width="4"/>
+ <path d="M0 218Q180 188 420 218V315Q180 285 0 315Z" fill="url(#book)" stroke="#298fff" stroke-width="4"/>
+ <g fill="#fff" font-family="Arial" font-weight="700" font-size="27"><text x="125" y="57">Education</text><text x="125" y="166">Cybersecurity</text><text x="125" y="276">Success</text></g>
+ <g fill="none" stroke="#dcecff" stroke-width="5"><path d="M45 34q25 -18 48 0v40q-23 -18 -48 0zM93 34q25 -18 48 0v40q-23 -18 -48 0z"/><path d="M65 137l20 -12 20 12v32l-20 -12 -20 12z"/></g>
+ <path d="M65 244l24 8 24 -8v39l-24 -8 -24 8z" fill="url(#gold)"/>
+</g>
+<!-- graduation cap -->
+<g transform="translate(50 130)" filter="url(#shine)">
+ <path d="M0 115 255 0 520 115 260 230Z" fill="#050914" stroke="#178bff" stroke-width="6"/>
+ <path d="M95 158Q260 250 425 158L395 280Q260 355 125 280Z" fill="#080d19" stroke="#1268d5" stroke-width="5"/>
+ <path d="M255 5V95" stroke="#ffbf36" stroke-width="8"/><path d="M255 92q-24 35 0 62 24 -27 0 -62" fill="url(#gold)"/>
+</g>
+<!-- welcome title -->
+<text x="850" y="245" fill="#f5f9ff" font-family="Tajawal,Arial" font-size="52" font-weight="700" text-anchor="middle">مرحبًا بك في</text>
+<text x="850" y="330" fill="#139df8" font-family="Tajawal,Arial" font-size="72" font-weight="900" text-anchor="middle">منصة أحمد التعليمية</text>
+<path d="M590 390H1110" stroke="url(#gold)" stroke-width="4"/>
+<text x="850" y="535" fill="#fff" font-family="Tajawal,Arial" font-size="112" font-weight="900" text-anchor="middle" filter="url(#shine)">أحمد</text>
+<rect x="630" y="572" width="440" height="88" rx="18" fill="url(#gold)" stroke="#ffe8a0" stroke-width="3"/>
+<text x="850" y="632" fill="#111827" font-family="Tajawal,Arial" font-size="54" font-weight="900" text-anchor="middle">عزبة صادق</text>
+<text x="850" y="710" fill="#eaf4ff" font-family="Tajawal,Arial" font-size="34" text-anchor="middle">معًا نحو مستقبل أفضل</text>
+<!-- right side feature pills -->
+<g font-family="Tajawal,Arial" font-size="28" fill="#fff" text-anchor="middle">
+ <rect x="1250" y="315" width="360" height="76" rx="38" fill="#071a34" stroke="#147eea" stroke-width="3"/><text x="1430" y="365">دروس متميزة</text>
+ <rect x="1250" y="410" width="360" height="76" rx="38" fill="#071a34" stroke="#147eea" stroke-width="3"/><text x="1430" y="460">اختبارات شاملة</text>
+ <rect x="1250" y="505" width="360" height="76" rx="38" fill="#071a34" stroke="#147eea" stroke-width="3"/><text x="1430" y="555">مساعد ذكي</text>
+ <rect x="1250" y="600" width="360" height="76" rx="38" fill="#071a34" stroke="#147eea" stroke-width="3"/><text x="1430" y="650">متابعة التقدم</text>
+</g>
+<g transform="translate(650 770)">
+ <rect width="400" height="96" rx="24" fill="url(#blue)" stroke="#22d8ff" stroke-width="5" filter="url(#shine)"/>
+ <text x="200" y="61" fill="#fff" font-family="Tajawal,Arial" font-size="40" font-weight="800" text-anchor="middle">الدخول إلى المنصة</text>
+</g>
+<text x="110" y="875" fill="#e9f4ff" font-family="Tajawal,Arial" font-size="32" font-style="italic">تعلم .. تدرب .. تحقق</text>
+</svg>

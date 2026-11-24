@@ -4,6 +4,12 @@ import assert from 'node:assert/strict';
 const browser = await chromium.launch({ headless: true });
 const page = await browser.newPage({ viewport: { width: 1365, height: 900 } });
 const pageErrors = [];
+
+async function reenterAfterReload() {
+  await page.locator('#welcomeScreen').waitFor({ state: 'visible' });
+  await page.locator('#enterPlatform').click();
+  await page.locator('#welcomeScreen').waitFor({ state: 'hidden' });
+}
 page.on('pageerror', error => pageErrors.push(error.message));
 
 try {
@@ -228,6 +234,10 @@ try {
   assert.equal(await page.evaluate(() => typeof window.StudySchedule?.init), 'function', 'Schedule module must expose its initializer');
   assert.equal(await page.evaluate(() => typeof window.activateTab), 'function', 'Navigation module must expose tab activation');
   assert.match(await page.title(), /Ahmed Study Platform/);
+  await page.locator('#welcomeScreen').waitFor({ state: 'visible' });
+  assert.equal(await page.locator('#welcomeScreen img').getAttribute('src'), './assets/images/welcome-screen.svg', 'Pre-login welcome artwork must be present');
+  await page.locator('#enterPlatform').click();
+  await page.locator('#welcomeScreen').waitFor({ state: 'hidden' });
   await page.locator('#home').waitFor({ state: 'visible' });
   assert.equal(await page.locator('.tabs [role="tab"]').count(), 18, 'Smart revision, exam center, English learning path, and five subject tabs must preserve all existing tabs');
   assert.equal(await page.evaluate(() => typeof window.StudySmartRevision?.init), 'function', 'Smart revision module must expose its initializer');
@@ -390,6 +400,7 @@ try {
   await page.evaluate(() => { const checkbox = document.querySelector('#upList [data-done]'); checkbox.checked = true; checkbox.dispatchEvent(new Event('change', { bubbles: true })); });
   await page.locator('#doneList').getByText('اختبار واجهة المنصة').waitFor({ state: 'visible' });
   await page.reload({ waitUntil: 'domcontentloaded' });
+  await reenterAfterReload();
   await page.locator('[data-tab="sched"]').click();
   await page.locator('#doneList').getByText('اختبار واجهة المنصة').waitFor({ state: 'visible' });
   await page.evaluate(() => { const checkbox = document.querySelector('#doneList [data-done]'); checkbox.checked = false; checkbox.dispatchEvent(new Event('change', { bubbles: true })); });
@@ -453,6 +464,7 @@ try {
   await page.locator('[data-tab="notes"]').click();
   // A saved note should survive a full page reload.
   await page.reload({ waitUntil: 'domcontentloaded' });
+  await reenterAfterReload();
   await page.locator('[data-tab="notes"]').click();
   await page.locator('#noteList').getByText('ملاحظة اختبارية ثانية').waitFor({ state: 'visible' });
 
@@ -598,6 +610,7 @@ try {
   assert.equal(await page.locator('html').getAttribute('data-theme'), 'dark');
   assert.equal(await page.evaluate(() => document.documentElement.style.getPropertyValue('--brand')), '#4F46E5');
   await page.reload({ waitUntil: 'domcontentloaded' });
+  await reenterAfterReload();
   await page.locator('[data-tab="tools"]').click();
   assert.equal(await page.locator('#brandName').textContent(), 'Backup Restored');
   await page.locator('[data-tab="sched"]').click();
@@ -674,6 +687,7 @@ try {
   await page.locator('#themeToggle').click();
   assert.equal(await page.locator('html').getAttribute('data-theme'), 'dark');
   await page.reload({ waitUntil: 'domcontentloaded' });
+  await reenterAfterReload();
   assert.equal(await page.locator('html').getAttribute('data-theme'), 'dark');
   await page.locator('#themeToggle').click();
   assert.equal(await page.locator('html').getAttribute('data-theme'), 'light');
@@ -687,12 +701,14 @@ try {
   assert.equal(await page.locator('#hi').textContent(), 'أهلًا يا Student');
   assert.equal(await page.evaluate(() => document.documentElement.style.getPropertyValue('--brand')), '#4F46E5');
   await page.reload({ waitUntil: 'domcontentloaded' });
+  await reenterAfterReload();
   assert.equal(await page.locator('#brandName').textContent(), 'My Study Space');
   assert.equal(await page.locator('#hi').textContent(), 'أهلًا يا Student');
 
   // Malformed legacy storage must fall back safely instead of crashing app startup.
   await page.evaluate(() => localStorage.setItem('study-v1', '{ malformed json'));
   await page.reload({ waitUntil: 'domcontentloaded' });
+  await reenterAfterReload();
   await page.locator('#home').waitFor({ state: 'visible' });
 
   // Existing local data key and arbitrary saved fields must survive startup.
@@ -700,6 +716,7 @@ try {
     ev: [], notes: [], words: [], track: 'sci', prac: [], goal: 100, mist: [], focus: {}, smokeTestMarker: 'preserved'
   })));
   await page.reload({ waitUntil: 'domcontentloaded' });
+  await reenterAfterReload();
   assert.equal(await page.evaluate(() => JSON.parse(localStorage.getItem('study-v1')).smokeTestMarker), 'preserved');
 
   // Smart revision collects vocabulary, active mistakes, and completed lessons, then schedules ratings.
@@ -719,6 +736,7 @@ try {
   });
   assert.equal(revisionSeed, true);
   await page.reload({waitUntil:'domcontentloaded'});
+  await reenterAfterReload();
   await page.locator('[data-tab="reviewCenter"]').click();
   await page.locator('#smartReviewRoot .revision-stats').waitFor({state:'visible'});
   assert.equal(await page.locator('#smartReviewRoot .revision-preview-item').count(), 4, 'Revision queue must include a word, a mistake, a subject lesson, and an English lesson');
@@ -810,8 +828,8 @@ try {
       const cacheKeys = await caches.keys();
       return {
         activeState: registration.active?.state,
-        currentCachePresent: cacheKeys.includes('ahmed-study-platform-v26'),
-        oldAppCachePresent: cacheKeys.includes('ahmed-study-platform-v25'),
+        currentCachePresent: cacheKeys.includes('ahmed-study-platform-v27'),
+        oldAppCachePresent: cacheKeys.includes('ahmed-study-platform-v26'),
         unrelatedCachePresent: cacheKeys.includes('unrelated-cache-preserve')
       };
     });
@@ -836,7 +854,7 @@ try {
 
     const apiCacheCheck = await swPage.evaluate(async () => {
       const response = await fetch('/api/sw-cache-probe');
-      const cache = await caches.open('ahmed-study-platform-v26');
+      const cache = await caches.open('ahmed-study-platform-v27');
       const cachedResponse = await cache.match(new Request(new URL('/api/sw-cache-probe', location.origin)));
       return { status: response.status, cached: Boolean(cachedResponse) };
     });

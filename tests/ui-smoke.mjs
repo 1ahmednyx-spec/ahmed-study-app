@@ -494,11 +494,16 @@ try {
   await page.locator('#ecQuizStart').click();
   assert.equal(await page.locator('#ecQuizBox .course-question').count(), 5, 'English course quiz should generate five questions');
 
-  // English conversation helper should show a clear static-host AI fallback.
+  // English conversation helper should show the expected AI fallback when the Worker reports a missing secret.
+  await page.route('**/api/chat', route => route.fulfill({
+    status: 503,
+    contentType: 'application/json',
+    body: JSON.stringify({ error: { code: 'missing_server_secret' } })
+  }));
   await page.locator('[data-tab="chat"]').click();
   await page.locator('#cIn').fill('Hello, how are you?');
   await page.locator('#cSend').click();
-  await page.locator('#cSt').getByText('مش متاحة هنا').waitFor({ state: 'visible' });
+  await page.locator('#cSt').getByText('لم تتم إضافة مفتاح Gemini إلى أسرار Cloudflare بعد.').waitFor({ state: 'visible' });
 
   // Practice tracking should validate answers, persist a valid session, and update the weekly goal.
   await page.locator('[data-tab="prac"]').click();

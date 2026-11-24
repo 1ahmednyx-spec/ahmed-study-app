@@ -10,10 +10,34 @@ $('#closeAlert').onclick=()=>$('#alert').style.display='none';
 
 const {render:renderSched,checkReminders}=window.StudySchedule.init({state:S,save,uid,escapeHtml:esc,showAlert});
 
-/* AI */
-let AI=null;
-(async()=>{try{AI=await claude.use('sample')}catch(e){}})();
-const errMsg=c=>({not_granted:'لازم توافق على استخدام Claude',rate_limited:'الاستخدام كتير، جرّب بعد شوية',sampling_disabled:'الذكاء الاصطناعي غير متاح لحسابك'}[c]||'حصلت مشكلة، جرّب تاني');
+/* Secure AI connection: requests go to the same-origin Cloudflare Worker. */
+async function requestAI(input, responseFormat = "text") {
+  const response = await fetch("/api/chat", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ input, responseFormat })
+  });
+  let payload;
+  try { payload = await response.json(); }
+  catch { throw { code: "invalid_response" }; }
+  if (!response.ok) throw { code: payload?.error?.code || "request_failed" };
+  if (typeof payload.text !== "string") throw { code: "invalid_response" };
+  return payload.text;
+}
+const AI = input => requestAI(input).then(text => ({ text }));
+AI.json = async input => {
+  const text = await requestAI(input, "json");
+  try { return JSON.parse(text); }
+  catch { throw { code: "invalid_json" }; }
+};
+const errMsg=c=>({
+  rate_limited:'تم الوصول إلى حد الاستخدام مؤقتًا. انتظر قليلًا ثم حاول مجددًا.',
+  missing_server_secret:'لم تتم إضافة مفتاح Gemini إلى أسرار Cloudflare بعد.',
+  invalid_api_key:'مفتاح Gemini غير صحيح أو غير مفعّل.',
+  provider_unavailable:'خدمة Gemini غير متاحة حاليًا. حاول لاحقًا.',
+  provider_error:'حدث خطأ في خدمة الذكاء الاصطناعي.',
+  invalid_json:'تعذر قراءة النتيجة المنظمة. حاول مرة أخرى.'
+}[c]||'حدث خطأ أثناء الاتصال بالذكاء الاصطناعي. حاول مرة أخرى.');
 const {render:renderWords}=window.StudyWords.init({
   state:S,save,uid,escapeHtml:esc,
   getAI:()=>AI,

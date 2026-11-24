@@ -74,7 +74,7 @@
         $('#qOut').innerHTML = `<div class="sum">${escapeHtml(questions.trim())}</div>${answers ? `<details><summary>الإجابات (حاول تحل الأول)</summary><div class="sum">${escapeHtml(answers.trim())}</div></details>` : ''}`;
         status.textContent = '';
       } catch (error) {
-        status.textContent = getErrorMessage(error.code);
+        status.textContent = getErrorMessage(error);
       }
     };
 
@@ -96,7 +96,7 @@
         $('#plAdd').hidden = false;
         status.textContent = '';
       } catch (error) {
-        status.textContent = getErrorMessage(error.code);
+        status.textContent = getErrorMessage(error);
       }
     };
 

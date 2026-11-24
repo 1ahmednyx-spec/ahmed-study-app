@@ -3,6 +3,19 @@
 
   const SUBJECTS = ['كل المواد','اللغة العربية','اللغة الأجنبية الأولى','اللغة الإنجليزية','الأحياء','الرياضيات','الفيزياء','الكيمياء','التاريخ','الجغرافيا','الإحصاء','مواد أخرى'];
   const $ = selector => document.querySelector(selector);
+  const SUBJECT_STYLES = {
+    'اللغة العربية': {className:'arabic', icon:'📚'},
+    'الكيمياء': {className:'chemistry', icon:'🧪'},
+    'الفيزياء': {className:'physics', icon:'⚛️'},
+    'اللغة الإنجليزية': {className:'english', icon:'🌍'},
+    'اللغة الأجنبية الأولى': {className:'english', icon:'🌍'},
+    'الأحياء': {className:'biology', icon:'🧬'},
+    'الرياضيات': {className:'math', icon:'📐'},
+    'التاريخ': {className:'history', icon:'🏛️'},
+    'الجغرافيا': {className:'geography', icon:'🌐'},
+    'الإحصاء': {className:'statistics', icon:'📊'},
+    'مواد أخرى': {className:'other', icon:'🎓'}
+  };
   const DEFAULT_PLATFORMS = [
     {id:'teacher-platform-mohamed-salah',name:'بسطتهالك – محمد صلاح',subject:'اللغة العربية',url:'https://bassthalk.com/',description:'منصة محمد صلاح للغة العربية'},
     {id:'teacher-platform-reda-elfarouk',name:'مستر رضا الفاروق',subject:'اللغة العربية',url:'https://mrredaelfarouk.com/',description:'منصة مستر رضا الفاروق للغة العربية'},
@@ -96,8 +109,8 @@
         return;
       }
       list.innerHTML = items.map(item => `
-        <article class="teacher-platform-card">
-          <span class="teacher-platform-subject">${esc(item.subject)}</span>
+        <article class="teacher-platform-card teacher-platform-card--${(SUBJECT_STYLES[item.subject] || SUBJECT_STYLES['مواد أخرى']).className}">
+          <span class="teacher-platform-subject"><span aria-hidden="true">${(SUBJECT_STYLES[item.subject] || SUBJECT_STYLES['مواد أخرى']).icon}</span> ${esc(item.subject)}</span>
           <h4>${esc(item.name)}</h4>
           ${item.description ? `<p>${esc(item.description)}</p>` : ''}
           <a href="${esc(item.url)}" target="_blank" rel="noopener noreferrer">زيارة المنصة ↗</a>

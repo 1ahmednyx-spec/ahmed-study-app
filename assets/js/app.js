@@ -103,6 +103,8 @@ const smartRevision=window.StudySmartRevision.init({state:S,save,escapeHtml:esc}
 window.smartReviewRender=smartRevision.render;
 window.examCenterRender=examCenter.render;
 window.StudyMinistryLibrary.init();
+const teacherPlatforms = window.StudyTeacherPlatforms.init({state:S,save,escapeHtml:esc,showAlert});
+window.teacherPlatformsRender=teacherPlatforms.render;
 window.StudyPastExamArchive.init();
 
 const {render:renderMist}=window.StudyMistakes.init({state:S,save,uid,today,addDays,escapeHtml:esc});

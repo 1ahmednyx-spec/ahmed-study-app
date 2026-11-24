@@ -260,3 +260,24 @@ body{background:var(--bg);color:var(--ink);font-family:Tajawal,"Segoe UI",Tahoma
  .welcome-enter{left:20%;top:82.5%;width:60%;height:9.4%;border-radius:18px}
 }
 @media(prefers-reduced-motion:reduce){.welcome-enter{scroll-behavior:auto}}
+
+
+/* Teacher platforms directory */
+.teacher-platforms-hero{padding:22px;border-radius:18px;background:linear-gradient(125deg,#071326,#12345D 62%,#1764B5);color:#fff;margin-bottom:14px}
+.teacher-platforms-hero h2{font-size:24px;color:#fff;margin:4px 0}.teacher-platforms-hero p{margin:0;color:#D5E6FA;font-size:13px}
+.teacher-platforms-stats{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.teacher-platforms-stats span{padding:5px 10px;border:1px solid #ffffff35;border-radius:30px;font-size:12px}
+.teacher-platforms-layout{display:grid;grid-template-columns:minmax(260px,.78fr) minmax(0,1.22fr);gap:14px;align-items:start}
+.teacher-platforms-form,.teacher-platforms-list{padding:16px;border:1px solid var(--line);border-radius:15px;background:var(--surface);min-width:0}
+.teacher-platforms-form h3,.teacher-platforms-list h3{font-size:17px;margin:0 0 10px}
+.teacher-platforms-form button{width:100%}.teacher-platforms-actions{display:flex;gap:8px}.teacher-platforms-actions button{flex:1}
+.teacher-platforms-toolbar{display:grid;grid-template-columns:minmax(0,1fr) minmax(130px,.55fr);gap:8px;margin:10px 0}
+.teacher-platforms-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.teacher-platform-card{min-width:0;padding:13px;border:1px solid var(--line);border-radius:13px;background:var(--bg)}
+.teacher-platform-card h4{font-size:16px;margin:0 0 4px;overflow-wrap:anywhere}
+.teacher-platform-card p{font-size:12px;color:var(--muted);margin:5px 0;overflow-wrap:anywhere}
+.teacher-platform-subject{display:inline-block;padding:3px 9px;border-radius:30px;background:rgba(22,119,232,.1);color:var(--brand);font-size:11px;margin-bottom:6px}
+.teacher-platform-card a{display:inline-flex;margin-top:8px;color:var(--brand);font-weight:800;text-decoration:none;overflow-wrap:anywhere}
+.teacher-platform-card-actions{display:flex;gap:7px;margin-top:9px}.teacher-platform-card-actions button{margin:0;padding:6px 10px;font-size:12px}
+.teacher-platforms-empty{grid-column:1/-1;padding:25px 12px;text-align:center;border:1px dashed var(--line);border-radius:12px;color:var(--muted)}
+@media(max-width:850px){.teacher-platforms-layout{grid-template-columns:1fr}}
+@media(max-width:560px){.teacher-platforms-hero{padding:17px}.teacher-platforms-cards{grid-template-columns:1fr}.teacher-platforms-toolbar{grid-template-columns:1fr}.teacher-platforms-form,.teacher-platforms-list{padding:12px}}

@@ -55,3 +55,12 @@ The application UI and existing study data remain client-side. Existing study da
 All feature modules listed in the current structure above have been extracted and are loaded before the bootstrap. `app.js` now contains only shared helpers, dependency wiring, initial rendering, and service-worker registration. Further changes should be driven by concrete maintenance needs rather than splitting the small bootstrap into artificial modules.
 
 All modules above are implemented and loaded by `index.html` before the application bootstrap.
+
+
+## Vercel migration — isolated preview phase
+
+- The `migration/vercel-platform` branch adds Vercel Node.js Functions under `api/` for the existing Gemini and read-only Neon routes.
+- The Vercel implementation uses server-side `GEMINI_API_KEY` and `DATABASE_URL` environment variables. No secret values belong in the repository or browser.
+- `sw.js` bypasses caching for `/api/*` and returns a JSON network error rather than cached HTML when an API request cannot reach the network.
+- The Cloudflare Worker remains the current production implementation until the Vercel Preview is configured and verified. Do not remove or modify Cloudflare production settings as part of this preview migration.
+- The existing `study-v1` local-storage key and data shape remain unchanged. Authentication, student-specific cloud sync, and database writes remain out of scope for this migration phase.

@@ -1,10 +1,15 @@
+import { neon } from "@neondatabase/serverless";
+
 const JSON_HEADERS = {
   "content-type": "application/json; charset=utf-8",
-  "cache-control": "no-store"
+  "cache-control": "no-store",
+  "x-content-type-options": "nosniff",
+  "referrer-policy": "no-referrer"
 };
 
 const WINDOW_MS = 10 * 60 * 1000;
 const MAX_REQUESTS = 20;
+const MAX_DB_REQUESTS = 60;
 const MAX_INPUT_CHARS = 20000;
 const requestBuckets = new Map();
 
@@ -12,7 +17,7 @@ function json(data, status = 200) {
   return new Response(JSON.stringify(data), { status, headers: JSON_HEADERS });
 }
 
-function isRateLimited(request) {
+function isRateLimited(request, maxRequests = MAX_REQUESTS) {
   const now = Date.now();
   const key = request.headers.get("CF-Connecting-IP") || "unknown";
   const current = requestBuckets.get(key);
@@ -26,7 +31,7 @@ function isRateLimited(request) {
     return false;
   }
   current.count += 1;
-  return current.count > MAX_REQUESTS;
+  return current.count > maxRequests;
 }
 
 function normalizeInput(input) {
@@ -134,20 +139,95 @@ async function handleAI(request, env) {
   return json({ text });
 }
 
+/*
+ * Phase 1 database API is intentionally read-only.
+ * It exposes only published educational content; no student records or writes.
+ */
+async function handleDatabase(request, env, url) {
+  if (request.method !== "GET") {
+    return json({ error: { code: "method_not_allowed" } }, 405);
+  }
+
+  const origin = request.headers.get("Origin");
+  if (origin && origin !== url.origin) {
+    return json({ error: { code: "forbidden_origin" } }, 403);
+  }
+
+  const isHealth = url.pathname === "/api/db/health";
+  const isSubjects = url.pathname === "/api/db/subjects";
+  const lessonMatch = url.pathname.match(/^\/api\/db\/subjects\/([0-9a-f-]{36})\/lessons$/i);
+  if (!isHealth && !isSubjects && !lessonMatch) {
+    return json({ error: { code: "not_found" } }, 404);
+  }
+
+  if (!env.DATABASE_URL) {
+    return json({ error: { code: "database_not_configured" } }, 503);
+  }
+
+  if (isRateLimited(request, MAX_DB_REQUESTS)) {
+    return json({ error: { code: "rate_limited" } }, 429);
+  }
+
+  try {
+    const sql = neon(env.DATABASE_URL);
+
+    if (isHealth) {
+      const rows = await sql`SELECT 1 AS ok`;
+      return json({
+        ok: rows[0]?.ok === 1,
+        service: "ahmed-study-database",
+        database: rows[0]?.ok === 1 ? "connected" : "unavailable"
+      });
+    }
+
+    if (isSubjects) {
+      const subjects = await sql`
+        SELECT id, name, description, sort_order
+        FROM subjects
+        WHERE is_published = TRUE
+        ORDER BY sort_order ASC, name ASC
+        LIMIT 100
+      `;
+      return json({ data: subjects });
+    }
+
+    const subjectId = lessonMatch[1];
+    const lessons = await sql`
+      SELECT id, subject_id, title, content, sort_order
+      FROM lessons
+      WHERE subject_id = ${subjectId}
+        AND is_published = TRUE
+      ORDER BY sort_order ASC, title ASC
+      LIMIT 100
+    `;
+    return json({ data: lessons });
+  } catch {
+    return json({ error: { code: "database_unavailable" } }, 503);
+  }
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+
     if (url.pathname === "/api/health") {
       return request.method === "GET"
         ? json({ ok: true, service: "ahmed-study-ai" })
         : json({ error: { code: "method_not_allowed" } }, 405);
     }
+
+    if (url.pathname.startsWith("/api/db/")) {
+      return handleDatabase(request, env, url);
+    }
+
     if (url.pathname === "/api/chat") {
       return handleAI(request, env);
     }
+
     if (url.pathname.startsWith("/api/")) {
       return json({ error: { code: "not_found" } }, 404);
     }
+
     return env.ASSETS.fetch(request);
   }
 };

@@ -1,5 +1,5 @@
 import { neon } from "@neondatabase/serverless";
-import { allowSameOrigin, isRateLimited, sendJson } from "../../../../_lib/http.js";
+import { allowSameOrigin, isRateLimited, sendJson } from "../../../_lib/http.js";
 
 export default async function handler(req, res) {
   if (req.method !== "GET") {

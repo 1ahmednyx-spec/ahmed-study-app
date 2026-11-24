@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ahmed-study-platform-v28';
+const CACHE_NAME = 'ahmed-study-platform-v29';
 const APP_FILES = [
   './',
   './index.html',

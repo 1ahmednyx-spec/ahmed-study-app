@@ -879,7 +879,7 @@ try {
     await swPage.addInitScript(() => {
       if (!('serviceWorker' in navigator)) return;
       const seedCaches = Promise.all([
-        caches.open('ahmed-study-platform-v30'),
+        caches.open('ahmed-study-platform-v31'),
         caches.open('unrelated-cache-preserve')
       ]);
       const nativeRegister = navigator.serviceWorker.register.bind(navigator.serviceWorker);
@@ -924,14 +924,14 @@ try {
       const cacheKeys = await caches.keys();
       return {
         activeState: registration.active?.state,
-        currentCachePresent: cacheKeys.includes('ahmed-study-platform-v31'),
-        oldAppCachePresent: cacheKeys.includes('ahmed-study-platform-v30'),
+        currentCachePresent: cacheKeys.includes('ahmed-study-platform-v32'),
+        oldAppCachePresent: cacheKeys.includes('ahmed-study-platform-v31'),
         unrelatedCachePresent: cacheKeys.includes('unrelated-cache-preserve')
       };
     });
     assert.equal(lifecycle.activeState, 'activated', 'Service worker must activate');
-    assert.equal(lifecycle.currentCachePresent, true, 'Current app-shell cache v31 must be created');
-    assert.equal(lifecycle.oldAppCachePresent, false, 'Activation must delete the previous app cache v30');
+    assert.equal(lifecycle.currentCachePresent, true, 'Current app-shell cache v32 must be created');
+    assert.equal(lifecycle.oldAppCachePresent, false, 'Activation must delete the previous app cache v31');
     assert.equal(lifecycle.unrelatedCachePresent, true, 'Activation must preserve unrelated caches');
     console.log('CHECKPOINT: service worker activated and cache lifecycle assertions passed');
 
@@ -950,7 +950,7 @@ try {
 
     const apiCacheCheck = await swPage.evaluate(async () => {
       const response = await fetch('/api/sw-cache-probe');
-      const cache = await caches.open('ahmed-study-platform-v31');
+      const cache = await caches.open('ahmed-study-platform-v32');
       const cachedResponse = await cache.match(new Request(new URL('/api/sw-cache-probe', location.origin)));
       return { status: response.status, cached: Boolean(cachedResponse) };
     });

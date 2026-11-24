@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ahmed-study-platform-v25';
+const CACHE_NAME = 'ahmed-study-platform-v26';
 const APP_FILES = [
   './',
   './index.html',
@@ -26,21 +26,61 @@ const APP_FILES = [
   './icon-192.png',
   './icon-512.png'
 ];
+
+const STATIC_PATHS = new Set(
+  APP_FILES.map(file => new URL(file, self.registration.scope).pathname)
+);
+
 self.addEventListener('install', event => {
-  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_FILES)));
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(cache => cache.addAll(APP_FILES))
+  );
   self.skipWaiting();
 });
+
 self.addEventListener('activate', event => {
-  event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key)))));
+  event.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(
+        keys
+          .filter(key => key.startsWith('ahmed-study-platform-') && key !== CACHE_NAME)
+          .map(key => caches.delete(key))
+      )
+    )
+  );
   self.clients.claim();
 });
+
 self.addEventListener('fetch', event => {
-  if (event.request.method !== 'GET' || new URL(event.request.url).origin !== self.location.origin) return;
-  event.respondWith(caches.match(event.request).then(cached => cached || fetch(event.request).then(response => {
-    if (response && response.ok) {
-      const copy = response.clone();
-      caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
-    }
-    return response;
-  }).catch(() => caches.match('./index.html'))));
+  const request = event.request;
+  if (request.method !== 'GET') return;
+
+  const url = new URL(request.url);
+  if (url.origin !== self.location.origin) return;
+
+  // API responses must always reach the network and must never enter the app-shell cache.
+  if (url.pathname.startsWith('/api/')) return;
+
+  // Cache only the explicitly listed app-shell files; other requests pass through untouched.
+  if (!STATIC_PATHS.has(url.pathname)) return;
+
+  event.respondWith(
+    caches.open(CACHE_NAME).then(cache => cache.match(request)).then(cached => {
+      if (cached) return cached;
+
+      return fetch(request).then(response => {
+        if (!response || !response.ok) return response;
+        const copy = response.clone();
+        return caches.open(CACHE_NAME)
+          .then(cache => cache.put(request, copy))
+          .then(() => response)
+          .catch(() => response);
+      }).catch(() => {
+        if (request.mode === 'navigate') {
+          return caches.open(CACHE_NAME).then(cache => cache.match('./index.html'));
+        }
+        throw new Error('Static asset unavailable offline');
+      });
+    })
+  );
 });

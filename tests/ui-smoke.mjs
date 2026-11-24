@@ -494,11 +494,16 @@ try {
   await page.locator('#ecQuizStart').click();
   assert.equal(await page.locator('#ecQuizBox .course-question').count(), 5, 'English course quiz should generate five questions');
 
-  // English conversation helper should show a clear static-host AI fallback.
+  // English conversation helper should show the expected AI fallback when the Worker reports a missing secret.
+  await page.route('**/api/chat', route => route.fulfill({
+    status: 503,
+    contentType: 'application/json',
+    body: JSON.stringify({ error: { code: 'missing_server_secret' } })
+  }));
   await page.locator('[data-tab="chat"]').click();
   await page.locator('#cIn').fill('Hello, how are you?');
   await page.locator('#cSend').click();
-  await page.locator('#cSt').getByText('مش متاحة هنا').waitFor({ state: 'visible' });
+  await page.locator('#cSt').getByText('لم تتم إضافة مفتاح Gemini إلى أسرار Cloudflare بعد.').waitFor({ state: 'visible' });
 
   // Practice tracking should validate answers, persist a valid session, and update the weekly goal.
   await page.locator('[data-tab="prac"]').click();
@@ -515,9 +520,9 @@ try {
   await page.locator('#goalSt').getByText('من 30 سؤال').waitFor({ state: 'visible' });
   await page.locator('#qT').fill('درس تجريبي');
   await page.locator('#qBtn').click();
-  await page.locator('#qSt').getByText('مش متاحة هنا').waitFor({ state: 'visible' });
+  await page.locator('#qSt').getByText('لم تتم إضافة مفتاح Gemini إلى أسرار Cloudflare بعد.').waitFor({ state: 'visible' });
   await page.locator('#plBtn').click();
-  await page.locator('#plSt').getByText('مش متاحة هنا').waitFor({ state: 'visible' });
+  await page.locator('#plSt').getByText('لم تتم إضافة مفتاح Gemini إلى أسرار Cloudflare بعد.').waitFor({ state: 'visible' });
 
   // A newly recorded mistake must remain visible even when its spaced-review date is in the future.
   await page.locator('[data-tab="tools"]').click();
@@ -534,11 +539,11 @@ try {
   await page.locator('#mForm button[type="submit"]').click();
   await page.locator('#mList').getByText('خطأ ثانٍ لاختبار استعادة النسخة الاحتياطية').waitFor({ state: 'visible' });
 
-  // AI-dependent tools must explain the Pages limitation instead of failing silently.
+  // AI-dependent tools should display the Worker's missing-secret error clearly.
   await page.locator('#aT').fill('A short lesson about photosynthesis.');
   await page.locator('#aQ').fill('Explain photosynthesis.');
   await page.locator('#aGo').click();
-  await page.locator('#aSt').getByText('غير مفعّل').waitFor({ state: 'visible' });
+  await page.locator('#aSt').getByText('لم تتم إضافة مفتاح Gemini إلى أسرار Cloudflare بعد.').waitFor({ state: 'visible' });
 
   // Invalid backup files must be rejected without replacing the current study data.
   await page.locator('#bkIn').setInputFiles({
@@ -752,8 +757,121 @@ try {
   }));
   assert.ok(narrow.document <= narrow.viewport + 1, `Narrow mobile page overflow: ${JSON.stringify(narrow)}`);
 
+  // Exercise the service worker in an isolated browser context with seeded cache entries.
+  console.log('CHECKPOINT: starting isolated service-worker tests');
+  const swContext = await browser.newContext({ serviceWorkers: 'allow' });
+  const swPage = await swContext.newPage();
+  try {
+    await swPage.addInitScript(() => {
+      if (!('serviceWorker' in navigator)) return;
+      const seedCaches = Promise.all([
+        caches.open('ahmed-study-platform-v25'),
+        caches.open('unrelated-cache-preserve')
+      ]);
+      const nativeRegister = navigator.serviceWorker.register.bind(navigator.serviceWorker);
+      Object.defineProperty(navigator.serviceWorker, 'register', {
+        configurable: true,
+        value: async (...args) => {
+          await seedCaches;
+          return nativeRegister(...args);
+        }
+      });
+    });
+    await swPage.goto('http://localhost:4173/', { waitUntil: 'load' });
+    console.log('CHECKPOINT: isolated page loaded; waiting for service-worker activation');
+    const lifecycle = await swPage.evaluate(async () => {
+      const withTimeout = (promise, label, milliseconds = 15000) => {
+        let timer;
+        return Promise.race([
+          promise,
+          new Promise((_, reject) => {
+            timer = setTimeout(() => reject(new Error(`Timed out after ${milliseconds}ms: ${label}`)), milliseconds);
+          })
+        ]).finally(() => clearTimeout(timer));
+      };
+      const registration = await withTimeout(navigator.serviceWorker.ready, 'navigator.serviceWorker.ready');
+      const activeWorker = registration.active;
+      if (!activeWorker) throw new Error('Service worker registration has no active worker');
+      if (activeWorker.state !== 'activated') {
+        await withTimeout(new Promise((resolve, reject) => {
+          const onStateChange = () => {
+            if (activeWorker.state === 'activated') {
+              activeWorker.removeEventListener('statechange', onStateChange);
+              resolve();
+            } else if (activeWorker.state === 'redundant') {
+              activeWorker.removeEventListener('statechange', onStateChange);
+              reject(new Error('Service worker became redundant before activation'));
+            }
+          };
+          activeWorker.addEventListener('statechange', onStateChange);
+          onStateChange();
+        }), 'service worker activation');
+      }
+      const cacheKeys = await caches.keys();
+      return {
+        activeState: registration.active?.state,
+        currentCachePresent: cacheKeys.includes('ahmed-study-platform-v26'),
+        oldAppCachePresent: cacheKeys.includes('ahmed-study-platform-v25'),
+        unrelatedCachePresent: cacheKeys.includes('unrelated-cache-preserve')
+      };
+    });
+    assert.equal(lifecycle.activeState, 'activated', 'Service worker must activate');
+    assert.equal(lifecycle.currentCachePresent, true, 'Current app-shell cache must be created');
+    assert.equal(lifecycle.oldAppCachePresent, false, 'Activation must delete the previous app cache');
+    assert.equal(lifecycle.unrelatedCachePresent, true, 'Activation must preserve unrelated caches');
+    console.log('CHECKPOINT: service worker activated and cache lifecycle assertions passed');
+
+    await swPage.reload({ waitUntil: 'load' });
+    await swPage.evaluate(async () => {
+      if (navigator.serviceWorker.controller) return;
+      await new Promise((resolve, reject) => {
+        const timer = setTimeout(() => reject(new Error('Timed out after 15000ms waiting for service-worker controllerchange')), 15000);
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          clearTimeout(timer);
+          resolve();
+        }, { once: true });
+      });
+    });
+    console.log('CHECKPOINT: page is controlled by the service worker');
+
+    const apiCacheCheck = await swPage.evaluate(async () => {
+      const response = await fetch('/api/sw-cache-probe');
+      const cache = await caches.open('ahmed-study-platform-v26');
+      const cachedResponse = await cache.match(new Request(new URL('/api/sw-cache-probe', location.origin)));
+      return { status: response.status, cached: Boolean(cachedResponse) };
+    });
+    assert.equal(apiCacheCheck.status, 404, 'Unconfigured API probe should reach the local server');
+    assert.equal(apiCacheCheck.cached, false, 'API responses must never enter the app-shell cache');
+    console.log('CHECKPOINT: API cache exclusion assertions passed');
+
+    await swContext.setOffline(true);
+    const offlineChecks = await swPage.evaluate(async () => {
+      let staticAsset;
+      try {
+        const response = await fetch('/assets/css/app.css');
+        staticAsset = { ok: response.ok, status: response.status };
+      } catch (error) {
+        staticAsset = { ok: false, error: error.message };
+      }
+      let apiRequest;
+      try {
+        const response = await fetch('/api/sw-cache-probe');
+        apiRequest = { resolved: true, status: response.status };
+      } catch {
+        apiRequest = { resolved: false };
+      }
+      return { staticAsset, apiRequest };
+    });
+    assert.equal(offlineChecks.staticAsset.ok, true, 'A precached static asset must remain available offline');
+    assert.equal(offlineChecks.apiRequest.resolved, false, 'API requests must not be served from the app-shell cache offline');
+    console.log('CHECKPOINT: offline static-asset and API assertions passed');
+    await swContext.setOffline(false);
+  } finally {
+    await swContext.close();
+  }
+
   assert.deepEqual(pageErrors, [], `Uncaught browser errors: ${pageErrors.join('; ')}`);
-  console.log('PASS: homepage, navigation, smart revision queue and scheduling, schedule creation, local notes, theme persistence, local data preservation, mistake review, AI fallback, backup validation, mobile overflow at 390px and 320px, and browser console.');
+  console.log('PASS: homepage, navigation, smart revision queue and scheduling, schedule creation, local notes, theme persistence, local data preservation, mistake review, AI fallback, backup validation, mobile overflow at 390px and 320px, service-worker cache cleanup, API cache exclusion, offline static assets, and browser console.');
 } finally {
   await browser.close();
 }

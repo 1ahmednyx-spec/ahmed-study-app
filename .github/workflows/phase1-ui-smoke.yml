@@ -8,6 +8,7 @@ on:
       - feature/subjects-2027-on-main
       - feature/past-exam-archive
       - fix/service-worker-static-cache
+      - fix/mobile-welcome-screen
   pull_request:
     branches:
       - main

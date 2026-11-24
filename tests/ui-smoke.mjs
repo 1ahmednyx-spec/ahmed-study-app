@@ -235,7 +235,16 @@ try {
   assert.equal(await page.evaluate(() => typeof window.activateTab), 'function', 'Navigation module must expose tab activation');
   assert.match(await page.title(), /Ahmed Study Platform/);
   await page.locator('#welcomeScreen').waitFor({ state: 'visible' });
-  assert.equal(await page.locator('#welcomeScreen img').getAttribute('src'), './assets/images/welcome-screen.svg', 'Pre-login welcome artwork must be present');
+  const desktopWelcome = page.locator('#welcomeScreen img.welcome-desktop');
+  const mobileWelcome = page.locator('#welcomeScreen img.welcome-mobile');
+  assert.equal(await desktopWelcome.getAttribute('src'), './assets/images/welcome-screen.svg', 'Desktop welcome artwork must be present');
+  assert.equal(await mobileWelcome.getAttribute('src'), './assets/images/welcome-screen-mobile.svg', 'Mobile welcome artwork must be present');
+  assert.equal(await desktopWelcome.isVisible(), true, 'Desktop welcome artwork must be visible at desktop width');
+  assert.equal(await mobileWelcome.isVisible(), false, 'Mobile welcome artwork must be hidden at desktop width');
+  await page.setViewportSize({ width: 390, height: 844 });
+  assert.equal(await desktopWelcome.isVisible(), false, 'Desktop welcome artwork must be hidden on mobile');
+  assert.equal(await mobileWelcome.isVisible(), true, 'Portrait welcome artwork must be visible on mobile');
+  await page.setViewportSize({ width: 1365, height: 900 });
   await page.locator('#enterPlatform').click();
   await page.locator('#welcomeScreen').waitFor({ state: 'hidden' });
   await page.locator('#home').waitFor({ state: 'visible' });
@@ -828,8 +837,8 @@ try {
       const cacheKeys = await caches.keys();
       return {
         activeState: registration.active?.state,
-        currentCachePresent: cacheKeys.includes('ahmed-study-platform-v27'),
-        oldAppCachePresent: cacheKeys.includes('ahmed-study-platform-v26'),
+        currentCachePresent: cacheKeys.includes('ahmed-study-platform-v28'),
+        oldAppCachePresent: cacheKeys.includes('ahmed-study-platform-v27'),
         unrelatedCachePresent: cacheKeys.includes('unrelated-cache-preserve')
       };
     });

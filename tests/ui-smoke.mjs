@@ -736,6 +736,7 @@ try {
   });
   assert.equal(revisionSeed, true);
   await page.reload({waitUntil:'domcontentloaded'});
+  await reenterAfterReload();
   await page.locator('[data-tab="reviewCenter"]').click();
   await page.locator('#smartReviewRoot .revision-stats').waitFor({state:'visible'});
   assert.equal(await page.locator('#smartReviewRoot .revision-preview-item').count(), 4, 'Revision queue must include a word, a mistake, a subject lesson, and an English lesson');

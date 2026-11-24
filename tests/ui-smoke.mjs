@@ -802,6 +802,11 @@ try {
     await page.locator('#teacherPlatformsList').getByRole('heading', {name, exact:true}).waitFor({state:'visible'});
     assert.equal(await page.locator('#teacherPlatformsList a[href="' + href + '"]').count(), 1, 'Default teacher link must be present: ' + name);
   }
+  assert.equal(await page.locator('#teacherPlatformsList .teacher-platform-card--arabic').count(), 2, 'Arabic platforms must use the Arabic color theme');
+  assert.equal(await page.locator('#teacherPlatformsList .teacher-platform-card--chemistry').count(), 2, 'Chemistry platforms must use the chemistry color theme');
+  assert.equal(await page.locator('#teacherPlatformsList .teacher-platform-card--physics').count(), 2, 'Physics platforms must use the physics color theme');
+  assert.equal(await page.locator('#teacherPlatformsList .teacher-platform-card--english').count(), 2, 'English platforms must use the English color theme');
+  assert.equal(await page.locator('#teacherPlatformsList .teacher-platform-card--biology').count(), 1, 'Biology platform must use the biology color theme');
   await page.locator('#teacherPlatformFilter').selectOption('الفيزياء');
   assert.equal(await page.locator('#teacherPlatformsList .teacher-platform-card').count(), 2, 'Physics filter must show both physics platforms');
   await page.locator('#teacherPlatformFilter').selectOption('كل المواد');

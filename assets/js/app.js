@@ -20,7 +20,18 @@ async function requestAI(input, responseFormat = "text") {
   let payload;
   try { payload = await response.json(); }
   catch { throw { code: "invalid_response" }; }
-  if (!response.ok) throw { code: payload?.error?.code || "request_failed" };
+  if (!response.ok) {
+    const providerStatus = Number.isInteger(payload?.error?.provider_status)
+      ? payload.error.provider_status : undefined;
+    const rawProviderCode = payload?.error?.provider_code;
+    const providerCode = typeof rawProviderCode === "string" &&
+      /^[A-Z][A-Z0-9_]{0,63}$/.test(rawProviderCode) ? rawProviderCode : undefined;
+    throw {
+      code: payload?.error?.code || "request_failed",
+      providerStatus,
+      providerCode
+    };
+  }
   if (typeof payload.text !== "string") throw { code: "invalid_response" };
   return payload.text;
 }
@@ -30,14 +41,22 @@ AI.json = async input => {
   try { return JSON.parse(text); }
   catch { throw { code: "invalid_json" }; }
 };
-const errMsg=c=>({
-  rate_limited:'تم الوصول إلى حد الاستخدام مؤقتًا. انتظر قليلًا ثم حاول مجددًا.',
-  missing_server_secret:'لم تتم إضافة مفتاح Gemini إلى أسرار Cloudflare بعد.',
-  invalid_api_key:'مفتاح Gemini غير صحيح أو غير مفعّل.',
-  provider_unavailable:'خدمة Gemini غير متاحة حاليًا. حاول لاحقًا.',
-  provider_error:'حدث خطأ في خدمة الذكاء الاصطناعي.',
-  invalid_json:'تعذر قراءة النتيجة المنظمة. حاول مرة أخرى.'
-}[c]||'حدث خطأ أثناء الاتصال بالذكاء الاصطناعي. حاول مرة أخرى.');
+const errMsg=error=>{
+  const c=typeof error==='string'?error:error?.code;
+  const message=({
+    rate_limited:'تم الوصول إلى حد الاستخدام مؤقتًا. انتظر قليلًا ثم حاول مجددًا.',
+    missing_server_secret:'لم تتم إضافة مفتاح Gemini إلى أسرار Cloudflare بعد.',
+    invalid_api_key:'رفضت Google مفتاح Gemini أو صلاحيات الوصول للمشروع. راجع إعدادات المفتاح وتفعيل الخدمة.',
+    provider_bad_request:'رفضت Google صيغة الطلب المرسل إلى Gemini.',
+    provider_unavailable:'خدمة Gemini غير متاحة حاليًا. حاول لاحقًا.',
+    provider_error:'حدث خطأ في خدمة الذكاء الاصطناعي.',
+    invalid_json:'تعذر قراءة النتيجة المنظمة. حاول مرة أخرى.'
+  }[c]||'حدث خطأ أثناء الاتصال بالذكاء الاصطناعي. حاول مرة أخرى.');
+  const details=[];
+  if(Number.isInteger(error?.providerStatus))details.push('HTTP '+error.providerStatus);
+  if(typeof error?.providerCode==='string'&&/^[A-Z][A-Z0-9_]{0,63}$/.test(error.providerCode))details.push(error.providerCode);
+  return details.length?message+' (تفاصيل Google: '+details.join('، ')+')':message;
+};
 const {render:renderWords}=window.StudyWords.init({
   state:S,save,uid,escapeHtml:esc,
   getAI:()=>AI,

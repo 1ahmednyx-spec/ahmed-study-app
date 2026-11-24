@@ -799,7 +799,7 @@ try {
   ];
   assert.equal(await page.locator('#teacherPlatformsList .teacher-platform-card').count(), 9, 'All nine curated teacher platforms must be seeded by default');
   for (const [name, href] of defaultTeacherLinks) {
-    await page.locator('#teacherPlatformsList').getByText(name).waitFor({state:'visible'});
+    await page.locator('#teacherPlatformsList').getByRole('heading', {name, exact:true}).waitFor({state:'visible'});
     assert.equal(await page.locator('#teacherPlatformsList a[href="' + href + '"]').count(), 1, 'Default teacher link must be present: ' + name);
   }
   await page.locator('#teacherPlatformFilter').selectOption('الفيزياء');

@@ -187,7 +187,7 @@
     root.querySelector('[data-subject-units]').innerHTML = course.units.map((unit, ui) => {
       const items = filtered.filter(x => x.ui === ui);
       if (!items.length) return '';
-      return '<section class="subject-unit"><h3>' + esc(unit.name) + '</h3>' + items.map(({lesson, key}) => {
+      return '<section class="subject-unit"><h3>' + esc(unit.name) + '</h3>' + items.map(({lesson, key, li}) => {
         const [title, explanation, takeaway, question, ...rest] = lesson;
         const options = rest.slice(0,4), answer = rest[4], feedback = rest[5];
         return '<details class="course-unit subject-lesson"><summary><input type="checkbox" class="course-done" data-subject-done="' + key + '" ' + (done[key] ? 'checked' : '') + ' aria-label="إتمام الدرس"><span><b>' + esc(title) + '</b><br><span class="course-muted">' + (done[key] ? 'تمت المذاكرة' : 'شرح وتطبيق') + '</span></span></summary><div class="course-unit-body"><h4>الشرح المبسّط</h4><p>' + esc(explanation) + '</p><div class="course-feedback"><b>الخلاصة:</b> ' + esc(takeaway) + '</div>' + (global.StudyLessonVideos ? global.StudyLessonVideos.renderSlot(id, ui, li) : '') + '<h4>اختبر فهمك</h4><p>' + esc(question) + '</p><div class="subject-options">' + options.map((option, oi) => '<label><input type="radio" name="' + id + '-' + key + '" value="' + oi + '"><span>' + esc(option) + '</span></label>').join('') + '</div><button class="s" type="button" data-subject-check="' + key + '" data-answer="' + answer + '" data-explain="' + encodeURIComponent(feedback) + '">صحّح إجابتي</button><div class="hint" data-subject-feedback="' + key + '" aria-live="polite"></div></div></details>';

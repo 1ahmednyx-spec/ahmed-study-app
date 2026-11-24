@@ -21,7 +21,7 @@
 
 ## Runtime and data
 
-The application UI and study data remain client-side. Existing study data is stored in browser local storage under the compatibility key `study-v1`. This key must not be renamed or discarded during refactoring. A secure Cloudflare Worker now provides the server-side AI API; account authentication and cloud database synchronization are still not implemented. Never place provider API keys in browser code.
+The application UI and existing study data remain client-side. Existing study data is stored in browser local storage under the compatibility key `study-v1`. This key must not be renamed or discarded during refactoring. A secure Cloudflare Worker provides the server-side AI API and a read-only Neon API for published educational content. Student accounts, authentication, student-specific cloud synchronization, and database writes are not yet implemented. Never place provider API keys or database connection strings in browser code.
 
 ## Secure AI backend (Cloudflare Worker)
 
@@ -30,8 +30,16 @@ The application UI and study data remain client-side. Existing study data is sto
 - The Worker calls the Gemini Interactions API using `GEMINI_API_KEY` as a Cloudflare Secret. The default model is `gemini-3.8-flash`; `GEMINI_MODEL` may override it as a regular Worker variable.
 - Requests use `store: false`, validate input size and message count, and apply a best-effort per-isolate rate limit.
 - Configure `main = "src/index.js"`, `assets.binding = "ASSETS"`, and `run_worker_first = ["/api/*"]` in `cloudflare/wrangler.toml`.
-- Before AI features can work in production, add the Cloudflare Worker Secret named `GEMINI_API_KEY`. Never commit the key to GitHub or place it in browser JavaScript.
-- `GET /api/health` is a non-sensitive deployment health check.
+- `GET /api/health` is a non-sensitive Worker deployment health check.
+
+## Neon database integration — phase 1
+
+- The same Worker exposes `GET /api/db/health`, `GET /api/db/subjects`, and `GET /api/db/subjects/:uuid/lessons`.
+- `@neondatabase/serverless` uses Neon's HTTP query interface in the Cloudflare Worker.
+- The pooled Neon connection string is configured only as the Cloudflare Worker Secret `DATABASE_URL`. It must never be committed or sent to the browser.
+- The public API returns only rows marked `is_published = TRUE`; it is read-only and does not expose user, exam-attempt, answer, notes, or schedule records.
+- Cross-origin browser requests and non-GET methods are rejected. The request limit is best-effort per Worker isolate.
+- Student-specific data endpoints and database writes are intentionally deferred until authentication and per-user authorization are implemented.
 
 ## Phase 2 migration rules
 

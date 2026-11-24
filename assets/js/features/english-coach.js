@@ -13,7 +13,7 @@
       if(!getAI()){$('#cSt').textContent='ميزة الذكاء الاصطناعي مش متاحة هنا';return}
       turns.push({role:'user',content:m});$('#cIn').value='';renderChat();$('#cSt').textContent='الخبير بيكتب…';$('#cSend').disabled=true;
       try{const {text}=await getAI()([{role:'user',content:rules()},...turns],{cache:false});turns.push({role:'assistant',content:text});$('#cSt').textContent='';say(P(text,'EN')||text)}
-      catch(e){turns.pop();$('#cIn').value=m;$('#cSt').textContent=errMsg(e.code)}
+      catch(e){turns.pop();$('#cIn').value=m;$('#cSt').textContent=errMsg(e)}
       $('#cSend').disabled=false;while(turns.length>12)turns.splice(0,2);renderChat()};
     $('#cClr').onclick=()=>{turns=[];renderChat()};
     
@@ -24,7 +24,7 @@
       if(t){const box=e.target.closest('.b').querySelector('.tr');
         if(!getAI()){box.textContent='ميزة الذكاء الاصطناعي مش متاحة';return}
         box.textContent='جاري الترجمة…';
-        try{box.textContent=(await getAI()('ترجم النص ده للعربية المصرية المبسطة، وارجع الترجمة بس:\n'+t)).text}catch(x){box.textContent=errMsg(x.code)}}});
+        try{box.textContent=(await getAI()('ترجم النص ده للعربية المصرية المبسطة، وارجع الترجمة بس:\n'+t)).text}catch(x){box.textContent=errMsg(x)}}});
     (async()=>{try{const d=await claude.use('dictation');if(!d)return;DICT=d;dictInit();return;let base='',on=false;const b=null;
       d.onPartial(({text})=>{$('#cIn').value=(base+' '+text).trim()});
       d.onFinal(({text})=>{base=($('#cIn').value=(base+' '+text).trim())});

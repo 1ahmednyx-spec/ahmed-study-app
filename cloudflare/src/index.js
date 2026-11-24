@@ -1,4 +1,5 @@
 import { neon } from "@neondatabase/serverless";
+import { getProviderDiagnostics } from "./provider-diagnostics.js";
 
 const JSON_HEADERS = {
   "content-type": "application/json; charset=utf-8",
@@ -106,16 +107,19 @@ async function handleAI(request, env) {
   }
 
   if (!upstream.ok) {
+    // Return only the provider HTTP status and a strictly validated status code.
+    // Never expose provider messages, request content, headers, or credentials.
+    const diagnostics = await getProviderDiagnostics(upstream);
     if (upstream.status === 429) {
-      return json({ error: { code: "rate_limited" } }, 429);
+      return json({ error: { code: "rate_limited", ...diagnostics } }, 429);
     }
     if (upstream.status === 400) {
-      return json({ error: { code: "provider_bad_request" } }, 400);
+      return json({ error: { code: "provider_bad_request", ...diagnostics } }, 400);
     }
     if (upstream.status === 401 || upstream.status === 403) {
-      return json({ error: { code: "invalid_api_key" } }, 502);
+      return json({ error: { code: "invalid_api_key", ...diagnostics } }, 502);
     }
-    return json({ error: { code: "provider_error" } }, 502);
+    return json({ error: { code: "provider_error", ...diagnostics } }, 502);
   }
 
   let result;

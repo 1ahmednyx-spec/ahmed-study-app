@@ -222,6 +222,20 @@
     render();
   }
 
-  window.StudyMinistryLibrary = { init, render };
+  function openSubject(subjectName) {
+    const trackSelect = $('#trk');
+    track = trackSelect?.value || track;
+    if (!getSubjects().some(subject => subject.name === subjectName)) return false;
+    selected = subjectName;
+    const search = $('#ministryBookSearch');
+    if (search) search.value = '';
+    if (typeof window.activateTab === 'function') window.activateTab('library');
+    render();
+    const detail = $('#ministrySubjectDetail');
+    if (detail) detail.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    return true;
+  }
+
+  window.StudyMinistryLibrary = { init, render, openSubject };
   window.ministryLibraryRender = render;
 })();

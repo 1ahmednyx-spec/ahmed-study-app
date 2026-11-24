@@ -870,7 +870,7 @@ try {
     await swPage.addInitScript(() => {
       if (!('serviceWorker' in navigator)) return;
       const seedCaches = Promise.all([
-        caches.open('ahmed-study-platform-v31'),
+        caches.open('ahmed-study-platform-v30'),
         caches.open('unrelated-cache-preserve')
       ]);
       const nativeRegister = navigator.serviceWorker.register.bind(navigator.serviceWorker);

@@ -502,8 +502,12 @@ try {
   // English 2027 course tools should render, save vocabulary locally, and start a quiz.
   await page.locator('[data-tab="english2027"]').click();
   await page.locator('#ecProgressText').getByText('0 من 12 وحدة').waitFor({ state: 'visible' });
-  const officialEnglishLibrary = page.locator('#english2027 a[href="https://studentbooks.moe.gov.eg/Books"]');
-  assert.ok(await officialEnglishLibrary.count() >= 1, 'English course must link to the official Ministry book library');
+  const internalEnglishLibrary = page.locator('#english2027 [data-ec-open-ministry-book]');
+  assert.ok(await internalEnglishLibrary.count() >= 1, 'English course must open the Ministry book from the internal library');
+  await internalEnglishLibrary.first().click();
+  await page.locator('#ministrySubjectDetail h2').getByText('اللغة الأجنبية الأولى').waitFor({ state: 'visible' });
+  await page.locator('#ministrySubjectDetail').getByText('كتاب اللغة الإنجليزية — الفصل الدراسي الأول').waitFor({ state: 'visible' });
+  await page.locator('[data-tab="english2027"]').click();
   assert.ok(await page.locator('#ecUnitList').getByText('محاور للمذاكرة وليست قائمة رسمية بعناوين الدروس').count() > 0, 'Unit details must identify lesson prompts as unverified official titles');
   assert.ok(await page.locator('#english2027').getByText('فهرس مساعد غير رسمي').count() === 1, 'Supplementary curriculum index must be labeled unofficial');
   await page.locator('#ecWord').fill('caregiver');

@@ -777,7 +777,7 @@ try {
         }
       });
     });
-    await swPage.goto('http://127.0.0.1:4173/', { waitUntil: 'load' });
+    await swPage.goto('http://localhost:4173/', { waitUntil: 'load' });
     console.log('CHECKPOINT: isolated page loaded; waiting for service-worker activation');
     const lifecycle = await swPage.evaluate(async () => {
       const withTimeout = (promise, label, milliseconds = 15000) => {

@@ -520,9 +520,9 @@ try {
   await page.locator('#goalSt').getByText('من 30 سؤال').waitFor({ state: 'visible' });
   await page.locator('#qT').fill('درس تجريبي');
   await page.locator('#qBtn').click();
-  await page.locator('#qSt').getByText('مش متاحة هنا').waitFor({ state: 'visible' });
+  await page.locator('#qSt').getByText('لم تتم إضافة مفتاح Gemini إلى أسرار Cloudflare بعد.').waitFor({ state: 'visible' });
   await page.locator('#plBtn').click();
-  await page.locator('#plSt').getByText('مش متاحة هنا').waitFor({ state: 'visible' });
+  await page.locator('#plSt').getByText('لم تتم إضافة مفتاح Gemini إلى أسرار Cloudflare بعد.').waitFor({ state: 'visible' });
 
   // A newly recorded mistake must remain visible even when its spaced-review date is in the future.
   await page.locator('[data-tab="tools"]').click();

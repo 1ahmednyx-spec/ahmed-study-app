@@ -758,6 +758,7 @@ try {
   assert.ok(narrow.document <= narrow.viewport + 1, `Narrow mobile page overflow: ${JSON.stringify(narrow)}`);
 
   // Exercise the service worker in an isolated browser context with seeded cache entries.
+  console.log('CHECKPOINT: starting isolated service-worker tests');
   const swContext = await browser.newContext({ serviceWorkers: 'allow' });
   const swPage = await swContext.newPage();
   try {
@@ -777,8 +778,18 @@ try {
       });
     });
     await swPage.goto('http://127.0.0.1:4173/', { waitUntil: 'load' });
+    console.log('CHECKPOINT: isolated page loaded; waiting for service-worker activation');
     const lifecycle = await swPage.evaluate(async () => {
-      const registration = await navigator.serviceWorker.ready;
+      const withTimeout = (promise, label, milliseconds = 15000) => {
+        let timer;
+        return Promise.race([
+          promise,
+          new Promise((_, reject) => {
+            timer = setTimeout(() => reject(new Error(`Timed out after ${milliseconds}ms: ${label}`)), milliseconds);
+          })
+        ]).finally(() => clearTimeout(timer));
+      };
+      const registration = await withTimeout(navigator.serviceWorker.ready, 'navigator.serviceWorker.ready');
       const cacheKeys = await caches.keys();
       return {
         activeState: registration.active?.state,
@@ -791,12 +802,20 @@ try {
     assert.equal(lifecycle.currentCachePresent, true, 'Current app-shell cache must be created');
     assert.equal(lifecycle.oldAppCachePresent, false, 'Activation must delete the previous app cache');
     assert.equal(lifecycle.unrelatedCachePresent, true, 'Activation must preserve unrelated caches');
+    console.log('CHECKPOINT: service worker activated and cache lifecycle assertions passed');
 
     await swPage.reload({ waitUntil: 'load' });
     await swPage.evaluate(async () => {
       if (navigator.serviceWorker.controller) return;
-      await new Promise(resolve => navigator.serviceWorker.addEventListener('controllerchange', resolve, { once: true }));
+      await new Promise((resolve, reject) => {
+        const timer = setTimeout(() => reject(new Error('Timed out after 15000ms waiting for service-worker controllerchange')), 15000);
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          clearTimeout(timer);
+          resolve();
+        }, { once: true });
+      });
     });
+    console.log('CHECKPOINT: page is controlled by the service worker');
 
     const apiCacheCheck = await swPage.evaluate(async () => {
       const response = await fetch('/api/sw-cache-probe');
@@ -806,6 +825,7 @@ try {
     });
     assert.equal(apiCacheCheck.status, 404, 'Unconfigured API probe should reach the local server');
     assert.equal(apiCacheCheck.cached, false, 'API responses must never enter the app-shell cache');
+    console.log('CHECKPOINT: API cache exclusion assertions passed');
 
     await swContext.setOffline(true);
     const offlineChecks = await swPage.evaluate(async () => {
@@ -827,6 +847,7 @@ try {
     });
     assert.equal(offlineChecks.staticAsset.ok, true, 'A precached static asset must remain available offline');
     assert.equal(offlineChecks.apiRequest.resolved, false, 'API requests must not be served from the app-shell cache offline');
+    console.log('CHECKPOINT: offline static-asset and API assertions passed');
     await swContext.setOffline(false);
   } finally {
     await swContext.close();

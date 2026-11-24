@@ -39,6 +39,7 @@
       <button type="button" role="tab" aria-selected="false" data-tab="notes"><span aria-hidden="true">📝</span> الملخصات</button>
       <button type="button" role="tab" aria-selected="false" data-tab="eng"><span aria-hidden="true">🔤</span> قاموس الكلمات</button>
       <button type="button" role="tab" aria-selected="false" data-tab="library"><span aria-hidden="true">📚</span> مكتبة الوزارة</button>
+      <button type="button" role="tab" aria-selected="false" data-tab="teacherPlatforms"><span aria-hidden="true">👨‍🏫</span> منصات المدرسين</button>
       <button type="button" role="tab" aria-selected="false" data-tab="english2027"><span aria-hidden="true">🇬🇧</span> إنجليزي 2027</button>
       <button type="button" role="tab" aria-selected="false" data-tab="englishPath"><span aria-hidden="true">🌍</span> تعلم الإنجليزية</button>
       <button type="button" role="tab" aria-selected="false" data-tab="biology2027"><span aria-hidden="true">🧬</span> أحياء 2027</button>
@@ -71,6 +72,7 @@
           <button type="button" data-go-tab="prac"><span aria-hidden="true">🎯</span><b>التدريب والخطة</b><small>سجّل حل الأسئلة ونظّم أسبوعك</small></button>
           <button type="button" data-go-tab="reviewCenter"><span aria-hidden="true">🔄</span><b>المراجعة الذكية</b><small>راجع كلماتك وأخطاءك والدروس المكتملة</small></button>
           <button type="button" data-go-tab="library"><span aria-hidden="true">📚</span><b>مكتبة الوزارة</b><small>كتب الصف الثالث الثانوي حسب المادة</small></button>
+          <button type="button" data-go-tab="teacherPlatforms"><span aria-hidden="true">👨‍🏫</span><b>منصات المدرسين</b><small>روابط المدرسين والمنصات التعليمية في مكان واحد</small></button>
           <button type="button" data-go-tab="english2027"><span aria-hidden="true">🇬🇧</span><b>إنجليزي 2027</b><small>تابع وحدات ومراجعة الإنجليزية</small></button>
           <button type="button" data-go-tab="englishPath"><span aria-hidden="true">🌍</span><b>تعلم الإنجليزية</b><small>مسار مستقل من الأساسيات إلى المتوسط</small></button>
           <button type="button" data-go-tab="biology2027"><span aria-hidden="true">🧬</span><b>أحياء 2027</b><small>افتح مساحة الأحياء للكتاب والوحدات والتدريبات</small></button>
@@ -168,6 +170,10 @@
 
 <section id="reviewCenter" hidden>
   <div class="panel" id="smartReviewRoot" aria-label="نظام المراجعة الذكية"></div>
+</section>
+
+<section id="teacherPlatforms" hidden>
+  <div id="teacherPlatformsRoot"></div>
 </section>
 
 <section id="tools" hidden>
@@ -344,6 +350,7 @@
 <script src="./assets/js/features/english-coach.js"></script>
 <script src="./assets/js/features/dashboard.js"></script>
 <script src="./assets/js/features/smart-revision.js"></script>
+<script src="./assets/js/features/teacher-platforms.js"></script>
 <script src="./assets/js/features/preferences.js"></script>
 <script src="./assets/js/app.js"></script>
 <script>

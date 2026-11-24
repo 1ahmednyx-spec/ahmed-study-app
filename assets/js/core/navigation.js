@@ -1,6 +1,6 @@
 /* Main navigation */
 (function () {
-  const ids = ['home', 'sched', 'notes', 'chat', 'prac', 'examCenter', 'pastExamArchive', 'reviewCenter', 'tools', 'eng', 'library', 'english2027', 'englishPath', 'arabic2027', 'chemistry2027', 'physics2027', 'math2027', 'biology2027'];
+  const ids = ['home', 'sched', 'notes', 'chat', 'prac', 'examCenter', 'pastExamArchive', 'reviewCenter', 'tools', 'eng', 'library', 'english2027', 'englishPath', 'arabic2027', 'chemistry2027', 'physics2027', 'math2027', 'biology2027', 'teacherPlatforms'];
   const $ = selector => document.querySelector(selector);
 
   function activateTab(id) {
@@ -13,6 +13,7 @@
       if (section) section.hidden = sectionId !== id;
     });
     if (id === 'home' && typeof window.dashboardRender === 'function') window.dashboardRender();
+    if (id === 'teacherPlatforms' && typeof window.teacherPlatformsRender === 'function') window.teacherPlatformsRender();
     if (id === 'examCenter' && typeof window.examCenterRender === 'function') window.examCenterRender();
     if (id === 'reviewCenter' && typeof window.smartReviewRender === 'function') window.smartReviewRender();
     if (id === 'library' && typeof window.ministryLibraryRender === 'function') window.ministryLibraryRender();

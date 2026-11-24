@@ -784,6 +784,30 @@ try {
   await page.locator('[data-tab="home"]').click();
   await page.locator('#home').waitFor({state:'visible'});
 
+  // Teacher platforms directory: add, filter, edit, persist, and delete links.
+  await page.locator('[data-tab="teacherPlatforms"]').click();
+  await page.locator('#teacherPlatformName').fill('منصة اختبار المدرس');
+  await page.locator('#teacherPlatformSubject').selectOption('الفيزياء');
+  await page.locator('#teacherPlatformUrl').fill('https://example.com/physics');
+  await page.locator('#teacherPlatformDescription').fill('رابط تجريبي للاختبار');
+  await page.locator('#teacherPlatformSave').click();
+  await page.locator('#teacherPlatformsList').getByText('منصة اختبار المدرس').waitFor({state:'visible'});
+  assert.equal(await page.locator('#teacherPlatformsList a[href="https://example.com/physics"]').count(), 1);
+  await page.locator('#teacherPlatformSearch').fill('غير موجود');
+  assert.ok((await page.locator('#teacherPlatformsList').innerText()).includes('لا توجد منصات مطابقة'));
+  await page.locator('#teacherPlatformSearch').fill('');
+  await page.locator('#teacherPlatformsList [data-platform-edit]').click();
+  await page.locator('#teacherPlatformName').fill('منصة المدرس بعد التعديل');
+  await page.locator('#teacherPlatformSave').click();
+  await page.locator('#teacherPlatformsList').getByText('منصة المدرس بعد التعديل').waitFor({state:'visible'});
+  await page.reload({waitUntil:'domcontentloaded'});
+  await reenterAfterReload();
+  await page.locator('[data-tab="teacherPlatforms"]').click();
+  await page.locator('#teacherPlatformsList').getByText('منصة المدرس بعد التعديل').waitFor({state:'visible'});
+  page.once('dialog', dialog => dialog.accept());
+  await page.locator('#teacherPlatformsList [data-platform-delete]').click();
+  await page.locator('#teacherPlatformsList').getByText('لا توجد منصات مضافة بعد').waitFor({state:'visible'});
+
   // Mobile layout must fit the viewport without page-level horizontal overflow.
   await page.setViewportSize({ width: 390, height: 844 });
   await page.locator('#home').waitFor({ state: 'visible' });
@@ -861,8 +885,8 @@ try {
       const cacheKeys = await caches.keys();
       return {
         activeState: registration.active?.state,
-        currentCachePresent: cacheKeys.includes('ahmed-study-platform-v29'),
-        oldAppCachePresent: cacheKeys.includes('ahmed-study-platform-v28'),
+        currentCachePresent: cacheKeys.includes('ahmed-study-platform-v30'),
+        oldAppCachePresent: cacheKeys.includes('ahmed-study-platform-v29'),
         unrelatedCachePresent: cacheKeys.includes('unrelated-cache-preserve')
       };
     });
@@ -887,7 +911,7 @@ try {
 
     const apiCacheCheck = await swPage.evaluate(async () => {
       const response = await fetch('/api/sw-cache-probe');
-      const cache = await caches.open('ahmed-study-platform-v27');
+      const cache = await caches.open('ahmed-study-platform-v30');
       const cachedResponse = await cache.match(new Request(new URL('/api/sw-cache-probe', location.origin)));
       return { status: response.status, cached: Boolean(cachedResponse) };
     });

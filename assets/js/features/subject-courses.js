@@ -195,6 +195,16 @@
   function init(options) {
     state = options.state; save = options.save;
     state.subjectLessonDone = state.subjectLessonDone || {};
+    document.addEventListener('click', event => {
+      const button = event.target.closest('[data-open-ministry-subject]');
+      if (!button) return;
+      const subjectName = button.dataset.openMinistrySubject;
+      const library = global.StudyMinistryLibrary;
+      if (library && typeof library.openSubject === 'function' && library.openSubject(subjectName)) return;
+      if (typeof options.showAlert === 'function') {
+        options.showAlert('تعذر فتح كتاب هذه المادة من المكتبة حاليًا. حدّث الصفحة وحاول مرة أخرى.');
+      }
+    });
     Object.keys(COURSES).forEach(id => render(id));
     document.addEventListener('input', event => {
       if (event.target.matches('[data-subject-search]')) render(event.target.closest('[data-subject-course]').closest('section').id);

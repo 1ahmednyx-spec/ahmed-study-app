@@ -251,6 +251,8 @@ try {
   assert.equal(await page.locator('.tabs [role="tab"]').count(), 19, 'Smart revision, exam center, English learning path, five subject tabs, and teacher platforms must preserve all existing tabs');
   assert.equal(await page.evaluate(() => typeof window.StudySmartRevision?.init), 'function', 'Smart revision module must expose its initializer');
   assert.equal(await page.locator('#reviewCenter #smartReviewRoot').count(), 1, 'Smart revision must have its own content section');
+  console.log('DEBUG PAGE ERRORS BEFORE DASHBOARD', pageErrors);
+  console.log('DEBUG DASHBOARD HTML', (await page.locator('#smartDashboard').innerHTML()).slice(0,1200));
   assert.equal(await page.locator('#smartDashboard .smart-metric').count(), 4, 'Homepage dashboard must show four live learning metrics');
   assert.equal(await page.locator('#smartDashboard .smart-subject').count(), 6, 'Homepage dashboard must show five school subjects and the English learning path');
   assert.equal(await page.evaluate(() => typeof window.StudyDashboard?.init), 'function', 'Dashboard module must expose its initializer');

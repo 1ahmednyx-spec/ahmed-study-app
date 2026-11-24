@@ -1,4 +1,4 @@
-import { allowSameOrigin, isRateLimited, sendJson } from "./_lib/http.js";
+import { allowSameOrigin, isRateLimited, sendJson } from "../lib/api-http.js";
 
 const MAX_INPUT_CHARS = 20000;
 

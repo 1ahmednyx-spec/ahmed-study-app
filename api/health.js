@@ -1,4 +1,4 @@
-import { sendJson } from "./_lib/http.js";
+import { sendJson } from "../lib/api-http.js";
 
 export default function handler(req, res) {
   if (req.method !== "GET") {

@@ -291,3 +291,25 @@ body{background:var(--bg);color:var(--ink);font-family:Tajawal,"Segoe UI",Tahoma
   .teacher-platform-card{padding:14px}
   .teacher-platform-card h4{font-size:17px}
 }
+
+
+/* Distinct subject colors for teacher platform cards */
+.teacher-platform-card{position:relative;overflow:hidden;border-inline-start:5px solid var(--teacher-color,#64748b);background:var(--teacher-tint, var(--bg));transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+.teacher-platform-card:before{content:"";position:absolute;inset:0 0 auto;height:4px;background:var(--teacher-color,#64748b)}
+.teacher-platform-card:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(15,35,60,.10)}
+.teacher-platform-card .teacher-platform-subject{background:var(--teacher-badge,rgba(100,116,139,.12));color:var(--teacher-color,#64748b);font-weight:800}
+.teacher-platform-card a{background:var(--teacher-badge,rgba(100,116,139,.10));color:var(--teacher-color,#64748b)}
+.teacher-platform-card--arabic{--teacher-color:#B45309;--teacher-tint:#FFF8ED;--teacher-badge:#FDE9C8}
+.teacher-platform-card--chemistry{--teacher-color:#0F766E;--teacher-tint:#ECFDF8;--teacher-badge:#CCFBF1}
+.teacher-platform-card--physics{--teacher-color:#2563EB;--teacher-tint:#EFF6FF;--teacher-badge:#DBEAFE}
+.teacher-platform-card--english{--teacher-color:#7C3AED;--teacher-tint:#F5F0FF;--teacher-badge:#EDE3FF}
+.teacher-platform-card--biology{--teacher-color:#15803D;--teacher-tint:#F0FDF4;--teacher-badge:#DCFCE7}
+.teacher-platform-card--math{--teacher-color:#C026D3;--teacher-tint:#FDF4FF;--teacher-badge:#FAE8FF}
+.teacher-platform-card--history{--teacher-color:#A16207;--teacher-tint:#FEFCE8;--teacher-badge:#FEF3C7}
+.teacher-platform-card--geography{--teacher-color:#0284C7;--teacher-tint:#F0F9FF;--teacher-badge:#E0F2FE}
+.teacher-platform-card--statistics{--teacher-color:#475569;--teacher-tint:#F8FAFC;--teacher-badge:#E2E8F0}
+.teacher-platform-card--other{--teacher-color:#64748B;--teacher-tint:#F8FAFC;--teacher-badge:#E2E8F0}
+:root[data-theme="dark"] .teacher-platform-card{background:color-mix(in srgb,var(--teacher-color) 12%,var(--surface))}
+:root[data-theme="dark"] .teacher-platform-card .teacher-platform-subject,:root[data-theme="dark"] .teacher-platform-card a{background:color-mix(in srgb,var(--teacher-color) 22%,var(--surface));color:color-mix(in srgb,var(--teacher-color) 75%,white)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .teacher-platform-card{background:color-mix(in srgb,var(--teacher-color) 12%,var(--surface))}}
+@media(prefers-reduced-motion:reduce){.teacher-platform-card{transition:none}.teacher-platform-card:hover{transform:none}}

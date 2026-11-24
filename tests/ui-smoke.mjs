@@ -802,6 +802,11 @@ try {
     await page.locator('#teacherPlatformsList').getByRole('heading', {name, exact:true}).waitFor({state:'visible'});
     assert.equal(await page.locator('#teacherPlatformsList a[href="' + href + '"]').count(), 1, 'Default teacher link must be present: ' + name);
   }
+  assert.equal(await page.locator('#teacherPlatformsList .teacher-platform-card--arabic').count(), 2, 'Arabic platforms must use the Arabic color theme');
+  assert.equal(await page.locator('#teacherPlatformsList .teacher-platform-card--chemistry').count(), 2, 'Chemistry platforms must use the chemistry color theme');
+  assert.equal(await page.locator('#teacherPlatformsList .teacher-platform-card--physics').count(), 2, 'Physics platforms must use the physics color theme');
+  assert.equal(await page.locator('#teacherPlatformsList .teacher-platform-card--english').count(), 2, 'English platforms must use the English color theme');
+  assert.equal(await page.locator('#teacherPlatformsList .teacher-platform-card--biology').count(), 1, 'Biology platform must use the biology color theme');
   await page.locator('#teacherPlatformFilter').selectOption('الفيزياء');
   assert.equal(await page.locator('#teacherPlatformsList .teacher-platform-card').count(), 2, 'Physics filter must show both physics platforms');
   await page.locator('#teacherPlatformFilter').selectOption('كل المواد');
@@ -874,7 +879,7 @@ try {
     await swPage.addInitScript(() => {
       if (!('serviceWorker' in navigator)) return;
       const seedCaches = Promise.all([
-        caches.open('ahmed-study-platform-v30'),
+        caches.open('ahmed-study-platform-v31'),
         caches.open('unrelated-cache-preserve')
       ]);
       const nativeRegister = navigator.serviceWorker.register.bind(navigator.serviceWorker);
@@ -919,14 +924,14 @@ try {
       const cacheKeys = await caches.keys();
       return {
         activeState: registration.active?.state,
-        currentCachePresent: cacheKeys.includes('ahmed-study-platform-v31'),
-        oldAppCachePresent: cacheKeys.includes('ahmed-study-platform-v30'),
+        currentCachePresent: cacheKeys.includes('ahmed-study-platform-v32'),
+        oldAppCachePresent: cacheKeys.includes('ahmed-study-platform-v31'),
         unrelatedCachePresent: cacheKeys.includes('unrelated-cache-preserve')
       };
     });
     assert.equal(lifecycle.activeState, 'activated', 'Service worker must activate');
-    assert.equal(lifecycle.currentCachePresent, true, 'Current app-shell cache v31 must be created');
-    assert.equal(lifecycle.oldAppCachePresent, false, 'Activation must delete the previous app cache v30');
+    assert.equal(lifecycle.currentCachePresent, true, 'Current app-shell cache v32 must be created');
+    assert.equal(lifecycle.oldAppCachePresent, false, 'Activation must delete the previous app cache v31');
     assert.equal(lifecycle.unrelatedCachePresent, true, 'Activation must preserve unrelated caches');
     console.log('CHECKPOINT: service worker activated and cache lifecycle assertions passed');
 
@@ -945,7 +950,7 @@ try {
 
     const apiCacheCheck = await swPage.evaluate(async () => {
       const response = await fetch('/api/sw-cache-probe');
-      const cache = await caches.open('ahmed-study-platform-v31');
+      const cache = await caches.open('ahmed-study-platform-v32');
       const cachedResponse = await cache.match(new Request(new URL('/api/sw-cache-probe', location.origin)));
       return { status: response.status, cached: Boolean(cachedResponse) };
     });

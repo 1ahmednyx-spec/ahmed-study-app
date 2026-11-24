@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ahmed-study-platform-v25';
+const CACHE_NAME = 'ahmed-study-platform-v26';
 const APP_FILES = [
   './',
   './index.html',
@@ -35,7 +35,18 @@ self.addEventListener('activate', event => {
   self.clients.claim();
 });
 self.addEventListener('fetch', event => {
-  if (event.request.method !== 'GET' || new URL(event.request.url).origin !== self.location.origin) return;
+  const requestUrl = new URL(event.request.url);
+  if (requestUrl.origin !== self.location.origin || event.request.method !== 'GET') return;
+
+  // API responses must always be fresh and must never fall back to cached HTML.
+  if (requestUrl.pathname.startsWith('/api/')) {
+    event.respondWith(fetch(event.request).catch(() => new Response(
+      JSON.stringify({ error: { code: 'network_unavailable' } }),
+      { status: 503, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' } }
+    )));
+    return;
+  }
+
   event.respondWith(caches.match(event.request).then(cached => cached || fetch(event.request).then(response => {
     if (response && response.ok) {
       const copy = response.clone();

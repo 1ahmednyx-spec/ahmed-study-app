@@ -837,8 +837,8 @@ try {
       const cacheKeys = await caches.keys();
       return {
         activeState: registration.active?.state,
-        currentCachePresent: cacheKeys.includes('ahmed-study-platform-v27'),
-        oldAppCachePresent: cacheKeys.includes('ahmed-study-platform-v26'),
+        currentCachePresent: cacheKeys.includes('ahmed-study-platform-v28'),
+        oldAppCachePresent: cacheKeys.includes('ahmed-study-platform-v27'),
         unrelatedCachePresent: cacheKeys.includes('unrelated-cache-preserve')
       };
     });

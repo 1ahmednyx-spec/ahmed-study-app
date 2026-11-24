@@ -784,8 +784,38 @@ try {
   await page.locator('[data-tab="home"]').click();
   await page.locator('#home').waitFor({state:'visible'});
 
-  // Teacher platforms directory: add, filter, edit, persist, and delete links.
+  // Teacher platforms directory: shared default links, filtering, editing, persistence, deletion, and mobile layout.
   await page.locator('[data-tab="teacherPlatforms"]').click();
+  const defaultTeacherLinks = [
+    ['بسطتهالك – محمد صلاح','https://bassthalk.com/'],
+    ['مستر رضا الفاروق','https://mrredaelfarouk.com/'],
+    ['خالد صقر','https://www.khaled-sakr.com/'],
+    ['منصة محمد عبد الجواد – MAG Academy','https://magacademy.co/'],
+    ['منصة عبد المعبود','https://abdelmaaboud.com/'],
+    ['منصة كيرليس – Doctor in Physics','https://doctorinphysics.com/'],
+    ['إنجلشاوي – Mr Englishawy','https://www.mrenglishawy.com/ar/dashboard'],
+    ['مس مي مجدي – More English','https://more-english.net/'],
+    ['أحمد الجوهري','https://ahmed-elgohary.com/']
+  ];
+  assert.equal(await page.locator('#teacherPlatformsList .teacher-platform-card').count(), 9, 'All nine curated teacher platforms must be seeded by default');
+  for (const [name, href] of defaultTeacherLinks) {
+    await page.locator('#teacherPlatformsList').getByText(name).waitFor({state:'visible'});
+    assert.equal(await page.locator('#teacherPlatformsList a[href="' + href + '"]').count(), 1, 'Default teacher link must be present: ' + name);
+  }
+  await page.locator('#teacherPlatformFilter').selectOption('الفيزياء');
+  assert.equal(await page.locator('#teacherPlatformsList .teacher-platform-card').count(), 2, 'Physics filter must show both physics platforms');
+  await page.locator('#teacherPlatformFilter').selectOption('كل المواد');
+  await page.setViewportSize({width:390,height:844});
+  const teacherMobile = await page.evaluate(() => ({
+    viewport: document.documentElement.clientWidth,
+    document: document.documentElement.scrollWidth,
+    cards: [...document.querySelectorAll('#teacherPlatformsList .teacher-platform-card')].map(el => {
+      const r=el.getBoundingClientRect(); return {left:Math.round(r.left),right:Math.round(r.right)};
+    })
+  }));
+  assert.ok(teacherMobile.document <= teacherMobile.viewport + 1, 'Teacher platforms must not overflow on mobile: ' + JSON.stringify(teacherMobile));
+  assert.ok(teacherMobile.cards.every(card => card.left >= -1 && card.right <= teacherMobile.viewport + 1), 'Every teacher platform card must fit the mobile viewport');
+  await page.setViewportSize({width:1365,height:900});
   await page.locator('#teacherPlatformName').fill('منصة اختبار المدرس');
   await page.locator('#teacherPlatformSubject').selectOption('الفيزياء');
   await page.locator('#teacherPlatformUrl').fill('https://example.com/physics');
@@ -806,7 +836,7 @@ try {
   await page.locator('#teacherPlatformsList').getByText('منصة المدرس بعد التعديل').waitFor({state:'visible'});
   page.once('dialog', dialog => dialog.accept());
   await page.locator('#teacherPlatformsList [data-platform-delete]').click();
-  await page.locator('#teacherPlatformsList').getByText('لا توجد منصات مضافة بعد').waitFor({state:'visible'});
+  assert.equal(await page.locator('#teacherPlatformsList .teacher-platform-card').count(), 9, 'Deleting a personal test link must preserve the nine default teacher platforms');
 
   // Mobile layout must fit the viewport without page-level horizontal overflow.
   await page.setViewportSize({ width: 390, height: 844 });
@@ -840,7 +870,7 @@ try {
     await swPage.addInitScript(() => {
       if (!('serviceWorker' in navigator)) return;
       const seedCaches = Promise.all([
-        caches.open('ahmed-study-platform-v25'),
+        caches.open('ahmed-study-platform-v31'),
         caches.open('unrelated-cache-preserve')
       ]);
       const nativeRegister = navigator.serviceWorker.register.bind(navigator.serviceWorker);
@@ -886,13 +916,13 @@ try {
       return {
         activeState: registration.active?.state,
         currentCachePresent: cacheKeys.includes('ahmed-study-platform-v30'),
-        oldAppCachePresent: cacheKeys.includes('ahmed-study-platform-v29'),
+        oldAppCachePresent: cacheKeys.includes('ahmed-study-platform-v30'),
         unrelatedCachePresent: cacheKeys.includes('unrelated-cache-preserve')
       };
     });
     assert.equal(lifecycle.activeState, 'activated', 'Service worker must activate');
-    assert.equal(lifecycle.currentCachePresent, true, 'Current app-shell cache must be created');
-    assert.equal(lifecycle.oldAppCachePresent, false, 'Activation must delete the previous app cache');
+    assert.equal(lifecycle.currentCachePresent, true, 'Current app-shell cache v31 must be created');
+    assert.equal(lifecycle.oldAppCachePresent, false, 'Activation must delete the previous app cache v30');
     assert.equal(lifecycle.unrelatedCachePresent, true, 'Activation must preserve unrelated caches');
     console.log('CHECKPOINT: service worker activated and cache lifecycle assertions passed');
 
@@ -946,7 +976,7 @@ try {
   }
 
   assert.deepEqual(pageErrors, [], `Uncaught browser errors: ${pageErrors.join('; ')}`);
-  console.log('PASS: homepage, navigation, smart revision queue and scheduling, schedule creation, local notes, theme persistence, local data preservation, mistake review, AI fallback, backup validation, mobile overflow at 390px and 320px, service-worker cache cleanup, API cache exclusion, offline static assets, and browser console.');
+  console.log('PASS: homepage, navigation, smart revision queue and scheduling, schedule creation, local notes, theme persistence, local data preservation, mistake review, AI fallback, backup validation, teacher directory and mobile overflow at 390px and 320px, service-worker cache cleanup, API cache exclusion, offline static assets, and browser console.');
 } finally {
   await browser.close();
 }

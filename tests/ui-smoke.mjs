@@ -838,6 +838,10 @@ try {
   await page.locator('#teacherPlatformsList .teacher-platform-card').filter({has: page.getByRole('heading', {name:'منصة المدرس بعد التعديل', exact:true})}).locator('[data-platform-delete]').click();
   assert.equal(await page.locator('#teacherPlatformsList .teacher-platform-card').count(), 9, 'Deleting a personal test link must preserve the nine default teacher platforms');
 
+  // Return to the home tab before checking the overall mobile layout.
+  await page.locator('[data-tab="home"]').click();
+  await page.locator('#home').waitFor({ state: 'visible' });
+
   // Mobile layout must fit the viewport without page-level horizontal overflow.
   await page.setViewportSize({ width: 390, height: 844 });
   await page.locator('#home').waitFor({ state: 'visible' });

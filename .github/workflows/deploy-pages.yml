@@ -1,6 +1,9 @@
 name: Deploy Ahmed Study Platform to GitHub Pages
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
@@ -19,10 +22,10 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Check out the approved platform branch
+      - name: Check out the main branch
         uses: actions/checkout@v4
         with:
-          ref: feature/past-exam-archive
+          ref: main
 
       - name: Prepare static website files
         run: |

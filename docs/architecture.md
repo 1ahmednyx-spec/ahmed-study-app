@@ -21,9 +21,17 @@
 
 ## Runtime and data
 
-The application remains a static, client-side app. Existing study data is stored in browser local storage under the compatibility key `study-v1`. This key must not be renamed or discarded during refactoring.
+The application UI and study data remain client-side. Existing study data is stored in browser local storage under the compatibility key `study-v1`. This key must not be renamed or discarded during refactoring. A secure Cloudflare Worker now provides the server-side AI API; account authentication and cloud database synchronization are still not implemented. Never place provider API keys in browser code.
 
-There is no account system, cloud database, or server-side AI integration yet. Never place provider API keys in browser code. AI-dependent controls must keep a clear unavailable-state message until a secure backend is configured.
+## Secure AI backend (Cloudflare Worker)
+
+- `cloudflare/src/index.js` handles `POST /api/chat` and serves static assets through the `ASSETS` binding.
+- The browser calls only the same-origin `/api/chat` endpoint; it never receives the Gemini API key.
+- The Worker calls the Gemini Interactions API using `GEMINI_API_KEY` as a Cloudflare Secret. The default model is `gemini-3.8-flash`; `GEMINI_MODEL` may override it as a regular Worker variable.
+- Requests use `store: false`, validate input size and message count, and apply a best-effort per-isolate rate limit.
+- Configure `main = "src/index.js"`, `assets.binding = "ASSETS"`, and `run_worker_first = ["/api/*"]` in `cloudflare/wrangler.toml`.
+- Before AI features can work in production, add the Cloudflare Worker Secret named `GEMINI_API_KEY`. Never commit the key to GitHub or place it in browser JavaScript.
+- `GET /api/health` is a non-sensitive deployment health check.
 
 ## Phase 2 migration rules
 

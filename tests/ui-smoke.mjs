@@ -27,6 +27,7 @@ try {
   const englishCourseResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/english-course.js');
   const englishLearningPathResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/english-learning-path.js');
   const subjectCoursesResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/subject-courses.js');
+  const lessonVideosResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/lesson-videos.js');
   const examCenterResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/exam-center.js');
   const pastExamArchiveResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/past-exam-archive.js');
   const dashboardResponse = await page.request.get('http://127.0.0.1:4173/assets/js/features/dashboard.js');
@@ -38,7 +39,7 @@ try {
   assert.equal(serviceWorkerResponse.status(), 200, 'Service worker must be served');
   const serviceWorkerSource = await serviceWorkerResponse.text();
   assert.match(serviceWorkerSource, /ahmed-study-platform-v\d+/, 'Service worker cache must be versioned');
-  for (const modulePath of ['./assets/js/features/preferences.js', './assets/js/features/english-course.js', './assets/js/features/english-learning-path.js', './assets/js/features/subject-courses.js', './assets/js/features/exam-center.js', './assets/js/features/past-exam-archive.js', './assets/js/features/dashboard.js', './assets/js/features/smart-revision.js', './assets/js/features/ministry-library.js', './assets/js/features/english-coach.js']) {
+  for (const modulePath of ['./assets/js/features/preferences.js', './assets/js/features/english-course.js', './assets/js/features/english-learning-path.js', './assets/js/features/subject-courses.js', './assets/js/features/lesson-videos.js', './assets/js/features/exam-center.js', './assets/js/features/past-exam-archive.js', './assets/js/features/dashboard.js', './assets/js/features/smart-revision.js', './assets/js/features/ministry-library.js', './assets/js/features/english-coach.js']) {
     assert.ok(serviceWorkerSource.includes(modulePath), `Service worker must precache ${modulePath}`);
   }
 
@@ -58,6 +59,7 @@ try {
   assert.equal(englishCourseResponse.status(), 200, 'English course module must be served');
   assert.equal(englishLearningPathResponse.status(), 200, 'Separate English learning path module must be served');
   assert.equal(subjectCoursesResponse.status(), 200, '2027 subject courses module must be served');
+  assert.equal(lessonVideosResponse.status(), 200, 'Lesson video module must be served');
   assert.equal(examCenterResponse.status(), 200, 'Exam center module must be served');
   assert.equal(pastExamArchiveResponse.status(), 200, 'Past exam archive module must be served');
   const pastExamArchiveSource = await pastExamArchiveResponse.text();
@@ -924,13 +926,13 @@ try {
       const cacheKeys = await caches.keys();
       return {
         activeState: registration.active?.state,
-        currentCachePresent: cacheKeys.includes('ahmed-study-platform-v32'),
+        currentCachePresent: cacheKeys.includes('ahmed-study-platform-v33'),
         oldAppCachePresent: cacheKeys.includes('ahmed-study-platform-v31'),
         unrelatedCachePresent: cacheKeys.includes('unrelated-cache-preserve')
       };
     });
     assert.equal(lifecycle.activeState, 'activated', 'Service worker must activate');
-    assert.equal(lifecycle.currentCachePresent, true, 'Current app-shell cache v32 must be created');
+    assert.equal(lifecycle.currentCachePresent, true, 'Current app-shell cache v33 must be created');
     assert.equal(lifecycle.oldAppCachePresent, false, 'Activation must delete the previous app cache v31');
     assert.equal(lifecycle.unrelatedCachePresent, true, 'Activation must preserve unrelated caches');
     console.log('CHECKPOINT: service worker activated and cache lifecycle assertions passed');
@@ -950,7 +952,7 @@ try {
 
     const apiCacheCheck = await swPage.evaluate(async () => {
       const response = await fetch('/api/sw-cache-probe');
-      const cache = await caches.open('ahmed-study-platform-v32');
+      const cache = await caches.open('ahmed-study-platform-v33');
       const cachedResponse = await cache.match(new Request(new URL('/api/sw-cache-probe', location.origin)));
       return { status: response.status, cached: Boolean(cachedResponse) };
     });

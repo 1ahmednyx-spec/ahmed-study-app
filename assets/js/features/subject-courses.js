@@ -179,15 +179,18 @@
     const filtered = lessons.filter(x => !query || (x.unit.name + ' ' + x.lesson.slice(0,4).join(' ')).toLowerCase().includes(query));
     const completed = lessons.filter(x => done[x.key]).length;
     const pct = lessons.length ? Math.round(completed / lessons.length * 100) : 0;
+    if (!root.querySelector('[data-subject-video-admin]')) root.insertAdjacentHTML('afterbegin', '<div data-subject-video-admin></div>');
+    const adminBar = root.querySelector('[data-subject-video-admin]');
+    if (adminBar && global.StudyLessonVideos) adminBar.innerHTML = global.StudyLessonVideos.adminBar();
     root.querySelector('[data-subject-progress]').innerHTML = '<b>' + completed + ' من ' + lessons.length + ' درس</b><span>' + pct + '%</span>';
     root.querySelector('[data-subject-progress-bar]').style.width = pct + '%';
     root.querySelector('[data-subject-units]').innerHTML = course.units.map((unit, ui) => {
       const items = filtered.filter(x => x.ui === ui);
       if (!items.length) return '';
-      return '<section class="subject-unit"><h3>' + esc(unit.name) + '</h3>' + items.map(({lesson, key}) => {
+      return '<section class="subject-unit"><h3>' + esc(unit.name) + '</h3>' + items.map(({lesson, key, li}) => {
         const [title, explanation, takeaway, question, ...rest] = lesson;
         const options = rest.slice(0,4), answer = rest[4], feedback = rest[5];
-        return '<details class="course-unit subject-lesson"><summary><input type="checkbox" class="course-done" data-subject-done="' + key + '" ' + (done[key] ? 'checked' : '') + ' aria-label="إتمام الدرس"><span><b>' + esc(title) + '</b><br><span class="course-muted">' + (done[key] ? 'تمت المذاكرة' : 'شرح وتطبيق') + '</span></span></summary><div class="course-unit-body"><h4>الشرح المبسّط</h4><p>' + esc(explanation) + '</p><div class="course-feedback"><b>الخلاصة:</b> ' + esc(takeaway) + '</div><h4>اختبر فهمك</h4><p>' + esc(question) + '</p><div class="subject-options">' + options.map((option, oi) => '<label><input type="radio" name="' + id + '-' + key + '" value="' + oi + '"><span>' + esc(option) + '</span></label>').join('') + '</div><button class="s" type="button" data-subject-check="' + key + '" data-answer="' + answer + '" data-explain="' + encodeURIComponent(feedback) + '">صحّح إجابتي</button><div class="hint" data-subject-feedback="' + key + '" aria-live="polite"></div></div></details>';
+        return '<details class="course-unit subject-lesson"><summary><input type="checkbox" class="course-done" data-subject-done="' + key + '" ' + (done[key] ? 'checked' : '') + ' aria-label="إتمام الدرس"><span><b>' + esc(title) + '</b><br><span class="course-muted">' + (done[key] ? 'تمت المذاكرة' : 'شرح وتطبيق') + '</span></span></summary><div class="course-unit-body"><h4>الشرح المبسّط</h4><p>' + esc(explanation) + '</p><div class="course-feedback"><b>الخلاصة:</b> ' + esc(takeaway) + '</div>' + (global.StudyLessonVideos ? global.StudyLessonVideos.renderSlot(id, ui, li) : '') + '<h4>اختبر فهمك</h4><p>' + esc(question) + '</p><div class="subject-options">' + options.map((option, oi) => '<label><input type="radio" name="' + id + '-' + key + '" value="' + oi + '"><span>' + esc(option) + '</span></label>').join('') + '</div><button class="s" type="button" data-subject-check="' + key + '" data-answer="' + answer + '" data-explain="' + encodeURIComponent(feedback) + '">صحّح إجابتي</button><div class="hint" data-subject-feedback="' + key + '" aria-live="polite"></div></div></details>';
       }).join('') + '</section>';
     }).join('') || '<div class="empty">لا توجد دروس مطابقة للبحث.</div>';
     root.querySelector('[data-subject-count]').textContent = lessons.length + ' درسًا متاحًا في هذه الخريطة التعليمية.';
@@ -230,6 +233,7 @@
       feedback.style.color = correct ? 'var(--ok)' : 'var(--danger)';
     });
     global.subjectCourseRender = render;
+    global.subjectCourseIds = Object.keys(COURSES);
   }
   function getExamQuestions(subjectId) {
     const course = COURSES[subjectId];

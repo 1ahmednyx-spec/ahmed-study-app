@@ -248,7 +248,7 @@ try {
   await page.locator('#enterPlatform').click();
   await page.locator('#welcomeScreen').waitFor({ state: 'hidden' });
   await page.locator('#home').waitFor({ state: 'visible' });
-  assert.equal(await page.locator('.tabs [role="tab"]').count(), 18, 'Smart revision, exam center, English learning path, and five subject tabs must preserve all existing tabs');
+  assert.equal(await page.locator('.tabs [role="tab"]').count(), 19, 'Smart revision, exam center, English learning path, five subject tabs, and teacher platforms must preserve all existing tabs');
   assert.equal(await page.evaluate(() => typeof window.StudySmartRevision?.init), 'function', 'Smart revision module must expose its initializer');
   assert.equal(await page.locator('#reviewCenter #smartReviewRoot').count(), 1, 'Smart revision must have its own content section');
   assert.equal(await page.locator('#smartDashboard .smart-metric').count(), 4, 'Homepage dashboard must show four live learning metrics');

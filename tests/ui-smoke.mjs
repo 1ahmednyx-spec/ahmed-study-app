@@ -4,6 +4,12 @@ import assert from 'node:assert/strict';
 const browser = await chromium.launch({ headless: true });
 const page = await browser.newPage({ viewport: { width: 1365, height: 900 } });
 const pageErrors = [];
+
+async function reenterAfterReload() {
+  await page.locator('#welcomeScreen').waitFor({ state: 'visible' });
+  await page.locator('#enterPlatform').click();
+  await page.locator('#welcomeScreen').waitFor({ state: 'hidden' });
+}
 page.on('pageerror', error => pageErrors.push(error.message));
 
 try {
@@ -394,6 +400,7 @@ try {
   await page.evaluate(() => { const checkbox = document.querySelector('#upList [data-done]'); checkbox.checked = true; checkbox.dispatchEvent(new Event('change', { bubbles: true })); });
   await page.locator('#doneList').getByText('اختبار واجهة المنصة').waitFor({ state: 'visible' });
   await page.reload({ waitUntil: 'domcontentloaded' });
+  await reenterAfterReload();
   await page.locator('[data-tab="sched"]').click();
   await page.locator('#doneList').getByText('اختبار واجهة المنصة').waitFor({ state: 'visible' });
   await page.evaluate(() => { const checkbox = document.querySelector('#doneList [data-done]'); checkbox.checked = false; checkbox.dispatchEvent(new Event('change', { bubbles: true })); });
@@ -457,6 +464,7 @@ try {
   await page.locator('[data-tab="notes"]').click();
   // A saved note should survive a full page reload.
   await page.reload({ waitUntil: 'domcontentloaded' });
+  await reenterAfterReload();
   await page.locator('[data-tab="notes"]').click();
   await page.locator('#noteList').getByText('ملاحظة اختبارية ثانية').waitFor({ state: 'visible' });
 
@@ -602,6 +610,7 @@ try {
   assert.equal(await page.locator('html').getAttribute('data-theme'), 'dark');
   assert.equal(await page.evaluate(() => document.documentElement.style.getPropertyValue('--brand')), '#4F46E5');
   await page.reload({ waitUntil: 'domcontentloaded' });
+  await reenterAfterReload();
   await page.locator('[data-tab="tools"]').click();
   assert.equal(await page.locator('#brandName').textContent(), 'Backup Restored');
   await page.locator('[data-tab="sched"]').click();
@@ -678,6 +687,7 @@ try {
   await page.locator('#themeToggle').click();
   assert.equal(await page.locator('html').getAttribute('data-theme'), 'dark');
   await page.reload({ waitUntil: 'domcontentloaded' });
+  await reenterAfterReload();
   assert.equal(await page.locator('html').getAttribute('data-theme'), 'dark');
   await page.locator('#themeToggle').click();
   assert.equal(await page.locator('html').getAttribute('data-theme'), 'light');
@@ -691,12 +701,14 @@ try {
   assert.equal(await page.locator('#hi').textContent(), 'أهلًا يا Student');
   assert.equal(await page.evaluate(() => document.documentElement.style.getPropertyValue('--brand')), '#4F46E5');
   await page.reload({ waitUntil: 'domcontentloaded' });
+  await reenterAfterReload();
   assert.equal(await page.locator('#brandName').textContent(), 'My Study Space');
   assert.equal(await page.locator('#hi').textContent(), 'أهلًا يا Student');
 
   // Malformed legacy storage must fall back safely instead of crashing app startup.
   await page.evaluate(() => localStorage.setItem('study-v1', '{ malformed json'));
   await page.reload({ waitUntil: 'domcontentloaded' });
+  await reenterAfterReload();
   await page.locator('#home').waitFor({ state: 'visible' });
 
   // Existing local data key and arbitrary saved fields must survive startup.
@@ -704,6 +716,7 @@ try {
     ev: [], notes: [], words: [], track: 'sci', prac: [], goal: 100, mist: [], focus: {}, smokeTestMarker: 'preserved'
   })));
   await page.reload({ waitUntil: 'domcontentloaded' });
+  await reenterAfterReload();
   assert.equal(await page.evaluate(() => JSON.parse(localStorage.getItem('study-v1')).smokeTestMarker), 'preserved');
 
   // Smart revision collects vocabulary, active mistakes, and completed lessons, then schedules ratings.
